@@ -24,7 +24,10 @@ explainy is a library for generating explanations for machine learning models in
 
 
 * Free software: MIT license
-* Documentation: https://explainy.readthedocs.io.
+
+Documentation 
+--------------
+https://explainy.readthedocs.io.
 
 
 Features
