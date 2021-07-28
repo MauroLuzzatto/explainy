@@ -1,6 +1,6 @@
-========
-explainy
-========
+================================================
+explainy - model explanations for humans
+================================================
 
 
 .. image:: https://img.shields.io/pypi/v/explainy.svg
@@ -19,15 +19,19 @@ explainy
      :alt: Updates
 
 
+.. image:: https://img.shields.io/pypi/pyversions/explainy.svg
+    :alt: Supported versions
+    :target: https://pypi.org/project/explainy
 
-explainy is a library for generating explanations for machine learning models in Python. It uses methods from Machine Learning Explainability and provides a standardized API to create feature importance explanations for samples. The explanations are generated in the form of plots and text.
+
+explainy is a library for generating machine learning models explanations in Python. It uses methods from Machine Learning Explainability and provides a standardized API to create feature importance explanations for samples. The explanations are generated in the form of plots and text.
 
 
 * Free software: MIT license
 
 Documentation 
 --------------
-https://explainy.readthedocs.io.
+https://explainy.readthedocs.io
 
 
 Features
