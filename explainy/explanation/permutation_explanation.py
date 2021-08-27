@@ -19,7 +19,7 @@ import pandas as pd
 import sklearn
 from sklearn.inspection import permutation_importance
 
-from src.explanation.ExplanationBase import ExplanationBase
+from explainy.explanation.ExplanationBase import ExplanationBase
 
 
 class PermutationExplanation(ExplanationBase):
