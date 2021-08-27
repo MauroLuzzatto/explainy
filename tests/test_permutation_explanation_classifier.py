@@ -13,8 +13,7 @@ from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
-from src.explanation.permutation_explanation import PermutationExplanation
-
+from explainy.explanation.permutation_explanation import PermutationExplanation
 
 def get_classification_model():
 
@@ -31,6 +30,8 @@ def get_classification_model():
 
 
 def test_permuation_explanation_2_features():
+
+    model, X_test, y_test = get_classification_model()
 
     number_of_features = 2
     sample_index = 1
@@ -57,6 +58,8 @@ def test_permuation_explanation_2_features():
 
 def test_permuation_explanation_4_features():
 
+    model, X_test, y_test = get_classification_model()
+
     number_of_features = 4
     sample_index = 5
 
@@ -81,7 +84,6 @@ def test_permuation_explanation_4_features():
 
 if __name__ == "__main__":
 
-    model, X_test, y_test = get_classification_model()
 
     test_permuation_explanation_2_features()
     test_permuation_explanation_4_features()

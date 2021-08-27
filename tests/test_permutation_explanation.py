@@ -13,8 +13,7 @@ from sklearn.datasets import load_diabetes
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
-from src.explanation.permutation_explanation import PermutationExplanation
-
+from explainy.explanation.permutation_explanation import PermutationExplanation
 
 def get_regression_model():
 
@@ -32,6 +31,8 @@ def get_regression_model():
 
 
 def test_permuation_explanation_4_features():
+    
+    model, X_test, y_test = get_regression_model()
 
     number_of_features = 4
     sample_index = 1
@@ -56,6 +57,9 @@ def test_permuation_explanation_4_features():
 
 
 def test_permuation_explanation_8_features():
+
+    model, X_test, y_test = get_regression_model()
+    
 
     number_of_features = 8
     sample_index = 1
@@ -83,5 +87,5 @@ if __name__ == "__main__":
 
     model, X_test, y_test = get_regression_model()
 
-    test_permuation_explanation_4_features()
-    test_permuation_explanation_8_features()
+    test_permuation_explanation_4_features(model, X_test, y_test)
+    test_permuation_explanation_8_features(model, X_test, y_test)
