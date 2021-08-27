@@ -4,14 +4,6 @@ explainy package
 Submodules
 ----------
 
-explainy.cli module
--------------------
-
-.. automodule:: explainy.cli
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 explainy.explainy module
 ------------------------
 

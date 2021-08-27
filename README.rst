@@ -14,14 +14,16 @@ explainy - model explanations for humans
         :alt: Documentation Status
 
 
-.. image:: https://pyup.io/repos/github/MauroLuzzatto/explainy/shield.svg
-     :target: https://pyup.io/repos/github/MauroLuzzatto/explainy/
-     :alt: Updates
-
-
 .. image:: https://img.shields.io/pypi/pyversions/explainy.svg
     :alt: Supported versions
     :target: https://pypi.org/project/explainy
+
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square
+    :alt: Code style: black
+    :target: https://github.com/ambv/black
+
+
 
 
 explainy is a library for generating machine learning models explanations in Python. It uses methods from **Machine Learning Explainability** and provides a standardized API to create feature importance explanations for samples. The explanations are generated in the form of plots and text.

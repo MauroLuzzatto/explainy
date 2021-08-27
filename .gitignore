@@ -50,7 +50,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
-github_token.txt
+_archive
 
 # Translations
 *.mo
