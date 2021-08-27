@@ -1,13 +1,21 @@
 explainy package
 ================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   explainy.explanation
+
 Submodules
 ----------
 
-explainy.explainy module
-------------------------
+explainy.cli module
+-------------------
 
-.. automodule:: explainy.explainy
+.. automodule:: explainy.cli
    :members:
    :undoc-members:
    :show-inheritance:
