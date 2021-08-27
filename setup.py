@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
 """The setup script."""
-
+from pathlib import Path
 from setuptools import setup, find_packages
+
+
+def read_requirements(path):
+    return list(Path(path).read_text().splitlines())
+
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -10,8 +15,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=7.0', ]
-
+requirements = read_requirements('requirements/requirements.txt')
 test_requirements = ['pytest>=3', ]
 
 setup(
@@ -44,6 +48,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/MauroLuzzatto/explainy',
-    version='0.1.3',
+    version='0.1.4',
     zip_safe=False,
 )
