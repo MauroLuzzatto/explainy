@@ -18,10 +18,12 @@ from src.explanation.utils import create_folder
 
 from abc import ABC, abstractmethod
 
+
 class ExplanationBase(ABC, ExplanationMixin):
     """
     Explanation base class
     """
+
     def __init__(
         self,
         config: Dict = None,
@@ -46,20 +48,18 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         self.set_paths()
         self.get_number_to_string_dict()
-        
-        score_text_empty = (
-            "The {} used {} features to produce the predictions. The prediction of this sample was {:.1f}."
-        )
+
+        score_text_empty = "The {} used {} features to produce the predictions. The prediction of this sample was {:.1f}."
         self.score_text_empty = self.config.get("score_text_empty", score_text_empty)
 
-    
     def get_number_of_features(self, number_of_features):
-        
-        if number_of_features > self.X.shape[1]:
-            warnings.warn(f'The "number_of_features" is larger than the number of dataset features. The value is set to {self.X.shape[1]}')
-        
-        return min(number_of_features, self.X.shape[1])
 
+        if number_of_features > self.X.shape[1]:
+            warnings.warn(
+                f'The "number_of_features" is larger than the number of dataset features. The value is set to {self.X.shape[1]}'
+            )
+
+        return min(number_of_features, self.X.shape[1])
 
     def set_paths(self):
         """
@@ -69,9 +69,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             None.
 
         """
-        self.path = os.path.join(
-            os.path.dirname(os.getcwd()), "reports", self.folder
-        )
+        self.path = os.path.join(os.path.dirname(os.getcwd()), "reports", self.folder)
         self.path_plot = create_folder(os.path.join(self.path, "plot"))
         self.path_result = create_folder(os.path.join(self.path, "results"))
         self.path_log = create_folder(os.path.join(self.path, "logs"))
@@ -92,7 +90,6 @@ class ExplanationBase(ABC, ExplanationMixin):
     def get_feature_values(self):
         raise NotImplementedError("Subclasses should implement this!")
 
-   
     def get_prediction(self, sample: int = 0) -> float:
         """
         Get the model prediction
@@ -115,9 +112,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         Returns:
             None
         """
-        return self.method_text_empty.format(
-            self.num_to_str[self.number_of_features]
-        )
+        return self.method_text_empty.format(self.num_to_str[self.number_of_features])
 
     def get_sentences(self, feature_values: list, sentence_empty: str) -> None:
         """
@@ -130,9 +125,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         """
         values = []
         for feature_name, feature_value in feature_values:
-            values.append(
-                sentence_empty.format(feature_name, feature_value)    
-            )
+            values.append(sentence_empty.format(feature_name, feature_value))
 
         sentences = self.join_text_with_comma_and_and(values)
         return sentences
@@ -164,7 +157,6 @@ class ExplanationBase(ABC, ExplanationMixin):
         return self.score_text_empty.format(
             self.model.__class__.__name__, number_of_dataset_features, self.prediction
         )
-    
 
     def get_model_text(self):
         return str(self.model)
@@ -174,36 +166,34 @@ class ExplanationBase(ABC, ExplanationMixin):
         if sample:
             plot_name = f"{self.explanation_name}_sample_{sample}_sparse_{self.number_of_features}.png"
         else:
-            plot_name = (
-                f"{self.explanation_name}_sparse_{self.number_of_features}.png"
-            )
+            plot_name = f"{self.explanation_name}_sparse_{self.number_of_features}.png"
         return plot_name
-    
-    
+
     def get_explanation(self, separator="\n"):
-        
-        
+
         assert hasattr(self, "method_text"), "instance lacks method_text"
         assert hasattr(self, "score_text"), "instance lacks score_text"
-        assert hasattr(self, "natural_language_text"), "instance lacks natural_language_text"
-        
+        assert hasattr(
+            self, "natural_language_text"
+        ), "instance lacks natural_language_text"
+
         if separator:
             explanation = separator.join(
                 [self.score_text, self.method_text, self.natural_language_text]
             )
         else:
-            explanation =(
-                self.score_text, self.method_text, self.natural_language_text
+            explanation = (
+                self.score_text,
+                self.method_text,
+                self.natural_language_text,
             )
         return explanation
-    
-    
+
     def print_output(self, separator="\n"):
         print(self.get_explanation(separator))
-    
-    def __str__(self, separator ='\n'):
+
+    def __str__(self, separator="\n"):
         return self.print_output(separator)
-        
 
     def save_csv(self, sample: int) -> None:
         """

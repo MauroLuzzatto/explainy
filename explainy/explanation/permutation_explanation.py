@@ -22,7 +22,6 @@ from sklearn.inspection import permutation_importance
 from src.explanation.ExplanationBase import ExplanationBase
 
 
-
 class PermutationExplanation(ExplanationBase):
     """
     Non-contrastive, global Explanation
@@ -34,11 +33,9 @@ class PermutationExplanation(ExplanationBase):
         y: np.array,
         model: sklearn.base.BaseEstimator,
         number_of_features: int,
-        config: Dict = None
+        config: Dict = None,
     ):
-        super(PermutationExplanation, self).__init__(
-            config
-        )
+        super(PermutationExplanation, self).__init__(config)
         """
         Init the specific explanation class, the base class is "Explanation"
 
@@ -59,24 +56,23 @@ class PermutationExplanation(ExplanationBase):
         self.feature_names = list(self.X)
         self.number_of_features = self.get_number_of_features(number_of_features)
 
-        natural_language_text_empty = (
-            "The {} features which were most important for the predictions were (from highest to lowest): {}."
-        )
-        method_text_empty = (
-            "The feature importance was calculated using the Permutation Feature Importance method."
-        )
+        natural_language_text_empty = "The {} features which were most important for the predictions were (from highest to lowest): {}."
+        method_text_empty = "The feature importance was calculated using the Permutation Feature Importance method."
         sentence_text_empty = "'{}' ({:.2f})"
 
-        self.natural_language_text_empty = self.config.get("natural_language_text_empty", natural_language_text_empty)
+        self.natural_language_text_empty = self.config.get(
+            "natural_language_text_empty", natural_language_text_empty
+        )
         self.method_text_empty = self.config.get("method_text_empty", method_text_empty)
-        self.sentence_text_empty = self.config.get("sentence_text_empty", sentence_text_empty)
+        self.sentence_text_empty = self.config.get(
+            "sentence_text_empty", sentence_text_empty
+        )
 
         self.explanation_name = "permutation"
         self.logger = self.setup_logger(self.explanation_name)
-        
+
         self._setup()
-        
-    
+
     def _calculate_explanation(self, n_repeats=30):
         """
         conduct the Permutation Feature Importance and get the importance
@@ -111,9 +107,7 @@ class PermutationExplanation(ExplanationBase):
         """
         feature_values = []
         # sort by importance -> highst to lowest
-        for index in self.r.importances_mean.argsort()[::-1][
-            : self.number_of_features
-        ]:
+        for index in self.r.importances_mean.argsort()[::-1][: self.number_of_features]:
             feature_values.append(
                 (self.feature_names[index], self.r.importances_mean[index])
             )
@@ -131,9 +125,7 @@ class PermutationExplanation(ExplanationBase):
         values = self.r.importances[sorted_idx].T
         labels = [self.feature_names[i] for i in sorted_idx]
 
-        fig, ax = plt.subplots(
-            figsize=(6, max(2, int(0.5 * self.number_of_features)))
-        )
+        fig, ax = plt.subplots(figsize=(6, max(2, int(0.5 * self.number_of_features))))
         ax.boxplot(
             values[:, -self.number_of_features :],
             vert=False,
@@ -144,7 +136,7 @@ class PermutationExplanation(ExplanationBase):
         plt.grid()
         plt.show()
         return fig
-        
+
     def bar_plot(self):
         """
         Bar plot of the feature importance
@@ -155,9 +147,7 @@ class PermutationExplanation(ExplanationBase):
         """
         sorted_idx = self.r.importances_mean.argsort()
         values = self.r.importances[sorted_idx].T
-        labels = [self.feature_names[i] for i in sorted_idx][
-            -self.number_of_features :
-        ]
+        labels = [self.feature_names[i] for i in sorted_idx][-self.number_of_features :]
 
         width = np.median(values[:, -self.number_of_features :], axis=0)
         y = np.arange(self.number_of_features)
@@ -165,15 +155,17 @@ class PermutationExplanation(ExplanationBase):
         fig = plt.figure(figsize=(6, max(2, int(0.5 * self.number_of_features))))
         plt.barh(y=y, width=width, height=0.5)
         plt.yticks(y, labels)
-        plt.xlabel("Permutation Feature Importance")  # TODO: add the loss e.g. (loss = R2)
+        plt.xlabel(
+            "Permutation Feature Importance"
+        )  # TODO: add the loss e.g. (loss = R2)
         plt.tight_layout()
         plt.grid()
         plt.show()
         return fig
 
-    def plot(self, kind='bar'):
+    def plot(self, kind="bar"):
         """
-        
+
 
         Args:
             kind (TYPE, optional): DESCRIPTION. Defaults to 'bar'.
@@ -182,9 +174,9 @@ class PermutationExplanation(ExplanationBase):
             None.
 
         """
-        if kind == 'bar':
+        if kind == "bar":
             self.fig = self.bar_plot()
-        elif kind == 'box':
+        elif kind == "box":
             self.fig = self.box_plot()
         else:
             raise
@@ -200,16 +192,17 @@ class PermutationExplanation(ExplanationBase):
         """
         self._calculate_explanation()
         self.feature_values = self.get_feature_values()
-        
-        self.sentences = self.get_sentences(self.feature_values, self.sentence_text_empty)
-        self.natural_language_text = self.get_natural_language_text(
-   )
-        self.method_text = self.get_method_text()        
+
+        self.sentences = self.get_sentences(
+            self.feature_values, self.sentence_text_empty
+        )
+        self.natural_language_text = self.get_natural_language_text()
+        self.method_text = self.get_method_text()
         self.plot_name = self.get_plot_name()
-        
+
     def save(self, sample_name):
         """
-        
+
 
         Args:
             sample_name (TYPE): DESCRIPTION.
@@ -219,13 +212,13 @@ class PermutationExplanation(ExplanationBase):
 
         """
         self.save_csv(sample_name)
-                
+
         self.fig.savefig(
             os.path.join(self.path_plot, self.plot_name),
             bbox_inches="tight",
         )
 
-    def explain(self, sample_index, sample_name=None, separator='\n'):
+    def explain(self, sample_index, sample_name=None, separator="\n"):
         """
         main function to create the explanation of the given sample. The
         method_text, natural_language_text and the plots are create per sample.
@@ -238,9 +231,8 @@ class PermutationExplanation(ExplanationBase):
         """
         if not sample_name:
             sample_name = sample_index
-            
+
         self.get_prediction(sample_index)
         self.score_text = self.get_score_text()
-        self.explanation =  self.get_explanation(separator)
+        self.explanation = self.get_explanation(separator)
         return self.explanation
-        
