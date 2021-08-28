@@ -20,6 +20,14 @@ explainy.cli module
    :undoc-members:
    :show-inheritance:
 
+explainy.explainy module
+------------------------
+
+.. automodule:: explainy.explainy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
