@@ -1,4 +1,4 @@
-Welcome to explainy's documentation!
+Welcome to the explainy documentation!
 ======================================
 
 .. toctree::
@@ -12,6 +12,11 @@ Welcome to explainy's documentation!
    contributing
    authors
    history
+
+.. toctree::
+   :hidden:
+
+   Examples<examples>
 
 Indices and tables
 ==================
