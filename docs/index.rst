@@ -16,8 +16,6 @@ Welcome to the explainy documentation!
 .. toctree::
    :hidden:
 
-   Examples<examples>
-
 Indices and tables
 ==================
 * :ref:`genindex`
