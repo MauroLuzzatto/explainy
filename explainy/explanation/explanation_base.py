@@ -12,9 +12,9 @@ import warnings
 
 import pandas as pd
 
-from explainy.explanation.ExplanationMixin import ExplanationMixin
-from explainy.explanation.Logger import Logger
-from explainy.explanation.utils import create_folder
+from explainy.explanation.explanation_mixin import ExplanationMixin
+from explainy.Logger import Logger
+from explainy.utils import create_folder
 
 from abc import ABC, abstractmethod
 

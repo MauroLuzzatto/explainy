@@ -6,10 +6,11 @@ Created on Thu May 13 21:49:43 2021
 """
 import os
 
-from explainy.explanation.CategoryMapper import CategoryMapper
+from explainy.explanation.category_mapper import CategoryMapper
 
 
 class ExplanationMixin:
+    
     def map_category(self, feature_name, feature_value):
         """
 

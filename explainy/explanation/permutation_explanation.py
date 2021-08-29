@@ -19,7 +19,7 @@ import pandas as pd
 import sklearn
 from sklearn.inspection import permutation_importance
 
-from explainy.explanation.ExplanationBase import ExplanationBase
+from explainy.explanation.explanation_base import ExplanationBase
 
 
 class PermutationExplanation(ExplanationBase):
@@ -32,7 +32,7 @@ class PermutationExplanation(ExplanationBase):
         X: pd.DataFrame,
         y: np.array,
         model: sklearn.base.BaseEstimator,
-        number_of_features: int,
+        number_of_features: int = 4,
         config: Dict = None,
     ):
         super(PermutationExplanation, self).__init__(config)
@@ -70,10 +70,12 @@ class PermutationExplanation(ExplanationBase):
 
         self.explanation_name = "permutation"
         self.logger = self.setup_logger(self.explanation_name)
+        
+        # hyparameters
+        n_repeats = self.config.get("n_repeats", 30)
+        self._setup(n_repeats)
 
-        self._setup()
-
-    def _calculate_explanation(self, n_repeats=30):
+    def _calculate_importance(self, n_repeats=30):
         """
         conduct the Permutation Feature Importance and get the importance
 
@@ -133,7 +135,6 @@ class PermutationExplanation(ExplanationBase):
         )
         plt.xlabel("Permutation Feature Importance")
         plt.tight_layout()
-        plt.grid()
         plt.show()
         return fig
 
@@ -159,7 +160,6 @@ class PermutationExplanation(ExplanationBase):
             "Permutation Feature Importance"
         )  # TODO: add the loss e.g. (loss = R2)
         plt.tight_layout()
-        plt.grid()
         plt.show()
         return fig
 
@@ -200,23 +200,7 @@ class PermutationExplanation(ExplanationBase):
         self.method_text = self.get_method_text()
         self.plot_name = self.get_plot_name()
 
-    def save(self, sample_name):
-        """
-
-
-        Args:
-            sample_name (TYPE): DESCRIPTION.
-
-        Returns:
-            None.
-
-        """
-        self.save_csv(sample_name)
-
-        self.fig.savefig(
-            os.path.join(self.path_plot, self.plot_name),
-            bbox_inches="tight",
-        )
+   
 
     def explain(self, sample_index, sample_name=None, separator="\n"):
         """
