@@ -16,7 +16,8 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=7.0', 'scikit-learn>=0.24.1', 'pandas', 'matplotlib'] #read_requirements(os.path.join('requirements', 'requirements.txt'))
+# requirements = ['Click>=7.0', 'scikit-learn>=0.24.1', 'pandas', 'matplotlib'] #read_requirements(os.path.join('requirements', 'requirements.txt'))
+requirements = ['Click', 'scikit-learn', 'pandas', 'matplotlib'] #read_requirements(os.path.join('requirements', 'requirements.txt'))
 
 print(requirements)
 test_requirements = ['pytest>=3', ]
