@@ -4,34 +4,26 @@ explainy.explanation package
 Submodules
 ----------
 
-explainy.explanation.CategoryMapper module
-------------------------------------------
-
-.. automodule:: explainy.explanation.CategoryMapper
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-explainy.explanation.ExplanationBase module
--------------------------------------------
-
-.. automodule:: explainy.explanation.ExplanationBase
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-explainy.explanation.ExplanationMixin module
+explainy.explanation.category\_mapper module
 --------------------------------------------
 
-.. automodule:: explainy.explanation.ExplanationMixin
+.. automodule:: explainy.explanation.category_mapper
    :members:
    :undoc-members:
    :show-inheritance:
 
-explainy.explanation.Logger module
-----------------------------------
+explainy.explanation.explanation\_base module
+---------------------------------------------
 
-.. automodule:: explainy.explanation.Logger
+.. automodule:: explainy.explanation.explanation_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+explainy.explanation.explanation\_mixin module
+----------------------------------------------
+
+.. automodule:: explainy.explanation.explanation_mixin
    :members:
    :undoc-members:
    :show-inheritance:
@@ -40,14 +32,6 @@ explainy.explanation.permutation\_explanation module
 ----------------------------------------------------
 
 .. automodule:: explainy.explanation.permutation_explanation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-explainy.explanation.utils module
----------------------------------
-
-.. automodule:: explainy.explanation.utils
    :members:
    :undoc-members:
    :show-inheritance:

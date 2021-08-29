@@ -12,18 +12,18 @@ Subpackages
 Submodules
 ----------
 
-explainy.cli module
--------------------
+explainy.logger module
+----------------------
 
-.. automodule:: explainy.cli
+.. automodule:: explainy.logger
    :members:
    :undoc-members:
    :show-inheritance:
 
-explainy.explainy module
-------------------------
+explainy.utils module
+---------------------
 
-.. automodule:: explainy.explainy
+.. automodule:: explainy.utils
    :members:
    :undoc-members:
    :show-inheritance:
