@@ -13,7 +13,7 @@ import warnings
 import pandas as pd
 
 from explainy.explanation.explanation_mixin import ExplanationMixin
-from explainy.Logger import Logger
+from explainy.logger import Logger
 from explainy.utils import create_folder
 
 from abc import ABC, abstractmethod
@@ -79,7 +79,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         return logger.get_logger()
 
     @abstractmethod
-    def _calculate_explanation(self):
+    def _calculate_importance(self):
         raise NotImplementedError("Subclasses should implement this!")
 
     @abstractmethod

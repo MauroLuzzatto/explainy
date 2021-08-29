@@ -181,7 +181,7 @@ class PermutationExplanation(ExplanationBase):
         else:
             raise
 
-    def _setup(self):
+    def _setup(self, n_repeats):
         """
         Since the plots and values are calculate once per trained model,
         the feature importance computatoin is done at the beginning
@@ -190,7 +190,7 @@ class PermutationExplanation(ExplanationBase):
         Returns:
             None.
         """
-        self._calculate_explanation()
+        self._calculate_importance(n_repeats=n_repeats)
         self.feature_values = self.get_feature_values()
 
         self.sentences = self.get_sentences(
@@ -199,8 +199,6 @@ class PermutationExplanation(ExplanationBase):
         self.natural_language_text = self.get_natural_language_text()
         self.method_text = self.get_method_text()
         self.plot_name = self.get_plot_name()
-
-   
 
     def explain(self, sample_index, sample_name=None, separator="\n"):
         """
