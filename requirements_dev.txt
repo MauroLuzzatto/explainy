@@ -10,3 +10,4 @@ Click==7.0
 pytest==6.2.4
 ipykernel==5.3.4
 matplotlib
+pydata-sphinx-theme==0.6.3
