@@ -18,7 +18,7 @@ with open('HISTORY.rst') as history_file:
 
 # requirements = ['Click>=7.0', 'scikit-learn>=0.24.1', 'pandas', 'matplotlib'] #read_requirements(os.path.join('requirements', 'requirements.txt'))
 requirements = ['Click', 'scikit-learn', 'pandas', 'matplotlib'] 
-(?# docs_extras = read_requirements(r'requirements_dev.txt'))
+# docs_extras = read_requirements(r'requirements_dev.txt'))
 test_requirements = ['pytest>=3', ]
 
 setup(
