@@ -13,8 +13,7 @@ Welcome to the explainy documentation!
    authors
    history
 
-.. toctree::
-   :hidden:
+
 
 Indices and tables
 ==================

@@ -59,6 +59,8 @@ class PermutationExplanation(ExplanationBase):
         natural_language_text_empty = "The {} features which were most important for the predictions were (from highest to lowest): {}."
         method_text_empty = "The feature importance was calculated using the Permutation Feature Importance method."
         sentence_text_empty = "'{}' ({:.2f})"
+        
+        # def define_text_placeholder():
 
         self.natural_language_text_empty = self.config.get(
             "natural_language_text_empty", natural_language_text_empty
