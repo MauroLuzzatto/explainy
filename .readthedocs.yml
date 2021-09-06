@@ -4,6 +4,4 @@ python:
   version: "3.8"
   install:
     - requirements: requirements_dev.txt
-    - method: setuptools
-      path: .
-  system_packages: true
+    - requirements: requirements.txt
