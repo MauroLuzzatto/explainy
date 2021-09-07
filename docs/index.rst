@@ -11,8 +11,6 @@ Welcome to the explainy documentation!
    modules
    contributing
    authors
-   history
-
 
 
 Indices and tables
