@@ -1,6 +1,5 @@
 Click
-numba==0.54.0
-numpy==1.20.0
+numpy
 scikit-learn
 pandas
 matplotlib
