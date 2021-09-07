@@ -20,6 +20,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
+sys.path.extend(r'C:\Users\maurol\OneDrive\Dokumente\Python_Scripts\explainy\examples')    
 
 import explainy
 

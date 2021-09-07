@@ -13,5 +13,5 @@ You will find below an example Jupyter notebook containing an intro to the usage
 .. toctree::
    :maxdepth: 1
 
-   ../../examples/01-explainy-intro.ipynb
+   ../examples/01-explainy-intro.ipynb
 
