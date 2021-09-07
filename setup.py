@@ -13,9 +13,6 @@ def read_requirements(path):
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
-
 
 requirements = read_requirements(r'requirements.txt')
 # docs_extras = read_requirements(r'requirements_dev.txt'))
@@ -44,7 +41,7 @@ setup(
     install_requires=requirements,
     # extras_require={'docs': docs_extras},
     license="MIT license",
-    long_description=readme + '\n\n' + history,
+    long_description=readme,
     include_package_data=True,
     keywords='explainy',
     name='explainy',
