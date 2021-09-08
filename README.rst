@@ -6,8 +6,9 @@ explainy - model explanations for humans
 .. image:: https://img.shields.io/pypi/v/explainy.svg
         :target: https://pypi.python.org/pypi/explainy
 
-.. image:: https://img.shields.io/travis/MauroLuzzatto/explainy.svg
-        :target: https://app.travis-ci.com/github/MauroLuzzatto/explainy
+.. image:: https://app.travis-ci.com/MauroLuzzatto/explainy.svg?branch=main
+        :target: https://app.travis-ci.com/github/MauroLuzzatto/explainy?branch=master
+
 
 .. image:: https://readthedocs.org/projects/explainy/badge/?version=latest
         :target: https://explainy.readthedocs.io/en/latest/?version=latest
