@@ -2,4 +2,6 @@ Click
 numpy
 scikit-learn
 pandas
+mlxtend
 matplotlib
+graphviz
