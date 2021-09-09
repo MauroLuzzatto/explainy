@@ -1,3 +1,4 @@
+cryptography==3.4.6
 Click
 numpy
 scikit-learn
