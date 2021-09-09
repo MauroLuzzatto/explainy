@@ -37,15 +37,26 @@ Documentation
 https://explainy.readthedocs.io
 
 
+Usage
+------
+
+```python
+from explainy.explanations import PermutationExplanation
+
+explainer = PermutationExplanation(
+	X, y, model, number_of_features=10
+)
+
+for sample_index in range(10):
+    explanation = explainer.explain(sample_index=sample_index)
+    explainer.print_output()
+    explainer.plot()
+    explainer.save(sample_index)
+
+```
+
 Features
 --------
 
 * TODO
 
-Credits
--------
-
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
