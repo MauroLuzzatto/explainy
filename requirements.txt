@@ -1,5 +1,5 @@
 Click
-numpy
+numpy==1.21.2
 scikit-learn
 pandas
 mlxtend
