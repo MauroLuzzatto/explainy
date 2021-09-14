@@ -11,5 +11,5 @@ twine==3.3.0
 pytest==6.2.4
 pydata-sphinx-theme
 recommonmark==0.7.1
-m2r2==0.3.0
+m2r2==0.3.1
 sphinx-markdown-tables
