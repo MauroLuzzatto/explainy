@@ -7,7 +7,7 @@ flake8==3.7.8
 tox==3.14.0
 coverage
 Sphinx==3.2.1
-twine==3.3.0
+twine==3.4.2
 pytest==6.2.4
 pydata-sphinx-theme
 recommonmark==0.7.1
