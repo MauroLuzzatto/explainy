@@ -3,5 +3,5 @@ numpy
 scikit-learn
 pandas
 mlxtend
-matplotlib
+matplotlib==3.4.3
 graphviz
