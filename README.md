@@ -30,10 +30,10 @@ pip install explainy
 
 ```python
 import pandas as pd
+
 from sklearn.datasets import load_diabetes
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
-from explainy.explanation.permutation_explanation import PermutationExplanation
 
 diabetes = load_diabetes()
 X_train, X_test, y_train, y_test = train_test_split(
@@ -47,6 +47,8 @@ model = RandomForestRegressor(random_state=0).fit(X_train, y_train)
 
 
 ```python
+from explainy.explanation.permutation_explanation import PermutationExplanation
+
 number_of_features = 4
 sample_index = 1
 
@@ -60,7 +62,9 @@ explanation = explainer.explain(
 print(explanation)
 ```
 > The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8.
+
 > The feature importance was calculated using the Permutation Feature Importance method.
+
 > The four features which were most important for the predictions were (from highest to lowest): 'bmi' (0.15), 's5' (0.12), 'bp' (0.03), and 'age' (0.02).
 
 ```python
