@@ -13,5 +13,5 @@ pydata-sphinx-theme
 recommonmark==0.7.1
 m2r2==0.3.0
 sphinx-markdown-tables
-sphinxemoji
+sphinxemoji==0.1.9
 nbsphinx
