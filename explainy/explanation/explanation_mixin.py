@@ -10,7 +10,6 @@ from explainy.explanation.category_mapper import CategoryMapper
 
 
 class ExplanationMixin:
-    
     def map_category(self, feature_name, feature_value):
         """
 

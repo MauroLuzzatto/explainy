@@ -80,12 +80,12 @@ explainer.save(sample_index)
 
 ## Model Explanations
 
-Method				|Type | Explanations | Classification | Regression | 
---- 				| --- | --- | :---: | :---: | 
-[Permutation Feature Importance](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.permutation_explanation)	| Non-contrastive | global |  :star: | :star:|
-Shapley Values		| Non-contrastive | local |   :star: | :star:|
-Global Surrogate Model|Contrastive | global | :star: | :star:|
-Counterfactual Example| Contrastive | local |:star: | :star:|
+| Method				|Type | Explanations | Classification | Regression | 
+| --- 				| --- | --- | :---: | :---: | 
+|[Permutation Feature Importance](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.permutation_explanation)	| Non-contrastive | global |  :star: | :star:|
+| Shapley Values		| Non-contrastive | local |   :star: | :star:|
+|Global Surrogate Model|Contrastive | global | :star: | :star:|
+|Counterfactual Example| Contrastive | local |:star: | :star:|
 
 
 Description

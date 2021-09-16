@@ -49,14 +49,20 @@ class ExplanationBase(ABC, ExplanationMixin):
         self.set_paths()
         self.get_number_to_string_dict()
 
-        score_text_empty = "The {} used {} features to produce the predictions. The prediction of this sample was {:.1f}."
-        self.score_text_empty = self.config.get("score_text_empty", score_text_empty)
+        score_text_empty = (
+            "The {} used {} features to produce the predictions. The prediction"
+            " of this sample was {:.1f}."
+        )
+        self.score_text_empty = self.config.get(
+            "score_text_empty", score_text_empty
+        )
 
     def get_number_of_features(self, number_of_features):
 
         if number_of_features > self.X.shape[1]:
             warnings.warn(
-                f'The "number_of_features" is larger than the number of dataset features. The value is set to {self.X.shape[1]}'
+                'The "number_of_features" is larger than the number of dataset'
+                f" features. The value is set to {self.X.shape[1]}"
             )
 
         return min(number_of_features, self.X.shape[1])
@@ -69,7 +75,9 @@ class ExplanationBase(ABC, ExplanationMixin):
             None.
 
         """
-        self.path = os.path.join(os.path.dirname(os.getcwd()), "reports", self.folder)
+        self.path = os.path.join(
+            os.path.dirname(os.getcwd()), "reports", self.folder
+        )
         self.path_plot = create_folder(os.path.join(self.path, "plot"))
         self.path_result = create_folder(os.path.join(self.path, "results"))
         self.path_log = create_folder(os.path.join(self.path, "logs"))
@@ -112,7 +120,9 @@ class ExplanationBase(ABC, ExplanationMixin):
         Returns:
             None
         """
-        return self.method_text_empty.format(self.num_to_str[self.number_of_features])
+        return self.method_text_empty.format(
+            self.num_to_str[self.number_of_features]
+        )
 
     def get_sentences(self, feature_values: list, sentence_empty: str) -> None:
         """
@@ -155,7 +165,9 @@ class ExplanationBase(ABC, ExplanationMixin):
         """
         number_of_dataset_features = self.X.shape[1]
         return self.score_text_empty.format(
-            self.model.__class__.__name__, number_of_dataset_features, self.prediction
+            self.model.__class__.__name__,
+            number_of_dataset_features,
+            self.prediction,
         )
 
     def get_model_text(self):
@@ -166,7 +178,9 @@ class ExplanationBase(ABC, ExplanationMixin):
         if sample:
             plot_name = f"{self.explanation_name}_sample_{sample}_sparse_{self.number_of_features}.png"
         else:
-            plot_name = f"{self.explanation_name}_sparse_{self.number_of_features}.png"
+            plot_name = (
+                f"{self.explanation_name}_sparse_{self.number_of_features}.png"
+            )
         return plot_name
 
     def get_explanation(self, separator="\n"):

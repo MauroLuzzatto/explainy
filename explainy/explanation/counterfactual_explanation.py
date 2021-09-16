@@ -1,13 +1,6 @@
-# -*- coding: utf-8 -*-
 """
-Created on Tue Nov 24 21:41:40 2020
-
-@author: mauro
-
-# TODO: 
-    - test if the implemantation will work with real samples
-    - is the feature importance calculation correct, do we only care about, if the value get larger?
-
+Counterfactual Explanation
+-------------------------------
 """
 import os
 from typing import Dict
@@ -36,13 +29,11 @@ class CounterfactualExplanation(ExplanationBase):
         X: pd.DataFrame,
         y: np.array,
         model: sklearn.base.BaseEstimator,
-        number_of_features:int = 4,
+        number_of_features: int = 4,
         config: Dict = None,
-        y_desired: float = None
+        y_desired: float = None,
     ) -> None:
-        super(CounterfactualExplanation, self).__init__(
-           config
-        )
+        super(CounterfactualExplanation, self).__init__(config)
         """
         Init the specific explanation class, the base class is "Explanation"
 
@@ -60,7 +51,7 @@ class CounterfactualExplanation(ExplanationBase):
         """
         self.X = X
         self.y = y
-        
+
         if y_desired is None:
             y_desired = y.values.max()
 
@@ -76,20 +67,22 @@ class CounterfactualExplanation(ExplanationBase):
         method_text_empty = (
             "The feature importance is shown using a counterfactual example."
         )
-        
+
         sentence_text_empty = "the '{}' was {}"
 
-        
         self.natural_language_text_empty = self.config.get(
             "natural_language_text_empty", natural_language_text_empty
         )
-        self.method_text_empty = self.config.get("method_text_empty", method_text_empty)
-        self.sentence_text_empty = self.config.get("sentence_text_empty", sentence_text_empty)
-
+        self.method_text_empty = self.config.get(
+            "method_text_empty", method_text_empty
+        )
+        self.sentence_text_empty = self.config.get(
+            "sentence_text_empty", sentence_text_empty
+        )
 
         self.explanation_name = "counterfactual"
         self.logger = self.setup_logger(self.explanation_name)
-        
+
         self.delta = self.config.get("delta", 1.0)
 
     def _calculate_importance(self, sample=0, delta=1.0):
@@ -128,20 +121,20 @@ class CounterfactualExplanation(ExplanationBase):
 
             if np.abs(self.y_counter_factual - self.y_desired) < delta:
                 break
-            
+
             if count > 100:
                 raise
-                
-            count+=1
 
-        self.logger.info('\nFinal Lambda:')
-        self.log_counterfactual(lammbda)        
+            count += 1
+
+        self.logger.info("\nFinal Lambda:")
+        self.log_counterfactual(lammbda)
         self.log_output(sample, x_ref, x_counter_factual)
         return x_ref, x_counter_factual
-    
+
     def log_counterfactual(self, lammbda):
         """
-        
+
 
         Args:
             lammbda (TYPE): DESCRIPTION.
@@ -150,7 +143,7 @@ class CounterfactualExplanation(ExplanationBase):
             None.
 
         """
-        
+
         self.logger.info(f"lambda: {lammbda}")
         self.logger.info(
             f"diff: {np.abs(self.y_counter_factual - self.y_desired)}"
@@ -161,10 +154,9 @@ class CounterfactualExplanation(ExplanationBase):
         )
         self.logger.info("---" * 15)
 
-        
     def log_output(self, sample, x_ref, x_counter_factual):
         """
-        
+
 
         Args:
             sample (TYPE): DESCRIPTION.
@@ -380,19 +372,20 @@ class CounterfactualExplanation(ExplanationBase):
         points[1, :] += 10
 
         # get new bounding box in inches
-        self.nbbox = matplotlib.transforms.Bbox.from_extents(points / plt.gcf().dpi)
+        self.nbbox = matplotlib.transforms.Bbox.from_extents(
+            points / plt.gcf().dpi
+        )
         plt.show(block=True)
         return fig
-    
-    def save(self, sample_index, sample_name):
-        
-        self.save_csv(sample_name)
-        
-        self.fig.savefig(
-                os.path.join(self.path_plot, self.plot_name),
-                bbox_inches=self.nbbox,
-            )
 
+    def save(self, sample_index, sample_name):
+
+        self.save_csv(sample_name)
+
+        self.fig.savefig(
+            os.path.join(self.path_plot, self.plot_name),
+            bbox_inches=self.nbbox,
+        )
 
     def get_method_text(self):
         """
@@ -429,7 +422,7 @@ class CounterfactualExplanation(ExplanationBase):
                 )
                 mode = "one-hot feature"
             else:
-                sentence_filled =  self.sentence_text_empty.format(
+                sentence_filled = self.sentence_text_empty.format(
                     feature_name, f"'{feature_value}'"
                 )
                 mode = "standard feature"
@@ -465,23 +458,23 @@ class CounterfactualExplanation(ExplanationBase):
             sentence_filled = sentence.format(column, f"not '{value}'")
 
         return sentence_filled
-    
-    
+
     def _setup(self, sample_index, sample_name):
-        
-        
+
         self.get_prediction(sample_index)
 
-        x_ref, x_counter_factual = self._calculate_importance(sample_index, delta=self.delta)
+        x_ref, x_counter_factual = self._calculate_importance(
+            sample_index, delta=self.delta
+        )
         self.get_feature_importance(x_ref, x_counter_factual)
         self.get_feature_values(x_ref, x_counter_factual)
         self.natural_language_text = self.get_natural_language_text()
         self.method_text = self.get_method_text()
-        
+
         # todo: move to save?
         self.plot_name = self.get_plot_name(sample_name)
 
-    def explain(self, sample_index, sample_name=None, separator='\n'):
+    def explain(self, sample_index, sample_name=None, separator="\n"):
         """
         main function to create the explanation of the given sample. The
         method_text, natural_language_text and the plots are create per sample.
@@ -494,10 +487,9 @@ class CounterfactualExplanation(ExplanationBase):
         """
         if not sample_name:
             sample_name = sample_index
-            
+
         self._setup(sample_index, sample_name)
 
         self.score_text = self.get_score_text()
-        self.explanation =  self.get_explanation(separator)
+        self.explanation = self.get_explanation(separator)
         return self.explanation
-

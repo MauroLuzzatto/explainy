@@ -13,16 +13,16 @@ class SurrogatePlot(object):
     """
     This class create the graphviz based surrogate plot using the trained sklearn DecisionTree
     """
-    
-    def __init__(self, precision=2, impurity=False, rounded=True, class_names=True):
+
+    def __init__(
+        self, precision=2, impurity=False, rounded=True, class_names=True
+    ):
         self.precision = precision
         self.impurity = impurity
         self.rounded = rounded
         self.class_names = class_names
 
-    def get_plot(
-        self, model, feature_names
-    ):
+    def get_plot(self, model, feature_names):
         """
         Update the dot file as desired, simplify the text in the boxes
 
@@ -33,7 +33,7 @@ class SurrogatePlot(object):
         Returns:
             f (TYPE): DESCRIPTION.
 
-        """        
+        """
         f = sklearn.tree.export_graphviz(
             model,
             feature_names=feature_names,
@@ -60,15 +60,15 @@ class SurrogatePlot(object):
         for value in values:
 
             if " - " in value:
-                
+
                 text = value.split("<=")[0].strip()
                 feature_name = text.split(" - ")[0]
                 feature_value = text.split(" - ")[1]
 
-                node = value.split('\\n')
+                node = value.split("\\n")
                 new_text = f"{feature_name} is not {feature_value}"
                 node[0] = new_text
-                f = f.replace(value, '\n'.join(node))
+                f = f.replace(value, "\n".join(node))
 
         return f
 

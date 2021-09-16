@@ -15,6 +15,7 @@ from sklearn.model_selection import train_test_split
 
 from explainy.explanation.permutation_explanation import PermutationExplanation
 
+
 def get_regression_model():
 
     diabetes = load_diabetes()
@@ -31,13 +32,15 @@ def get_regression_model():
 
 
 def test_permuation_explanation_4_features():
-    
+
     model, X_test, y_test = get_regression_model()
 
     number_of_features = 4
     sample_index = 1
 
-    explainer = PermutationExplanation(X_test, y_test, model, number_of_features)
+    explainer = PermutationExplanation(
+        X_test, y_test, model, number_of_features
+    )
 
     explanation = explainer.explain(sample_index, separator=None)
     score_text, method_text, natural_language_text = explanation
@@ -59,12 +62,13 @@ def test_permuation_explanation_4_features():
 def test_permuation_explanation_8_features():
 
     model, X_test, y_test = get_regression_model()
-    
 
     number_of_features = 8
     sample_index = 1
 
-    explainer = PermutationExplanation(X_test, y_test, model, number_of_features)
+    explainer = PermutationExplanation(
+        X_test, y_test, model, number_of_features
+    )
 
     explanation = explainer.explain(sample_index, separator=None)
     score_text, method_text, natural_language_text = explanation

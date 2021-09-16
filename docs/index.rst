@@ -7,10 +7,14 @@ Welcome to the explainy documentation!
 
    readme
    installation
-   usage
    modules
    contributing
    authors
+
+.. toctree::
+   :hidden:
+
+   examples
 
 
 Indices and tables

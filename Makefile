@@ -51,6 +51,11 @@ clean-test: ## remove test and coverage artifacts
 black:
 	black explainy tests
 
+black_string:
+	black explainy -l 80 --experimental-string-processing
+	black tests -l 80 --experimental-string-processing
+
+
 lint: ## check style with flake8
 	flake8 explainy tests
 

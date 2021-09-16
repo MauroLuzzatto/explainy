@@ -54,25 +54,35 @@ class PermutationExplanation(ExplanationBase):
         self.y = y
         self.model = model
         self.feature_names = list(self.X)
-        self.number_of_features = self.get_number_of_features(number_of_features)
+        self.number_of_features = self.get_number_of_features(
+            number_of_features
+        )
 
-        natural_language_text_empty = "The {} features which were most important for the predictions were (from highest to lowest): {}."
-        method_text_empty = "The feature importance was calculated using the Permutation Feature Importance method."
+        natural_language_text_empty = (
+            "The {} features which were most important for the predictions were"
+            " (from highest to lowest): {}."
+        )
+        method_text_empty = (
+            "The feature importance was calculated using the Permutation"
+            " Feature Importance method."
+        )
         sentence_text_empty = "'{}' ({:.2f})"
-        
+
         # def define_text_placeholder():
 
         self.natural_language_text_empty = self.config.get(
             "natural_language_text_empty", natural_language_text_empty
         )
-        self.method_text_empty = self.config.get("method_text_empty", method_text_empty)
+        self.method_text_empty = self.config.get(
+            "method_text_empty", method_text_empty
+        )
         self.sentence_text_empty = self.config.get(
             "sentence_text_empty", sentence_text_empty
         )
 
         self.explanation_name = "permutation"
         self.logger = self.setup_logger(self.explanation_name)
-        
+
         # hyparameters
         n_repeats = self.config.get("n_repeats", 30)
         self._setup(n_repeats)
@@ -111,7 +121,9 @@ class PermutationExplanation(ExplanationBase):
         """
         feature_values = []
         # sort by importance -> highst to lowest
-        for index in self.r.importances_mean.argsort()[::-1][: self.number_of_features]:
+        for index in self.r.importances_mean.argsort()[::-1][
+            : self.number_of_features
+        ]:
             feature_values.append(
                 (self.feature_names[index], self.r.importances_mean[index])
             )
@@ -129,7 +141,9 @@ class PermutationExplanation(ExplanationBase):
         values = self.r.importances[sorted_idx].T
         labels = [self.feature_names[i] for i in sorted_idx]
 
-        fig, ax = plt.subplots(figsize=(6, max(2, int(0.5 * self.number_of_features))))
+        fig, ax = plt.subplots(
+            figsize=(6, max(2, int(0.5 * self.number_of_features)))
+        )
         ax.boxplot(
             values[:, -self.number_of_features :],
             vert=False,
@@ -150,12 +164,16 @@ class PermutationExplanation(ExplanationBase):
         """
         sorted_idx = self.r.importances_mean.argsort()
         values = self.r.importances[sorted_idx].T
-        labels = [self.feature_names[i] for i in sorted_idx][-self.number_of_features :]
+        labels = [self.feature_names[i] for i in sorted_idx][
+            -self.number_of_features :
+        ]
 
         width = np.median(values[:, -self.number_of_features :], axis=0)
         y = np.arange(self.number_of_features)
 
-        fig = plt.figure(figsize=(6, max(2, int(0.5 * self.number_of_features))))
+        fig = plt.figure(
+            figsize=(6, max(2, int(0.5 * self.number_of_features)))
+        )
         plt.barh(y=y, width=width, height=0.5)
         plt.yticks(y, labels)
         plt.xlabel(

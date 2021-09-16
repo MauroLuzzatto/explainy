@@ -3,6 +3,8 @@ python:
   - 3.8
   - 3.7
   - 3.6
+before_install:
+  - python -m pip install --upgrade virtualenv
 install: 
   - pip install -U pip wheel
   - pip install -U tox-travis

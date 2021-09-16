@@ -15,6 +15,7 @@ from sklearn.model_selection import train_test_split
 
 from explainy.explanation.permutation_explanation import PermutationExplanation
 
+
 def get_classification_model():
 
     iris = load_iris()
@@ -36,7 +37,9 @@ def test_permuation_explanation_2_features():
     number_of_features = 2
     sample_index = 1
 
-    explainer = PermutationExplanation(X_test, y_test, model, number_of_features)
+    explainer = PermutationExplanation(
+        X_test, y_test, model, number_of_features
+    )
 
     explanation = explainer.explain(sample_index, separator=None)
 
@@ -83,7 +86,6 @@ def test_permuation_explanation_2_features():
 
 
 if __name__ == "__main__":
-
 
     test_permuation_explanation_2_features()
     # test_permuation_explanation_4_features()
