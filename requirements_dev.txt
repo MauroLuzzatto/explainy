@@ -14,4 +14,4 @@ recommonmark==0.7.1
 m2r2==0.3.0
 sphinx-markdown-tables
 sphinxemoji
-nbsphinx
+nbsphinx==0.8.7
