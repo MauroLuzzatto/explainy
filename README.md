@@ -1,7 +1,7 @@
 
 
 <!-- <a href="https://explosion.ai"><img src="https://explosion.ai/assets/img/logo.svg" width="125" height="125" align="right" /></a> -->
-<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="120" height="120" align="right" /></a>
+
 # explainy - black-box model explanations for humans
 
 
@@ -11,7 +11,7 @@
 [![Supported versions](https://img.shields.io/pypi/pyversions/explainy.svg)](https://pypi.org/project/explainy)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/ambv/black)
 
-
+<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="120" height="120" align="right" /></a>
 
 explainy is a library for generating explanations for machine learning models in Python. It uses methods from **Machine Learning Explainability** and provides a standardized API to create feature importance explanations for samples. The explanations are generated in the form of plots and text.
 
