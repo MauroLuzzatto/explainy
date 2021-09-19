@@ -10,9 +10,10 @@ def read_requirements(path):
     return list(Path(path).read_text().splitlines())
 
 
-with open('README.rst') as readme_file:
+with open('README.md') as readme_file:
     readme = readme_file.read()
 
+print(readme)
 
 requirements = read_requirements(r'requirements.txt')
 # docs_extras = read_requirements(r'requirements_dev.txt'))
@@ -41,7 +42,7 @@ setup(
     install_requires=requirements,
     # extras_require={'docs': docs_extras},
     license="MIT license",
-    long_description=readme,
+    long_description=f'"""{readme}"""',
     include_package_data=True,
     keywords='explainy',
     name='explainy',
