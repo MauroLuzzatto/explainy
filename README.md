@@ -1,7 +1,7 @@
 
 
 <!-- <a href="https://explosion.ai"><img src="https://explosion.ai/assets/img/logo.svg" width="125" height="125" align="right" /></a> -->
-<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="150" height="150" align="right" /></a>
+<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="120" height="120" align="right" /></a>
 # explainy - black-box model explanations for humans
 
 
