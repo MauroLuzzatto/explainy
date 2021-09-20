@@ -8,6 +8,7 @@
 [![docs](https://readthedocs.org/projects/explainy/badge/?version=latest)](https://explainy.readthedocs.io/en/latest/?version=latest)
 [![Supported versions](https://img.shields.io/pypi/pyversions/explainy.svg)](https://pypi.org/project/explainy)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/ambv/black)
+[![Downloads](https://pepy.tech/badge/explainy)](https://pepy.tech/project/explainy)
 
 
 
@@ -27,6 +28,8 @@ pip install explainy
 ```
 
 ## Usage
+
+Create and train a `sklearn` model:
 ```python
 import pandas as pd
 
@@ -44,6 +47,7 @@ y_test = pd.DataFrame(y_test)
 model = RandomForestRegressor(random_state=0).fit(X_train, y_train)
 ```
 
+Pass the trained model and the - to be explained - samples into a `PermuationExplaination` (or any other explanation) object. Defined the number of features used in the explanation as well as the index of the sample that should be explained.
 
 ```python
 from explainy.explanation.permutation_explanation import PermutationExplanation
@@ -58,6 +62,10 @@ explainer = PermutationExplanation(
 explanation = explainer.explain(
     sample_index, separator='\n'
 )
+```
+Print out the explanation of the sample in scope:
+
+```python
 print(explanation)
 ```
 > The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8.
@@ -65,6 +73,8 @@ print(explanation)
 > The feature importance was calculated using the Permutation Feature Importance method.
 
 > The four features which were most important for the predictions were (from highest to lowest): 'bmi' (0.15), 's5' (0.12), 'bp' (0.03), and 'age' (0.02).
+
+Plot the feature importance of that sample:
 
 ```python
 explainer.plot()
@@ -97,7 +107,7 @@ Description
 
 TODO
 
-
+<!-- 
 
 ## Explanations
 
@@ -139,7 +149,7 @@ A global surrogate model is an interpretable model that is trained to approximat
 - contrastive
 
 ![Global Surrogate Model](docs/_static/surrogate.png)
-
+ -->
 
 ## Source
 
