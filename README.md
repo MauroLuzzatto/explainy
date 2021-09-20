@@ -29,7 +29,7 @@ pip install explainy
 
 ## Usage
 
-Create and train a `sklearn` model:
+Initialize and train a `sklearn` model:
 ```python
 import pandas as pd
 
@@ -47,7 +47,7 @@ y_test = pd.DataFrame(y_test)
 model = RandomForestRegressor(random_state=0).fit(X_train, y_train)
 ```
 
-Pass the trained model and the - to be explained - samples into a `PermuationExplaination` (or any other explanation) object. Defined the number of features used in the explanation as well as the index of the sample that should be explained.
+Pass the trained model and the - to be explained - samples into a `PermuationExplanation` (or any other explanation) object. Defined the number of features used in the explanation as well as the index of the sample that should be explained.
 
 ```python
 from explainy.explanation.permutation_explanation import PermutationExplanation
