@@ -12,9 +12,9 @@
 
 
 
-explainy is a library for generating explanations for machine learning models in Python. It uses methods from **Machine Learning Explainability** and provides a standardized API to create feature importance explanations for samples. The explanations are generated in the form of plots and text.
+explainy is a library for generating machine learning models explanations in Python. It uses methods from **Machine Learning Explainability** and provides a standardized API to create feature importance explanations for samples. The explanations are generated in the form of plots and text.
 
-explainy comes with four different algorithms to create either global or local and contrastive or non-contrastive machine learning model explanations.
+explainy comes with four different algorithms to create either global or local and contrastive or non-contrastive model explanations.
 
 
 ## Documentation
@@ -47,7 +47,9 @@ y_test = pd.DataFrame(y_test)
 model = RandomForestRegressor(random_state=0).fit(X_train, y_train)
 ```
 
-Pass the trained model and the - to be explained - samples into a `PermuationExplanation` (or any other explanation) object. Defined the number of features used in the explanation as well as the index of the sample that should be explained.
+Pass the trained model and the to be explained dataset into a `PermutationExplanation` (or any other explanation) object. 
+
+Define the number of features used in the explanation and the index of the sample that should be explained.
 
 ```python
 from explainy.explanation.permutation_explanation import PermutationExplanation
@@ -63,7 +65,7 @@ explanation = explainer.explain(
     sample_index, separator='\n'
 )
 ```
-Print out the explanation of the sample in scope:
+Print the explanation for the sample. In case of a local explanation every sample as a different explanation.
 
 ```python
 print(explanation)
@@ -74,15 +76,24 @@ print(explanation)
 
 > The four features which were most important for the predictions were (from highest to lowest): 'bmi' (0.15), 's5' (0.12), 'bp' (0.03), and 'age' (0.02).
 
-Plot the feature importance of that sample:
+Plot the feature importance of that sample.
 
 ```python
 explainer.plot()
 ```
 ![Permutation Feature Importance](static/permutation_importance.png)
+
+If your prefer, you can also create another type of plot, as for example a boxplot.
+```python
+explainer.plot(kind='box')
+```
+![Permutation Feature Importance BoxPlot](static/permutation_importance_box.png)
+
+<!-- Finally the result can be saved
+
 ```python
 explainer.save(sample_index)
-```
+``` -->
 
 
 ## Model Explanations

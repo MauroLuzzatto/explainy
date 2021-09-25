@@ -1,13 +1,24 @@
 """
-Created on Tue Nov 24 21:41:40 2020
-
-@author: mauro
+Permutation feature importance
+------------------------------
+Permutation feature importance measures the increase in the prediction error of the model 
+after we permuted the feature's values, which breaks the relationship between 
+the feature and the true outcome [1].
 
 Permutation importance does not reflect to the intrinsic predictive value of 
-a feature by itself but how important this feature is for a particular model.
+a feature by itself but how important this feature is for a particular model [2].
 
-Source:
-https://scikit-learn.org/stable/modules/permutation_importance.html
+Characteristics
+===============
+- global
+- non-contrastive
+
+Source
+======
+[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
+https://christophm.github.io/interpretable-ml-book/
+
+[2] https://scikit-learn.org/stable/modules/permutation_importance.html
 
 """
 import os
@@ -36,9 +47,10 @@ class PermutationExplanation(ExplanationBase):
         config: Dict = None,
     ):
         super(PermutationExplanation, self).__init__(config)
-        """
-        Init the specific explanation class, the base class is "Explanation"
-
+        """        
+        This implementation is a thin wrapper around `sklearn.inspection.permutation_importance
+        <https://scikit-learn.org/stable/modules/permutation_importance.html>`_
+        
         Args:
             X (df): (Test) samples and features to calculate the importance for (sample, features)
             y (np.array): (Test) target values of the samples (samples, 1)
@@ -89,7 +101,7 @@ class PermutationExplanation(ExplanationBase):
 
     def _calculate_importance(self, n_repeats=30):
         """
-        conduct the Permutation Feature Importance and get the importance
+        Calculate the feature importance using the Permuation Feature Importance
 
          Args:
             n_repeats (int, optional): sets the number of times a feature
@@ -127,11 +139,12 @@ class PermutationExplanation(ExplanationBase):
             feature_values.append(
                 (self.feature_names[index], self.r.importances_mean[index])
             )
+
         return feature_values
 
     def box_plot(self):
         """
-        plot the sorted permutation feature importance using a boxplot
+        Plot the sorted permutation feature importance using a boxplot
 
         Returns:
             None.
@@ -156,19 +169,23 @@ class PermutationExplanation(ExplanationBase):
 
     def bar_plot(self):
         """
-        Bar plot of the feature importance
+        Plot the sorted permutation feature importance using a barplot
 
         Returns:
             None.
 
         """
         sorted_idx = self.r.importances_mean.argsort()
-        values = self.r.importances[sorted_idx].T
+        # values = self.r.importances[sorted_idx].T
         labels = [self.feature_names[i] for i in sorted_idx][
             -self.number_of_features :
         ]
 
-        width = np.median(values[:, -self.number_of_features :], axis=0)
+        # width = np.mean(values[:, -self.number_of_features :], axis=0)
+        width = [self.r.importances_mean[i] for i in sorted_idx][
+            -self.number_of_features :
+        ]
+
         y = np.arange(self.number_of_features)
 
         fig = plt.figure(
@@ -185,7 +202,7 @@ class PermutationExplanation(ExplanationBase):
 
     def plot(self, kind="bar"):
         """
-
+        Plot method that calls different kinds of plot types
 
         Args:
             kind (TYPE, optional): DESCRIPTION. Defaults to 'bar'.

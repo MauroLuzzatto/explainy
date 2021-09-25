@@ -1,5 +1,4 @@
 Click
-numpy
 scikit-learn
 pandas
 mlxtend
