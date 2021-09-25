@@ -1,6 +1,6 @@
 Click
 numpy
-scikit-learn
+scikit-learn==1.0
 pandas
 mlxtend
 matplotlib
