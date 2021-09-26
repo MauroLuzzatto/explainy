@@ -7,27 +7,8 @@ Created on Mon Aug 16 21:58:56 2021
 
 import pytest
 
-import pandas as pd
-
-from sklearn.datasets import load_iris
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-
 from explainy.explanation.permutation_explanation import PermutationExplanation
-
-
-def get_classification_model():
-
-    iris = load_iris()
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        iris.data, iris.target, random_state=0
-    )
-    X_test = pd.DataFrame(X_test, columns=iris.feature_names)
-    y_test = pd.DataFrame(y_test)
-
-    model = RandomForestClassifier(random_state=0).fit(X_train, y_train)
-    return model, X_test, y_test
+from .utils import get_classification_model
 
 
 def test_permuation_explanation_2_features():
@@ -59,33 +40,35 @@ def test_permuation_explanation_2_features():
     )
 
 
-# def test_permuation_explanation_4_features():
+def test_permuation_explanation_4_features():
 
-#     model, X_test, y_test = get_classification_model()
+    model, X_test, y_test = get_classification_model()
 
-#     number_of_features = 4
-#     sample_index = 5
+    number_of_features = 4
+    sample_index = 5
 
-#     explainer = PermutationExplanation(X_test, y_test, model, number_of_features)
+    explainer = PermutationExplanation(
+        X_test, y_test, model, number_of_features
+    )
 
-#     explanation = explainer.explain(sample_index, separator=None)
-#     score_text, method_text, natural_language_text = explanation
+    explanation = explainer.explain(sample_index, separator=None)
+    score_text, method_text, natural_language_text = explanation
 
-#     assert (
-#         score_text
-#         == "The RandomForestClassifier used 4 features to produce the predictions. The prediction of this sample was 1.0."
-#     )
-#     assert (
-#         method_text
-#         == "The feature importance was calculated using the Permutation Feature Importance method."
-#     )
-#     assert (
-#         natural_language_text
-#         == "The four features which were most important for the predictions were (from highest to lowest): 'petal length (cm)' (0.16), 'petal width (cm)' (0.16), 'sepal width (cm)' (0.00), and 'sepal length (cm)' (0.00)."
-#     )
+    assert (
+        score_text
+        == "The RandomForestClassifier used 4 features to produce the predictions. The prediction of this sample was 2.0."
+    )
+    assert (
+        method_text
+        == "The feature importance was calculated using the Permutation Feature Importance method."
+    )
+    assert (
+        natural_language_text
+        == "The four features which were most important for the predictions were (from highest to lowest): 'petal length (cm)' (0.16), 'petal width (cm)' (0.16), 'sepal width (cm)' (0.00), and 'sepal length (cm)' (0.00)."
+    )
 
 
 if __name__ == "__main__":
 
     test_permuation_explanation_2_features()
-    # test_permuation_explanation_4_features()
+    test_permuation_explanation_4_features()

@@ -1,7 +1,19 @@
 """
-Created on Tue Nov 24 21:41:40 2020
+Global Surrogate Model
+----------------------
+A global surrogate model is an interpretable model that is trained to approximate the 
+predictions of a black box model. We can draw conclusions about the black box model 
+by interpreting the surrogate model [1].
 
-@author: mauro
+Characteristics
+===============
+- global
+- contrastive
+
+Source
+======
+[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
+https://christophm.github.io/interpretable-ml-book/
 """
 import os
 from typing import Dict
@@ -66,7 +78,7 @@ class SurrogateModelExplanation(ExplanationBase):
 
         natural_language_text_empty = (
             "The features which were most important for the predictions were as"
-            " follows: {}."
+            " follows: {}"
         )
         method_text_empty = (
             "The feature importance was calculated using a {} surrogate model."
@@ -87,7 +99,7 @@ class SurrogateModelExplanation(ExplanationBase):
         self.explanation_name = "surrogate"
         self.logger = self.setup_logger(self.explanation_name)
 
-        self.setup()
+        self._setup()
 
     def _calculate_importance(self, max_leaf_nodes=100):
         """
@@ -155,6 +167,9 @@ class SurrogateModelExplanation(ExplanationBase):
 
         """
         self.surrogate_model = estimator(**kwargs)
+
+    def get_feature_values():
+        pass
 
     def plot(self, index_sample=None, **kwargs):
 
@@ -229,7 +244,7 @@ class SurrogateModelExplanation(ExplanationBase):
         sentences = surrogateText.get_text()
         return self.natural_language_text_empty.format(sentences)
 
-    def setup(self):
+    def _setup(self):
         """
         Calculate the feature importance and create the text once
 

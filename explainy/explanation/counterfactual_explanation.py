@@ -1,6 +1,21 @@
 """
 Counterfactual Explanation
--------------------------------
+--------------------------
+Counterfactual explanations tell us how the values of an instance have to change to 
+significantly change its prediction. A counterfactual explanation of a prediction 
+describes the smallest change to the feature values that changes the prediction 
+to a predefined output. By creating counterfactual instances, we learn about how the 
+model makes its predictions and can explain individual predictions [1].
+
+Characteristics
+===============
+- local
+- contrastive
+
+Source
+======
+[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
+https://christophm.github.io/interpretable-ml-book/
 """
 import os
 from typing import Dict
@@ -17,6 +32,7 @@ from mlxtend.evaluate import create_counterfactual
 from explainy.explanation.explanation_base import ExplanationBase
 
 # np.seterr(divide="ignore", invalid="ignore")
+RANDOM_SEED = 0
 
 
 class CounterfactualExplanation(ExplanationBase):
@@ -35,7 +51,8 @@ class CounterfactualExplanation(ExplanationBase):
     ) -> None:
         super(CounterfactualExplanation, self).__init__(config)
         """
-        Init the specific explanation class, the base class is "Explanation"
+        This implementation is a thin wrapper around `smlxtend.evaluate.create_counterfactual
+        <http://rasbt.github.io/mlxtend/user_guide/evaluate/create_counterfactual>`
 
         Args:
             X (df): (Test) samples and features to calculate the importance for (sample, features)
@@ -111,6 +128,7 @@ class CounterfactualExplanation(ExplanationBase):
                 X_dataset=self.X.values,
                 y_desired_proba=None,
                 lammbda=lammbda,
+                random_seed=RANDOM_SEED,
             )
 
             self.y_counter_factual = self.model.predict(

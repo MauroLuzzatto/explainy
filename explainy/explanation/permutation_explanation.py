@@ -49,7 +49,7 @@ class PermutationExplanation(ExplanationBase):
         super(PermutationExplanation, self).__init__(config)
         """        
         This implementation is a thin wrapper around `sklearn.inspection.permutation_importance
-        <https://scikit-learn.org/stable/modules/permutation_importance.html>`_
+        <https://scikit-learn.org/stable/modules/permutation_importance.html>`
         
         Args:
             X (df): (Test) samples and features to calculate the importance for (sample, features)
