@@ -2,6 +2,6 @@ Click
 scikit-learn
 pandas
 mlxtend
-shap
+shap==0.39.0
 matplotlib
 graphviz
