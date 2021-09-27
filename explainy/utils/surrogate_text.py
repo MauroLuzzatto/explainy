@@ -7,7 +7,7 @@ Created on Sat Dec 19 11:41:28 2020
 
 import numpy as np
 
-from explainy.explanations.explanation_mixin import ExplanationMixin
+from explainy.core.explanation_mixin import ExplanationMixin
 
 
 class SurrogateText(ExplanationMixin):
