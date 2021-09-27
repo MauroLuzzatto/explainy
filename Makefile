@@ -47,11 +47,13 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
+isort: ## sort the imports
+	isort explainy tests
 
-black:
+black: ## black formatting
 	black explainy tests
 
-black-string:
+black-string: ## black formatting with string processing
 	black explainy -l 80 --experimental-string-processing
 	black tests -l 80 --experimental-string-processing
 

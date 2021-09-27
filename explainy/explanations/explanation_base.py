@@ -7,16 +7,15 @@ Created on Tue Nov 24 21:15:30 2020
 
 import csv
 import os
-from typing import Dict
 import warnings
+from abc import ABC, abstractmethod
+from typing import Dict
 
 import pandas as pd
 
-from explainy.explanation.explanation_mixin import ExplanationMixin
+from explainy.explanations.explanation_mixin import ExplanationMixin
 from explainy.logger import Logger
 from explainy.utils import create_folder
-
-from abc import ABC, abstractmethod
 
 
 class ExplanationBase(ABC, ExplanationMixin):

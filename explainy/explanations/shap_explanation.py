@@ -24,7 +24,7 @@ import pandas as pd
 import shap
 import sklearn
 
-from explainy.explanation.explanation_base import ExplanationBase
+from explainy.explanations.explanation_base import ExplanationBase
 
 
 class ShapExplanation(ExplanationBase):

@@ -52,7 +52,7 @@ Pass the trained model and the to be explained dataset into a `PermutationExplan
 Define the number of features used in the explanation and the index of the sample that should be explained.
 
 ```python
-from explainy.explanation.permutation_explanation import PermutationExplanation
+from explainy.explanations.permutation_explanation import PermutationExplanation
 
 number_of_features = 4
 sample_index = 1
@@ -81,13 +81,13 @@ Plot the feature importance of that sample.
 ```python
 explainer.plot()
 ```
-![Permutation Feature Importance](static/permutation_importance.png)
+![Permutation Feature Importance](https://github.com/MauroLuzzatto/explainy/raw/main/static/permutation_importance.png)
 
 If your prefer, you can also create another type of plot, as for example a boxplot.
 ```python
 explainer.plot(kind='box')
 ```
-![Permutation Feature Importance BoxPlot](static/permutation_importance_box.png)
+![Permutation Feature Importance BoxPlot](https://github.com/MauroLuzzatto/explainy/raw/main/static/permutation_importance_box.png)
 
 <!-- Finally the result can be saved
 

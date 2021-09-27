@@ -7,7 +7,8 @@ Created on Mon Aug 16 21:58:56 2021
 
 import pytest
 
-from explainy.explanation.shap_explanation import ShapExplanation
+from explainy.explanations.shap_explanation import ShapExplanation
+
 from .utils import get_regression_model
 
 

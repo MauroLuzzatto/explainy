@@ -16,22 +16,19 @@ Source
 https://christophm.github.io/interpretable-ml-book/
 """
 import os
+import subprocess
+import warnings
 from typing import Dict
 
 import graphviz
 import numpy as np
-import warnings
-import subprocess
-
-
-from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.base import is_classifier, is_regressor  # type: ignore
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 
-from sklearn.linear_model import LogisticRegression, LinearRegression
-
-from explainy.explanation.explanation_base import ExplanationBase
-from explainy.explanation.surrogate_plot import SurrogatePlot
-from explainy.explanation.surrogate_text import SurrogateText
+from explainy.explanations.explanation_base import ExplanationBase
+from explainy.explanations.surrogate_plot import SurrogatePlot
+from explainy.explanations.surrogate_text import SurrogateText
 
 
 class SurrogateModelExplanation(ExplanationBase):

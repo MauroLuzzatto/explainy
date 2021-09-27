@@ -22,14 +22,13 @@ from typing import Dict
 
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.font_manager import FontProperties
-
 import numpy as np
 import pandas as pd
 import sklearn
+from matplotlib.font_manager import FontProperties
 from mlxtend.evaluate import create_counterfactual
 
-from explainy.explanation.explanation_base import ExplanationBase
+from explainy.explanations.explanation_base import ExplanationBase
 
 # np.seterr(divide="ignore", invalid="ignore")
 RANDOM_SEED = 0

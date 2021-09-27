@@ -6,7 +6,7 @@ Created on Thu May 13 21:49:43 2021
 """
 import os
 
-from explainy.explanation.category_mapper import CategoryMapper
+from explainy.explanations.category_mapper import CategoryMapper
 
 
 class ExplanationMixin:

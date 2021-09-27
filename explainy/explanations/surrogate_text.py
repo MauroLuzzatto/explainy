@@ -7,7 +7,7 @@ Created on Sat Dec 19 11:41:28 2020
 
 import numpy as np
 
-from explainy.explanation.explanation_mixin import ExplanationMixin
+from explainy.explanations.explanation_mixin import ExplanationMixin
 
 
 class SurrogateText(ExplanationMixin):
@@ -146,7 +146,7 @@ class SurrogateText(ExplanationMixin):
                     else:
                         text = (
                             f"'{feature_name_per_node}' was less or equal than"
-                            f" {self.threshold[node]:.2f}"
+                            f" {self.threshold[node]:.1f}"
                         )
                 else:
 
@@ -155,7 +155,7 @@ class SurrogateText(ExplanationMixin):
                     else:
                         text = (
                             f"'{feature_name_per_node}' was greater than"
-                            f" {self.threshold[node]:.2f}"
+                            f" {self.threshold[node]:.1f}"
                         )
                 mask.append(text)
 

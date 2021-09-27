@@ -30,7 +30,7 @@ import pandas as pd
 import sklearn
 from sklearn.inspection import permutation_importance
 
-from explainy.explanation.explanation_base import ExplanationBase
+from explainy.explanations.explanation_base import ExplanationBase
 
 
 class PermutationExplanation(ExplanationBase):
