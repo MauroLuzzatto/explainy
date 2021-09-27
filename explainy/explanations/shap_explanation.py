@@ -24,7 +24,7 @@ import pandas as pd
 import shap
 import sklearn
 
-from explainy.explanations.explanation_base import ExplanationBase
+from explainy.core.explanation_base import ExplanationBase
 
 
 class ShapExplanation(ExplanationBase):
@@ -71,14 +71,8 @@ class ShapExplanation(ExplanationBase):
         )
         sentence_text_empty = "'{}' ({:.2f})"
 
-        self.natural_language_text_empty = self.config.get(
-            "natural_language_text_empty", natural_language_text_empty
-        )
-        self.method_text_empty = self.config.get(
-            "method_text_empty", method_text_empty
-        )
-        self.sentence_text_empty = self.config.get(
-            "sentence_text_empty", sentence_text_empty
+        self.define_explanation_placeholder(
+            natural_language_text_empty, method_text_empty, sentence_text_empty
         )
 
         self.explanation_name = "shap"

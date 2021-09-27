@@ -101,9 +101,9 @@ explainer.save(sample_index)
 | Method				|Type | Explanations | Classification | Regression | 
 | --- 				| --- | :---: | :---: | :---: | 
 |[Permutation Feature Importance](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.permutation_explanation)	| Non-contrastive | global |  :star: | :star:|
-| Shapley Values		| Non-contrastive | local |   :star: | :star:|
-|Global Surrogate Model|Contrastive | global | :star: | :star:|
-|Counterfactual Example| Contrastive | local |:star: | :star:|
+|[Shap Values](https://explainy.readthedocs.io/en/latest/explainy.explanations.html?highlight=shap#module-explainy.explanations.shap_explanation)		| Non-contrastive | local |   :star: | :star:|
+|[Surrogate Model](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.surrogate_model_explanation)|Contrastive | global | :star: | :star:|
+|[Counterfactual Example](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.counterfactual_explanation)| Contrastive | local |:star: | :star:|
 
 
 Description
@@ -113,9 +113,9 @@ Description
 - non-contrastive: parameter weighting
 
 
-## Features
+<!-- ## Features
 
-TODO
+TODO -->
 ## Source
 
 [1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. https://christophm.github.io/interpretable-ml-book/

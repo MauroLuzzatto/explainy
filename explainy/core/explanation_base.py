@@ -13,9 +13,9 @@ from typing import Dict
 
 import pandas as pd
 
-from explainy.explanations.explanation_mixin import ExplanationMixin
+from explainy.core.explanation_mixin import ExplanationMixin
 from explainy.logger import Logger
-from explainy.utils import create_folder
+from explainy.utils.utils import create_folder
 
 
 class ExplanationBase(ABC, ExplanationMixin):
@@ -54,6 +54,25 @@ class ExplanationBase(ABC, ExplanationMixin):
         )
         self.score_text_empty = self.config.get(
             "score_text_empty", score_text_empty
+        )
+
+    def set_text_placeholder(
+        self,
+        natural_language_text_empty,
+        method_text_empty,
+        sentence_text_empty,
+    ):
+        """
+        Either set the explanation text or load it from defaults
+        """
+        self.natural_language_text_empty = self.config.get(
+            "natural_language_text_empty", natural_language_text_empty
+        )
+        self.method_text_empty = self.config.get(
+            "method_text_empty", method_text_empty
+        )
+        self.sentence_text_empty = self.config.get(
+            "sentence_text_empty", sentence_text_empty
         )
 
     def get_number_of_features(self, number_of_features):
@@ -207,6 +226,27 @@ class ExplanationBase(ABC, ExplanationMixin):
 
     def __str__(self, separator="\n"):
         return self.print_output(separator)
+
+    def save(self, sample_name):
+        """
+
+
+        Args:
+            sample_name (TYPE): DESCRIPTION.
+
+        Returns:
+            None.
+
+        """
+        if not sample_name:
+            sample_name = sample_index
+
+        self.save_csv(sample_name)
+
+        self.fig.savefig(
+            os.path.join(self.path_plot, self.plot_name),
+            bbox_inches="tight",
+        )
 
     def save_csv(self, sample: int) -> None:
         """

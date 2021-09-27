@@ -28,7 +28,7 @@ import sklearn
 from matplotlib.font_manager import FontProperties
 from mlxtend.evaluate import create_counterfactual
 
-from explainy.explanations.explanation_base import ExplanationBase
+from explainy.core.explanation_base import ExplanationBase
 
 # np.seterr(divide="ignore", invalid="ignore")
 RANDOM_SEED = 0
@@ -86,14 +86,8 @@ class CounterfactualExplanation(ExplanationBase):
 
         sentence_text_empty = "the '{}' was {}"
 
-        self.natural_language_text_empty = self.config.get(
-            "natural_language_text_empty", natural_language_text_empty
-        )
-        self.method_text_empty = self.config.get(
-            "method_text_empty", method_text_empty
-        )
-        self.sentence_text_empty = self.config.get(
-            "sentence_text_empty", sentence_text_empty
+        self.define_explanation_placeholder(
+            natural_language_text_empty, method_text_empty, sentence_text_empty
         )
 
         self.explanation_name = "counterfactual"

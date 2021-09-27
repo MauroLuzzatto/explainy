@@ -26,9 +26,9 @@ from sklearn.base import is_classifier, is_regressor  # type: ignore
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 
-from explainy.explanations.explanation_base import ExplanationBase
-from explainy.explanations.surrogate_plot import SurrogatePlot
-from explainy.explanations.surrogate_text import SurrogateText
+from explainy.core.explanation_base import ExplanationBase
+from explainy.utils.surrogate_plot import SurrogatePlot
+from explainy.utils.surrogate_text import SurrogateText
 
 
 class SurrogateModelExplanation(ExplanationBase):
@@ -83,14 +83,8 @@ class SurrogateModelExplanation(ExplanationBase):
         )
         sentence_text_empty = "The samples got a value of {:.2f} if {}"
 
-        self.natural_language_text_empty = self.config.get(
-            "natural_language_text_empty", natural_language_text_empty
-        )
-        self.method_text_empty = self.config.get(
-            "method_text_empty", method_text_empty
-        )
-        self.sentence_text_empty = self.config.get(
-            "sentence_text_empty", sentence_text_empty
+        self.define_explanation_placeholder(
+            natural_language_text_empty, method_text_empty, sentence_text_empty
         )
 
         self.explanation_name = "surrogate"
