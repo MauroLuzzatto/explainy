@@ -56,7 +56,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             "score_text_empty", score_text_empty
         )
 
-    def set_text_placeholder(
+    def define_explanation_placeholder(
         self,
         natural_language_text_empty,
         method_text_empty,

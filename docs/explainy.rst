@@ -7,7 +7,9 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   explainy.core
    explainy.explanations
+   explainy.utils
 
 Submodules
 ----------

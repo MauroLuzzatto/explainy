@@ -9,13 +9,13 @@ Welcome to the explainy documentation!
    installation
    modules
    contributing
-   authors
+
 
 .. toctree::
-   :hidden:
+   :glob:
 
-   examples
 
+   Examples <examples.rst>
 
 Indices and tables
 ==================

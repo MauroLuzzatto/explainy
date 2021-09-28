@@ -1,0 +1,29 @@
+explainy.core package
+=====================
+
+Submodules
+----------
+
+explainy.core.explanation\_base module
+--------------------------------------
+
+.. automodule:: explainy.core.explanation_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+explainy.core.explanation\_mixin module
+---------------------------------------
+
+.. automodule:: explainy.core.explanation_mixin
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: explainy.core
+   :members:
+   :undoc-members:
+   :show-inheritance:
