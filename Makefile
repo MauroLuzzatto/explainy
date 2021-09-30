@@ -51,12 +51,11 @@ isort: ## sort the imports
 	isort explainy tests
 
 black: ## black formatting
-	black explainy tests
+	black explainy tests --skip-string-normalization
 
 black-string: ## black formatting with string processing
-	black explainy -l 80 --experimental-string-processing
-	black tests -l 80 --experimental-string-processing
-
+	black explainy -l 80 --experimental-string-processing --skip-string-normalization
+	black tests -l 80 --experimental-string-processing --skip-string-normalization
 
 lint: ## check style with flake8
 	flake8 explainy tests
