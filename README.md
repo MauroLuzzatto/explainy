@@ -99,10 +99,10 @@ explainer.save(sample_index)
 
 | Method				|Type | Explanations | Classification | Regression | 
 | --- 				| --- | :---: | :---: | :---: | 
-|[Permutation Feature Importance](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.permutation_explanation)	| non-contrastive | global |  :star: | :star:|
+|[Permutation Feature Importance](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.permutation_explanation)	| non-contrastive | global |  :star: | :star:|
 |[Shap Values](https://explainy.readthedocs.io/en/latest/explainy.explanations.html?highlight=shap#module-explainy.explanations.shap_explanation)		| non-contrastive | local |   :star: | :star:|
-|[Surrogate Model](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.surrogate_model_explanation)|contrastive | global | :star: | WIP|
-|[Counterfactual Example](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.counterfactual_explanation)| contrastive | local |:star:| :star:|
+|[Surrogate Model](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.surrogate_model_explanation)|contrastive | global | :star: | WIP|
+|[Counterfactual Example](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.counterfactual_explanation)| contrastive | local |:star:| :star:|
 
 
 Description
