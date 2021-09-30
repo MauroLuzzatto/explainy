@@ -32,7 +32,6 @@ pip install explainy
 Initialize and train a `sklearn` model:
 ```python
 import pandas as pd
-
 from sklearn.datasets import load_diabetes
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
@@ -100,17 +99,17 @@ explainer.save(sample_index)
 
 | Method				|Type | Explanations | Classification | Regression | 
 | --- 				| --- | :---: | :---: | :---: | 
-|[Permutation Feature Importance](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.permutation_explanation)	| Non-contrastive | global |  :star: | :star:|
-|[Shap Values](https://explainy.readthedocs.io/en/latest/explainy.explanations.html?highlight=shap#module-explainy.explanations.shap_explanation)		| Non-contrastive | local |   :star: | :star:|
-|[Surrogate Model](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.surrogate_model_explanation)|Contrastive | global | :star: | :star:|
-|[Counterfactual Example](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.counterfactual_explanation)| Contrastive | local |:star: | :star:|
+|[Permutation Feature Importance](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.permutation_explanation)	| non-contrastive | global |  :star: | :star:|
+|[Shap Values](https://explainy.readthedocs.io/en/latest/explainy.explanations.html?highlight=shap#module-explainy.explanations.shap_explanation)		| non-contrastive | local |   :star: | :star:|
+|[Surrogate Model](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.surrogate_model_explanation)|contrastive | global | :star: | WIP|
+|[Counterfactual Example](https://explainy.readthedocs.io/en/latest/explainy.explanation.html#module-explainy.explanation.counterfactual_explanation)| contrastive | local |:star:| :star:|
 
 
 Description
-- global: explanation of system functionality
-- local: explanation of decision rationale
-- contrastive: tracing of decision path
-- non-contrastive: parameter weighting
+- **global**: explanation of system functionality (all samples have the same explanation)
+- **local**: explanation of decision rationale (each sample has its own explanation)
+- **contrastive**: tracing of decision path (differences to other outcomes are described)
+- **non-contrastive**: parameter weighting (the feature importance is reported)
 
 
 <!-- ## Features
