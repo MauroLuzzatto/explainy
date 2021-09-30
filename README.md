@@ -1,5 +1,6 @@
 
-<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="170" height="170" align="right" /></a>
+<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="180" height="180" align="right"/>
+
 # explainy - black-box model explanations for humans
 
 
