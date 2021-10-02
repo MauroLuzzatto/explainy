@@ -60,10 +60,7 @@ sample_index = 1
 explainer = PermutationExplanation(
     X_test, y_test, model, number_of_features
 )
-
-explanation = explainer.explain(
-    sample_index, separator='\n'
-)
+explanation = explainer.explain(sample_index)
 ```
 Print the explanation for the sample. In case of a local explanation every sample as a different explanation.
 
@@ -106,16 +103,24 @@ explainer.save(sample_index)
 |[Counterfactual Example](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.counterfactual_explanation)| contrastive | local |:star:| :star:|
 
 
-Description
+Description:
 - **global**: explanation of system functionality (all samples have the same explanation)
 - **local**: explanation of decision rationale (each sample has its own explanation)
 - **contrastive**: tracing of decision path (differences to other outcomes are described)
 - **non-contrastive**: parameter weighting (the feature importance is reported)
 
 
-<!-- ## Features
+## Features
+- Algorithms for inspecting black-box machine learning models 
+- Support for the machine learning frameworks `sklearn` and `xgboost`
 
-TODO -->
+### Other Machine Learning Explainability to watch
+- [shap](https://github.com/slundberg/shap): A game theoretic approach to explain the output of any machine learning model
+- [eli5](https://github.com/TeamHG-Memex/eli5): A library for debugging/inspecting machine learning classifiers and explaining their predictions 
+- [alibi](https://github.com/SeldonIO/alibi): Algorithms for explaining machine learning models 
+- [interpret](https://github.com/interpretml/interpret): Fit interpretable models. Explain blackbox machine learning
+
+
 ## Source
 
 [1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. https://christophm.github.io/interpretable-ml-book/

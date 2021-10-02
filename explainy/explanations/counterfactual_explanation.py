@@ -30,7 +30,7 @@ from mlxtend.evaluate import create_counterfactual
 
 from explainy.core.explanation_base import ExplanationBase
 
-# np.seterr(divide="ignore", invalid="ignore")
+np.seterr(divide="ignore", invalid="ignore")
 RANDOM_SEED = 0
 
 
@@ -79,11 +79,9 @@ class CounterfactualExplanation(ExplanationBase):
         natural_language_text_empty = (
             "The sample would have had the desired prediction, {}."
         )
-
         method_text_empty = (
             "The feature importance is shown using a counterfactual example."
         )
-
         sentence_text_empty = "the '{}' was {}"
 
         self.define_explanation_placeholder(
@@ -93,9 +91,9 @@ class CounterfactualExplanation(ExplanationBase):
         self.explanation_name = "counterfactual"
         self.logger = self.setup_logger(self.explanation_name)
 
-        self.delta = self.config.get("delta", 1.0)
+        self.delta = self.config.get("delta", None)
 
-    def _calculate_importance(self, sample=0, delta=1.0):
+    def _calculate_importance(self, sample=0):
         """
         Create the counter factual explanation for the given sample.
 
@@ -109,8 +107,10 @@ class CounterfactualExplanation(ExplanationBase):
 
         """
 
-        x_ref = self.X.values[sample, :]
+        if not self.delta:
+            self.delta = self.prediction * 0.75
 
+        x_ref = self.X.values[sample, :]
         count = 0
         for lammbda in np.arange(0, 10000, 0.1):
 
@@ -130,10 +130,10 @@ class CounterfactualExplanation(ExplanationBase):
 
             self.log_counterfactual(lammbda)
 
-            if np.abs(self.y_counter_factual - self.y_desired) < delta:
+            if self.prediction < self.y_counter_factual and np.abs(self.y_counter_factual - self.y_desired) < self.delta:
                 break
 
-            if count > 100:
+            if count > 40:
                 raise
 
             count += 1
@@ -161,7 +161,7 @@ class CounterfactualExplanation(ExplanationBase):
         )
         self.logger.info(
             f"y_counterfactual: {self.y_counter_factual:.2f}, desired:"
-            f" {self.y_desired:.2f}, y_pred {self.prediction:.2f}"
+            f" {self.y_desired:.2f}, y_pred: {self.prediction:.2f}, delta: {self.delta}"
         )
         self.logger.info("---" * 15)
 
@@ -325,7 +325,7 @@ class CounterfactualExplanation(ExplanationBase):
 
                     self.df.loc[feature_name, col_name] = string
 
-    def plot(self, show_rating=False):
+    def plot(self, sample_index=None, show_rating=False):
         """
         Plot the table comparing the refence and the counter factual values
 
@@ -390,6 +390,12 @@ class CounterfactualExplanation(ExplanationBase):
         return fig
 
     def save(self, sample_index, sample_name):
+        """[summary]
+
+        Args:
+            sample_index ([type]): [description]
+            sample_name ([type]): [description]
+        """
 
         self.save_csv(sample_name)
 
@@ -474,9 +480,7 @@ class CounterfactualExplanation(ExplanationBase):
 
         self.get_prediction(sample_index)
 
-        x_ref, x_counter_factual = self._calculate_importance(
-            sample_index, delta=self.delta
-        )
+        x_ref, x_counter_factual = self._calculate_importance(sample_index)
         self.get_feature_importance(x_ref, x_counter_factual)
         self.get_feature_values(x_ref, x_counter_factual)
         self.natural_language_text = self.get_natural_language_text()

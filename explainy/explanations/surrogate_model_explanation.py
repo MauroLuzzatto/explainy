@@ -168,6 +168,8 @@ class SurrogateModelExplanation(ExplanationBase):
             self.plot_tree(index_sample, **kwargs)
         elif self.kind == "linear":
             self.plot_bar(index_sample, **kwargs)
+        else:
+            raise Exception(f'Value of "kind" is not supported: {self.kind}!')
 
     def plot_bar(self, sample_index):
         raise NotImplementedError("to be done")

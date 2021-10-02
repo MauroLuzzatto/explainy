@@ -192,7 +192,7 @@ class PermutationExplanation(ExplanationBase):
         plt.show()
         return fig
 
-    def plot(self, kind="bar"):
+    def plot(self, sample_index=None, kind="bar"):
         """
         Plot method that calls different kinds of plot types
 
@@ -208,7 +208,7 @@ class PermutationExplanation(ExplanationBase):
         elif kind == "box":
             self.fig = self.box_plot()
         else:
-            raise
+            raise Exception(f'Value of "kind" is not supported: {kind}!')
 
     def _setup(self, n_repeats):
         """

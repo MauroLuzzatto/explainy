@@ -154,7 +154,7 @@ class ShapExplanation(ExplanationBase):
         elif kind == "shap":
             self.fig = self.shap_plot(sample_index)
         else:
-            raise
+            raise Exception(f'Value of "kind" is not supported: {kind}!')
 
     def bar_plot(self, sample_index: int = 0):
         """
