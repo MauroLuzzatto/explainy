@@ -250,7 +250,7 @@ class SurrogateModelExplanation(ExplanationBase):
         self.method_text = self.get_method_text()
         self.plot_name = self.get_plot_name()
 
-    def explain(self, sample_index, sample_name=None, separator=None):
+    def explain(self, sample_index, sample_name=None, separator='\n'):
         """
         main function to create the explanation of the given sample. The
         method_text, natural_language_text and the plots are create per sample.

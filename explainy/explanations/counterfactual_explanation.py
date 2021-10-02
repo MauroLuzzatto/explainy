@@ -67,10 +67,6 @@ class CounterfactualExplanation(ExplanationBase):
         """
         self.X = X
         self.y = y
-
-        if y_desired is None:
-            y_desired = y.values.max()
-
         self.y_desired = y_desired
         self.model = model
         self.feature_names = list(X)
@@ -93,7 +89,7 @@ class CounterfactualExplanation(ExplanationBase):
 
         self.delta = self.config.get("delta", None)
 
-    def _calculate_importance(self, sample=0):
+    def _calculate_importance(self, sample_index=0):
         """
         Create the counter factual explanation for the given sample.
 
@@ -107,10 +103,13 @@ class CounterfactualExplanation(ExplanationBase):
 
         """
 
-        if not self.delta:
-            self.delta = self.prediction * 0.75
+        if not self.y_desired:
+            self.y_desired = min(self.prediction * 1.25, self.y.values.max())
 
-        x_ref = self.X.values[sample, :]
+        if not self.delta:
+            self.delta = self.prediction * 0.10
+
+        x_ref = self.X.values[sample_index, :]
         count = 0
         for lammbda in np.arange(0, 10000, 0.1):
 
@@ -120,8 +119,7 @@ class CounterfactualExplanation(ExplanationBase):
                 model=self.model,
                 X_dataset=self.X.values,
                 y_desired_proba=None,
-                lammbda=lammbda,
-                random_seed=RANDOM_SEED,
+                lammbda=lammbda
             )
 
             self.y_counter_factual = self.model.predict(
@@ -129,8 +127,10 @@ class CounterfactualExplanation(ExplanationBase):
             )[0]
 
             self.log_counterfactual(lammbda)
+            self.log_output(sample_index, x_ref, x_counter_factual)
 
-            if self.prediction < self.y_counter_factual and np.abs(self.y_counter_factual - self.y_desired) < self.delta:
+
+            if np.abs(self.y_counter_factual - self.y_desired) < self.delta:
                 break
 
             if count > 40:
@@ -140,7 +140,7 @@ class CounterfactualExplanation(ExplanationBase):
 
         self.logger.info("\nFinal Lambda:")
         self.log_counterfactual(lammbda)
-        self.log_output(sample, x_ref, x_counter_factual)
+        self.log_output(sample_index, x_ref, x_counter_factual)
         return x_ref, x_counter_factual
 
     def log_counterfactual(self, lammbda):
@@ -155,15 +155,15 @@ class CounterfactualExplanation(ExplanationBase):
 
         """
 
-        self.logger.info(f"lambda: {lammbda}")
-        self.logger.info(
+        self.logger.debug(f"lambda: {lammbda}")
+        self.logger.debug(
             f"diff: {np.abs(self.y_counter_factual - self.y_desired)}"
         )
-        self.logger.info(
+        self.logger.debug(
             f"y_counterfactual: {self.y_counter_factual:.2f}, desired:"
             f" {self.y_desired:.2f}, y_pred: {self.prediction:.2f}, delta: {self.delta}"
         )
-        self.logger.info("---" * 15)
+        self.logger.debug("---" * 15)
 
     def log_output(self, sample, x_ref, x_counter_factual):
         """
@@ -179,24 +179,19 @@ class CounterfactualExplanation(ExplanationBase):
 
         """
 
-        self.logger.info("True label: {}".format(self.y.values[sample]))
-        self.logger.info(
-            "Predicted label: {}".format(
-                self.model.predict(x_ref.reshape(1, -1))[0]
-            )
-        )
-        self.logger.info(f"Desired label: {self.y_desired}")
-        self.logger.info("Features of the sample: {}".format(x_ref))
-        self.logger.info(
-            "Features of the countefactual: {}".format(x_counter_factual)
-        )
-        self.logger.info("Predictions for counterfactual:")
-        self.logger.info("Desired label: {}".format(self.y_desired))
-        self.logger.info(
-            "Predicted label: {}".format(
+        self.logger.debug("True label: {}".format(self.y.values[sample]))
+        self.logger.debug("Predicted label: {}".format(self.prediction))
+        self.logger.debug(f"Desired label: {self.y_desired}")
+        self.logger.debug(
+            "Predicted counterfactual label: {}".format(
                 self.model.predict(x_counter_factual.reshape(1, -1))[0]
             )
         )
+        self.logger.debug("Features of the sample: {}".format(x_ref))
+        self.logger.debug(
+            "Features of the countefactual: {}".format(x_counter_factual)
+        )
+       
 
     def get_prediction_from_new_value(self, ii, x_ref, x_counter_factual):
         """
