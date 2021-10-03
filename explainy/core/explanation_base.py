@@ -75,19 +75,27 @@ class ExplanationBase(ABC, ExplanationMixin):
             "sentence_text_empty", sentence_text_empty
         )
 
-    def get_number_of_features(self, number_of_features):
+    def get_number_of_features(self, number_of_features: int) -> int:
+        """
+        Set the number of features based on the defined number and the max
+        number of features
 
+        Args:
+            number_of_features (int): number_of_features as input
+
+        Returns:
+            int: number_of_features considering the max number of dataset features
+        """
         if number_of_features > self.X.shape[1]:
             warnings.warn(
                 'The "number_of_features" is larger than the number of dataset'
                 f" features. The value is set to {self.X.shape[1]}"
             )
-
         return min(number_of_features, self.X.shape[1])
 
     def set_paths(self):
         """
-
+        Set the paths where the output should be saved
 
         Returns:
             None.
@@ -227,16 +235,13 @@ class ExplanationBase(ABC, ExplanationMixin):
     def __str__(self, separator="\n"):
         return self.print_output(separator)
 
-    def save(self, sample_name):
+    def save(self, sample_index:int, sample_name:str=None) -> None:
         """
-
+        Save the explanations to a csv file, save the plots
 
         Args:
-            sample_name (TYPE): DESCRIPTION.
-
-        Returns:
-            None.
-
+            sample_index ([type]): [description]
+            sample_name ([type], optional): [description]. Defaults to None.
         """
         if not sample_name:
             sample_name = sample_index

@@ -62,7 +62,7 @@ explainer = PermutationExplanation(
 )
 explanation = explainer.explain(sample_index)
 ```
-Print the explanation for the sample. In case of a local explanation every sample as a different explanation.
+Print the explanation for the sample (in case of a local explanation every sample has a different explanation).
 
 ```python
 print(explanation)
@@ -114,7 +114,7 @@ Description:
 - Algorithms for inspecting black-box machine learning models 
 - Support for the machine learning frameworks `sklearn` and `xgboost`
 
-### Other Machine Learning Explainability to watch
+### Other Machine Learning Explainability libraries to watch
 - [shap](https://github.com/slundberg/shap): A game theoretic approach to explain the output of any machine learning model
 - [eli5](https://github.com/TeamHG-Memex/eli5): A library for debugging/inspecting machine learning classifiers and explaining their predictions 
 - [alibi](https://github.com/SeldonIO/alibi): Algorithms for explaining machine learning models 

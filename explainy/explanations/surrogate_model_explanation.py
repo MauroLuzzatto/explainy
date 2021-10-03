@@ -197,15 +197,24 @@ class SurrogateModelExplanation(ExplanationBase):
         except subprocess.CalledProcessError:
             warnings.warn("plot already open!")
 
-    def save(self, sample_name):
+    def save(self, sample_index:int, sample_name:str=None) -> None:
+        """
+        Save the explanations to a csv file, save the plots
+
+        Args:
+            sample_index ([type]): [description]
+            sample_name ([type], optional): [description]. Defaults to None.
+        """
+        if not sample_name:
+            sample_name = sample_index
+
+        self.save_csv(sample_name)
 
         with open(
             os.path.join(self.path_plot, "{}.dot".format(self.plot_name)),
             "w",
         ) as file:
             file.write(self.dot_file)
-
-        self.save_csv(sample_name)
 
     def get_method_text(self):
         """

@@ -16,7 +16,7 @@ Source
 [1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
 https://christophm.github.io/interpretable-ml-book/
 """
-from typing import Dict
+from typing import Dict, List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -31,7 +31,6 @@ class ShapExplanation(ExplanationBase):
     """
     Non-contrastive, local Explanation
     """
-
     def __init__(
         self,
         X: pd.DataFrame,
@@ -42,8 +41,9 @@ class ShapExplanation(ExplanationBase):
     ) -> None:
         super(ShapExplanation, self).__init__(config)
         """
-        Init the specific explanation class, the base class is "Explanation"
-
+        This implementation is a thin wrapper around `shap.TreeExplainer
+        <https://shap-lrjball.readthedocs.io/en/docs_update/generated/shap.TreeExplainer.html>`
+        
         Args:
             X (df): (Test) samples and features to calculate the importance for (sample, features)
             y (np.array): (Test) target values of the samples (samples, 1)
@@ -91,14 +91,16 @@ class ShapExplanation(ExplanationBase):
 
         if isinstance(self.explainer.expected_value, np.ndarray):
             self.explainer.expected_value = self.explainer.expected_value[0]
-
         assert isinstance(
             self.explainer.expected_value, float
         ), "self.explainer.expected_value has wrong type"
 
-    def get_feature_values(self, sample_index: int = 0):
+    def get_feature_values(self, sample_index: int = 0) -> List[Tuple[str, float]]:
         """
         extract the feature name and its importance per sample
+        - get absolute values to get the strongst postive and negative contribution
+        - sort by importance -> highst to lowest
+
 
         Args:
             sample_index (int, optional): sample for which the explanation should
@@ -109,10 +111,8 @@ class ShapExplanation(ExplanationBase):
             feature and its importance of a sample.
 
         """
-        # get absolute values to get the strongst postive and negative contribution
         indexes = np.argsort(abs(self.shap_values[sample_index, :]))
         feature_values = []
-        # sort by importance -> highst to lowest
         for index in indexes.tolist()[::-1][: self.number_of_features]:
             feature_values.append(
                 (
@@ -139,7 +139,7 @@ class ShapExplanation(ExplanationBase):
 
     def plot(self, sample_index: int = 0, kind="bar") -> None:
         """
-
+        Plot the shap values
 
         Args:
             sample_index (int, optional): DESCRIPTION. Defaults to 0.
@@ -147,7 +147,6 @@ class ShapExplanation(ExplanationBase):
 
         Returns:
             None: DESCRIPTION.
-
         """
         if kind == "bar":
             self.fig = self.bar_plot(sample_index)
@@ -156,7 +155,7 @@ class ShapExplanation(ExplanationBase):
         else:
             raise Exception(f'Value of "kind" is not supported: {kind}!')
 
-    def bar_plot(self, sample_index: int = 0):
+    def bar_plot(self, sample_index: int = 0) -> plt.figure:
         """
         Create a bar plot of the shape values for a selected sample
 
@@ -184,7 +183,7 @@ class ShapExplanation(ExplanationBase):
         plt.show()
         return fig
 
-    def shap_plot(self, sample_index: int = 0) -> None:
+    def shap_plot(self, sample_index: int = 0) -> plt.figure:
         """
         visualize the first prediction's explanation
 
@@ -203,14 +202,13 @@ class ShapExplanation(ExplanationBase):
             matplotlib=True,
             show=False,
         )
-
         fig = plt.gcf()
         fig.set_figheight(4)
         fig.set_figwidth(8)
         plt.show()
         return fig
 
-    def log_output(self, sample_index: int) -> None:
+    def _log_output(self, sample_index: int) -> None:
         """
         Log the prediction values of the sample
 
@@ -230,9 +228,9 @@ class ShapExplanation(ExplanationBase):
         )
         self.logger.debug("The predicted value was: {}".format(self.prediction))
 
-    def _setup(self, sample_index, sample_name):
+    def _setup(self, sample_index:int, sample_name:str):
         """
-
+        Helper function to call all methods to create the explanations
 
         Args:
             sample_index (TYPE): DESCRIPTION.
@@ -243,7 +241,7 @@ class ShapExplanation(ExplanationBase):
 
         """
         self._calculate_importance()
-        self.log_output(sample_index)
+        self._log_output(sample_index)
         self.feature_values = self.get_feature_values(sample_index)
 
         self.sentences = self.get_sentences(
@@ -264,10 +262,7 @@ class ShapExplanation(ExplanationBase):
         Returns:
             None.
         """
-
-        if not sample_name:
-            sample_name = sample_index
-
+        sample_name = self.get_sample_name(sample_index, sample_name)
         self.get_prediction(sample_index)
         self._setup(sample_index, sample_name)
 
