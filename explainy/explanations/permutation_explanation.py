@@ -32,6 +32,7 @@ from sklearn.inspection import permutation_importance
 
 from explainy.core.explanation_base import ExplanationBase
 
+RANDOM_SEED = 0
 
 class PermutationExplanation(ExplanationBase):
     """
@@ -60,7 +61,6 @@ class PermutationExplanation(ExplanationBase):
 
         Returns:
             None.
-
         """
         self.X = X
         self.y = y
@@ -89,6 +89,8 @@ class PermutationExplanation(ExplanationBase):
 
         # hyparameters
         n_repeats = self.config.get("n_repeats", 30)
+        # TODO: how to solve the hyperparamter issue
+        # self._setup(**kwargs)
         self._setup(n_repeats)
 
     def _calculate_importance(self, n_repeats=30):
@@ -107,7 +109,7 @@ class PermutationExplanation(ExplanationBase):
             self.X.values,
             self.y.values,
             n_repeats=n_repeats,
-            random_state=0,
+            random_state=RANDOM_SEED,
         )
 
     def get_feature_values(self):
@@ -124,7 +126,7 @@ class PermutationExplanation(ExplanationBase):
 
         """
         feature_values = []
-        # sort by importance -> highst to lowest
+        # sort by importance -> highest to lowest
         for index in self.r.importances_mean.argsort()[::-1][
             : self.number_of_features
         ]:
@@ -134,7 +136,7 @@ class PermutationExplanation(ExplanationBase):
 
         return feature_values
 
-    def box_plot(self):
+    def _box_plot(self):
         """
         Plot the sorted permutation feature importance using a boxplot
 
@@ -159,7 +161,7 @@ class PermutationExplanation(ExplanationBase):
         plt.show()
         return fig
 
-    def bar_plot(self):
+    def _bar_plot(self):
         """
         Plot the sorted permutation feature importance using a barplot
 
@@ -201,12 +203,11 @@ class PermutationExplanation(ExplanationBase):
 
         Returns:
             None.
-
         """
         if kind == "bar":
-            self.fig = self.bar_plot()
+            self.fig = self._bar_plot()
         elif kind == "box":
-            self.fig = self.box_plot()
+            self.fig = self._box_plot()
         else:
             raise Exception(f'Value of "kind" is not supported: {kind}!')
 
@@ -240,9 +241,7 @@ class PermutationExplanation(ExplanationBase):
         Returns:
             None.
         """
-        if not sample_name:
-            sample_name = sample_index
-
+        sample_name = self.get_sample_name(sample_index, sample_name)
         self.get_prediction(sample_index)
         self.score_text = self.get_score_text()
         self.explanation = self.get_explanation(separator)

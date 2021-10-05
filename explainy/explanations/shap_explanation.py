@@ -75,6 +75,8 @@ class ShapExplanation(ExplanationBase):
             natural_language_text_empty, method_text_empty, sentence_text_empty
         )
 
+        self.explanation_type = 'local'
+        self.explanation_style = 'non-contrastive'
         self.explanation_name = "shap"
         self.logger = self.setup_logger(self.explanation_name)
 
@@ -122,20 +124,20 @@ class ShapExplanation(ExplanationBase):
             )
         return feature_values
 
-    def get_score(self, sample_index: int = 0) -> float:
-        """
-        calculate the overall score of the sample (output-values)
+    # def get_score(self, sample_index: int = 0) -> float:
+    #     """
+    #     calculate the overall score of the sample (output-values)
 
-        Args:
-            sample_index (int, optional): sample for which the explanation should
-                be returned. Defaults to 0.
-        Returns:
-            None.
-        """
-        return (
-            np.sum(self.shap_values[sample_index, :])
-            + self.explainer.expected_value
-        )
+    #     Args:
+    #         sample_index (int, optional): sample for which the explanation should
+    #             be returned. Defaults to 0.
+    #     Returns:
+    #         None.
+    #     """
+    #     return (
+    #         np.sum(self.shap_values[sample_index, :])
+    #         + self.explainer.expected_value
+    #     )
 
     def plot(self, sample_index: int = 0, kind="bar") -> None:
         """
@@ -149,13 +151,13 @@ class ShapExplanation(ExplanationBase):
             None: DESCRIPTION.
         """
         if kind == "bar":
-            self.fig = self.bar_plot(sample_index)
+            self.fig = self._bar_plot(sample_index)
         elif kind == "shap":
-            self.fig = self.shap_plot(sample_index)
+            self.fig = self._shap_plot(sample_index)
         else:
             raise Exception(f'Value of "kind" is not supported: {kind}!')
 
-    def bar_plot(self, sample_index: int = 0) -> plt.figure:
+    def _bar_plot(self, sample_index: int = 0) -> plt.figure:
         """
         Create a bar plot of the shape values for a selected sample
 
@@ -183,7 +185,7 @@ class ShapExplanation(ExplanationBase):
         plt.show()
         return fig
 
-    def shap_plot(self, sample_index: int = 0) -> plt.figure:
+    def _shap_plot(self, sample_index: int = 0) -> plt.figure:
         """
         visualize the first prediction's explanation
 
@@ -219,14 +221,14 @@ class ShapExplanation(ExplanationBase):
             None.
         """
         self.logger.debug(
-            "The expected_value was: {:.2f}".format(
-                self.explainer.expected_value
-            )
+            f"The expected_value was: {self.explainer.expected_value:.2f}"
         )
         self.logger.debug(
-            "The y_value was: {}".format(self.y.values[sample_index][0])
+            f"The y_value was: {self.y.values[sample_index][0]}"
         )
-        self.logger.debug("The predicted value was: {}".format(self.prediction))
+        self.logger.debug(
+            f"The predicted value was: {self.prediction}"
+        )
 
     def _setup(self, sample_index:int, sample_name:str):
         """

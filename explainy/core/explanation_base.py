@@ -200,6 +200,14 @@ class ExplanationBase(ABC, ExplanationMixin):
         return str(self.model)
 
     def get_plot_name(self, sample=None):
+        """[summary]
+
+        Args:
+            sample ([type], optional): [description]. Defaults to None.
+
+        Returns:
+            [type]: [description]
+        """
 
         if sample:
             plot_name = f"{self.explanation_name}_sample_{sample}_sparse_{self.number_of_features}.png"
@@ -234,6 +242,12 @@ class ExplanationBase(ABC, ExplanationMixin):
 
     def __str__(self, separator="\n"):
         return self.print_output(separator)
+
+    def get_sample_name(self, sample_index, sample_name):
+        if not sample_name:
+            sample_name = str(sample_index)
+        return sample_name
+
 
     def save(self, sample_index:int, sample_name:str=None) -> None:
         """

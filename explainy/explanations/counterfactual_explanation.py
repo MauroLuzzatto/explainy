@@ -87,6 +87,7 @@ class CounterfactualExplanation(ExplanationBase):
         self.explanation_name = "counterfactual"
         self.logger = self.setup_logger(self.explanation_name)
 
+        # TODO: handle hyperparameters
         self.delta = self.config.get("delta", None)
 
     def _calculate_importance(self, sample_index=0):
@@ -126,26 +127,23 @@ class CounterfactualExplanation(ExplanationBase):
                 x_counter_factual.reshape(1, -1)
             )[0]
 
-            self.log_counterfactual(lammbda)
-            self.log_output(sample_index, x_ref, x_counter_factual)
-
+            self._log_counterfactual(lammbda)
+            self._log_output(sample_index, x_ref, x_counter_factual)
 
             if np.abs(self.y_counter_factual - self.y_desired) < self.delta:
                 break
-
             if count > 40:
                 raise
-
             count += 1
 
         self.logger.info("\nFinal Lambda:")
-        self.log_counterfactual(lammbda)
-        self.log_output(sample_index, x_ref, x_counter_factual)
+        self._log_counterfactual(lammbda)
+        self._log_output(sample_index, x_ref, x_counter_factual)
         return x_ref, x_counter_factual
 
-    def log_counterfactual(self, lammbda):
+    def _log_counterfactual(self, lammbda):
         """
-
+        Log the values from the counterfactual output
 
         Args:
             lammbda (TYPE): DESCRIPTION.
@@ -154,7 +152,6 @@ class CounterfactualExplanation(ExplanationBase):
             None.
 
         """
-
         self.logger.debug(f"lambda: {lammbda}")
         self.logger.debug(
             f"diff: {np.abs(self.y_counter_factual - self.y_desired)}"
@@ -165,9 +162,9 @@ class CounterfactualExplanation(ExplanationBase):
         )
         self.logger.debug("---" * 15)
 
-    def log_output(self, sample, x_ref, x_counter_factual):
+    def _log_output(self, sample, x_ref, x_counter_factual):
         """
-
+        Log all the relevant values
 
         Args:
             sample (TYPE): DESCRIPTION.
@@ -178,7 +175,6 @@ class CounterfactualExplanation(ExplanationBase):
             None.
 
         """
-
         self.logger.debug("True label: {}".format(self.y.values[sample]))
         self.logger.debug("Predicted label: {}".format(self.prediction))
         self.logger.debug(f"Desired label: {self.y_desired}")
@@ -239,10 +235,7 @@ class CounterfactualExplanation(ExplanationBase):
             pred_new = self.get_prediction_from_new_value(
                 ii, x_ref, x_counter_factual
             )
-
             difference = pred_new - pred_ref
-
-            # print(difference, pred_new, pred_ref)
             self.differences.append(difference)
             self.logger.debug(
                 "name: {} -- difference: {}".format(
@@ -282,7 +275,6 @@ class CounterfactualExplanation(ExplanationBase):
         )
         # reorder dataframe according the the feature importance
         self.df = self.df.loc[self.feature_sort, :]
-
         try:
             self.df["difference of the new feature in the prediction"][
                 self.df["difference of the new feature in the prediction"] != 0
@@ -384,21 +376,6 @@ class CounterfactualExplanation(ExplanationBase):
         plt.show(block=True)
         return fig
 
-    def save(self, sample_index, sample_name):
-        """[summary]
-
-        Args:
-            sample_index ([type]): [description]
-            sample_name ([type]): [description]
-        """
-
-        self.save_csv(sample_name)
-
-        self.fig.savefig(
-            os.path.join(self.path_plot, self.plot_name),
-            bbox_inches=self.nbbox,
-        )
-
     def get_method_text(self):
         """
         Define the method introduction text of the explanation type.
@@ -472,16 +449,18 @@ class CounterfactualExplanation(ExplanationBase):
         return sentence_filled
 
     def _setup(self, sample_index, sample_name):
+        """[summary]
 
+        Args:
+            sample_index ([type]): [description]
+            sample_name ([type]): [description]
+        """
         self.get_prediction(sample_index)
-
         x_ref, x_counter_factual = self._calculate_importance(sample_index)
         self.get_feature_importance(x_ref, x_counter_factual)
         self.get_feature_values(x_ref, x_counter_factual)
         self.natural_language_text = self.get_natural_language_text()
         self.method_text = self.get_method_text()
-
-        # todo: move to save?
         self.plot_name = self.get_plot_name(sample_name)
 
     def explain(self, sample_index, sample_name=None, separator="\n"):
@@ -495,11 +474,8 @@ class CounterfactualExplanation(ExplanationBase):
         Returns:
             None.
         """
-        if not sample_name:
-            sample_name = sample_index
-
+        sample_name = self.get_sample_name(sample_index, sample_name)
         self._setup(sample_index, sample_name)
-
         self.score_text = self.get_score_text()
         self.explanation = self.get_explanation(separator)
         return self.explanation
