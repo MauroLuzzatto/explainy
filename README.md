@@ -1,7 +1,7 @@
 
 <img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="180" height="180" align="right"/>
 
-# explainy - black-box model explanations for humans
+# explainy - machine learning model explanations for humans
 
 
 [![pypi version](https://img.shields.io/pypi/v/explainy.svg)](https://pypi.python.org/pypi/explainy)
