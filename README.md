@@ -13,9 +13,11 @@
 
 
 
-explainy is a library for generating machine learning models explanations in Python. It uses methods from **Machine Learning Explainability** and provides a standardized API to create feature importance explanations for samples. The explanations are generated in the form of plots and text.
+**explainy** is a library for generating machine learning models explanations in Python. It uses methods from **Machine Learning Explainability** and provides a standardized API to create feature importance explanations for samples. 
 
-explainy comes with four different algorithms to create either global or local and contrastive or non-contrastive model explanations.
+The API is inspired by `scikit-learn` and has two core methods `explain()` and `plot()`. The explanations are generated in the form of texts and plots.
+
+**explainy** comes with four different algorithms to create either *global* or *local* and *contrastive* or *non-contrastive* model explanations.
 
 
 ## Documentation
@@ -30,7 +32,9 @@ pip install explainy
 
 ## Usage
 
-Initialize and train a `sklearn` model:
+Initialize and train a `scikit-learn
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+` model:
 ```python
 import pandas as pd
 from sklearn.datasets import load_diabetes
@@ -112,7 +116,7 @@ Description:
 
 ## Features
 - Algorithms for inspecting black-box machine learning models 
-- Support for the machine learning frameworks `sklearn` and `xgboost`
+- Support for the machine learning frameworks `scikit-learn` and `xgboost`
 
 ### Other Machine Learning Explainability libraries to watch
 - [shap](https://github.com/slundberg/shap): A game theoretic approach to explain the output of any machine learning model
@@ -123,7 +127,7 @@ Description:
 
 ## Source
 
-[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. https://christophm.github.io/interpretable-ml-book/
+Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. https://christophm.github.io/interpretable-ml-book/
 
 ## Authors
 * **Mauro Luzzatto** - [Maurol](https://github.com/MauroLuzzatto)
