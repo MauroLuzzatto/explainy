@@ -1,7 +1,9 @@
 
 <img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="180" height="180" align="right"/>
 
-# explainy - machine learning model explanations for humans
+<!-- # explainy - machine learning model explanations for humans -->
+
+# explainy - black-box model explanations for humans
 
 
 [![pypi version](https://img.shields.io/pypi/v/explainy.svg)](https://pypi.python.org/pypi/explainy)
@@ -32,9 +34,7 @@ pip install explainy
 
 ## Usage
 
-Initialize and train a `scikit-learn
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
-` model:
+Initialize and train a `scikit-learn` model:
 ```python
 import pandas as pd
 from sklearn.datasets import load_diabetes
@@ -64,11 +64,11 @@ sample_index = 1
 explainer = PermutationExplanation(
     X_test, y_test, model, number_of_features
 )
-explanation = explainer.explain(sample_index)
 ```
-Print the explanation for the sample (in case of a local explanation every sample has a different explanation).
+Call the `explain()` method and print the explanation for the sample (in case of a local explanation every sample has a different explanation).
 
 ```python
+explanation = explainer.explain(sample_index)
 print(explanation)
 ```
 > The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8.
@@ -77,7 +77,7 @@ print(explanation)
 
 > The four features which were most important for the predictions were (from highest to lowest): 'bmi' (0.15), 's5' (0.12), 'bp' (0.03), and 'age' (0.02).
 
-Plot the feature importance of that sample.
+Use the `plot()` method to create a feature importance plot of that sample.
 
 ```python
 explainer.plot()
