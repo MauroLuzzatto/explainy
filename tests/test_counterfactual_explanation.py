@@ -23,24 +23,18 @@ def test_counterfactual_explanation_4_features():
     explainer = CounterfactualExplanation(
         X_test, y_test, model, number_of_features, y_desired=2
     )
-
     explanation = explainer.explain(sample_index, separator=None)
-    score_text, method_text, natural_language_text = explanation
-
-    print(score_text)
-    print(method_text)
-    print(natural_language_text)
 
     assert (
-        score_text
+        explanation.score_text
         == "The RandomForestClassifier used 4 features to produce the predictions. The prediction of this sample was 1.0."
     )
     assert (
-        method_text
+        explanation.method_text
         == "The feature importance is shown using a counterfactual example."
     )
     assert (
-        natural_language_text
+        explanation.natural_language_text
         == "The sample would have had the desired prediction, if the 'petal width (cm)' was '1.76', the 'petal length (cm)' was '4.0', the 'sepal width (cm)' was '2.85', and the 'sepal length (cm)' was '6.0'."
     )
 
@@ -55,23 +49,18 @@ def test_counterfactual_explanation_8_features():
     explainer = CounterfactualExplanation(
         X_test, y_test, model, number_of_features, y_desired=2
     )
-
     explanation = explainer.explain(sample_index, separator=None)
-    score_text, method_text, natural_language_text = explanation
-    print(score_text)
-    print(method_text)
-    print(natural_language_text)
-
+    
     assert (
-        score_text
+        explanation.score_text
         == "The RandomForestClassifier used 4 features to produce the predictions. The prediction of this sample was 1.0."
     )
     assert (
-        method_text
+        explanation.method_text
         == "The feature importance is shown using a counterfactual example."
     )
     assert (
-        natural_language_text
+        explanation.natural_language_text
         == "The sample would have had the desired prediction, if the 'petal width (cm)' was '1.76', the 'petal length (cm)' was '4.0', the 'sepal width (cm)' was '2.85', and the 'sepal length (cm)' was '6.0'."
     )
 

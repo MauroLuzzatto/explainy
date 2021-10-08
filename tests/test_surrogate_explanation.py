@@ -23,20 +23,14 @@ def test_counterfactual_explanation_4_features():
     explainer = SurrogateModelExplanation(
         X_test, y_test, model, number_of_features
     )
-
     explanation = explainer.explain(sample_index, separator=None)
-    score_text, method_text, natural_language_text = explanation
-
-    print(score_text)
-    print(method_text)
-    print(natural_language_text)
 
     assert (
-        score_text
+        explanation.score_text
         == "The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8."
     )
     assert (
-        method_text
+        explanation.method_text
         == "The feature importance was calculated using a DecisionTreeRegressor surrogate model. Four tree nodes are shown."
     )
     # assert (
@@ -55,19 +49,14 @@ def test_counterfactual_explanation_8_features():
     explainer = SurrogateModelExplanation(
         X_test, y_test, model, number_of_features
     )
-
     explanation = explainer.explain(sample_index, separator=None)
-    score_text, method_text, natural_language_text = explanation
-    print(score_text)
-    print(method_text)
-    print(natural_language_text)
-
+   
     assert (
-        score_text
+        explanation.score_text
         == "The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8."
     )
     assert (
-        method_text
+        explanation.method_text
         == "The feature importance was calculated using a DecisionTreeRegressor surrogate model. Eight tree nodes are shown."
     )
     # assert (

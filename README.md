@@ -58,7 +58,7 @@ Addtionally, define the number of features used in the explanation. This allows 
  Set the index of the sample that should be explained.
 
 ```python
-from explainy.explanations.permutation_explanation import PermutationExplanation
+from explainy.explanations import PermutationExplanation
 
 number_of_features = 4
 sample_index = 1

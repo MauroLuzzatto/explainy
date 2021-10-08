@@ -25,19 +25,18 @@ def test_permuation_explanation_4_features():
     )
 
     explanation = explainer.explain(sample_index, separator=None)
-    score_text, method_text, natural_language_text = explanation
 
     assert (
-        score_text
+        explanation.score_text
         == "The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8."
     )
     assert (
-        method_text
+        explanation.method_text
         == "The feature importance was calculated using the Permutation Feature Importance method."
     )
     assert (
-        natural_language_text
-        == "The four features which were most important for the predictions were (from highest to lowest): 'bmi' (0.15), 's5' (0.12), 'bp' (0.03), and 'age' (0.02)."
+        explanation.natural_language_text
+        == "The four features which were most important for the predictions were: 'bmi' (0.15), 's5' (0.12), 'bp' (0.03), and 'age' (0.02)."
     )
 
 
@@ -53,19 +52,18 @@ def test_permuation_explanation_8_features():
     )
 
     explanation = explainer.explain(sample_index, separator=None)
-    score_text, method_text, natural_language_text = explanation
 
     assert (
-        score_text
+        explanation.score_text
         == "The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8."
     )
     assert (
-        method_text
+        explanation.method_text
         == "The feature importance was calculated using the Permutation Feature Importance method."
     )
     assert (
-        natural_language_text
-        == "The eight features which were most important for the predictions were (from highest to lowest): 'bmi' (0.15), 's5' (0.12), 'bp' (0.03), 'age' (0.02), 's2' (-0.00), 'sex' (-0.00), 's3' (-0.00), and 's1' (-0.01)."
+        explanation.natural_language_text
+        == "The eight features which were most important for the predictions were: 'bmi' (0.15), 's5' (0.12), 'bp' (0.03), 'age' (0.02), 's2' (-0.00), 'sex' (-0.00), 's3' (-0.00), and 's1' (-0.01)."
     )
 
 

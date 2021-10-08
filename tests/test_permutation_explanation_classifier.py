@@ -26,19 +26,17 @@ def test_permuation_explanation_2_features():
 
     explanation = explainer.explain(sample_index, separator=None)
 
-    score_text, method_text, natural_language_text = explanation
-
     assert (
-        score_text
+        explanation.score_text
         == "The RandomForestClassifier used 4 features to produce the predictions. The prediction of this sample was 1.0."
     )
     assert (
-        method_text
+        explanation.method_text
         == "The feature importance was calculated using the Permutation Feature Importance method."
     )
     assert (
-        natural_language_text
-        == "The two features which were most important for the predictions were (from highest to lowest): 'petal length (cm)' (0.16), and 'petal width (cm)' (0.16)."
+        explanation.natural_language_text
+        == "The two features which were most important for the predictions were: 'petal length (cm)' (0.16), and 'petal width (cm)' (0.16)."
     )
 
 
@@ -54,19 +52,18 @@ def test_permuation_explanation_4_features():
     )
 
     explanation = explainer.explain(sample_index, separator=None)
-    score_text, method_text, natural_language_text = explanation
 
     assert (
-        score_text
+        explanation.score_text
         == "The RandomForestClassifier used 4 features to produce the predictions. The prediction of this sample was 2.0."
     )
     assert (
-        method_text
+        explanation.method_text
         == "The feature importance was calculated using the Permutation Feature Importance method."
     )
     assert (
-        natural_language_text
-        == "The four features which were most important for the predictions were (from highest to lowest): 'petal length (cm)' (0.16), 'petal width (cm)' (0.16), 'sepal width (cm)' (0.00), and 'sepal length (cm)' (0.00)."
+        explanation.natural_language_text
+        == "The four features which were most important for the predictions were: 'petal length (cm)' (0.16), 'petal width (cm)' (0.16), 'sepal width (cm)' (0.00), and 'sepal length (cm)' (0.00)."
     )
 
 

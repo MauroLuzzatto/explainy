@@ -5,3 +5,4 @@ mlxtend
 shap
 matplotlib
 graphviz
+ipython
