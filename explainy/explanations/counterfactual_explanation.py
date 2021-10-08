@@ -17,7 +17,6 @@ Source
 [1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
 https://christophm.github.io/interpretable-ml-book/
 """
-import os
 from typing import Dict
 
 import matplotlib
@@ -25,13 +24,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import sklearn
+from sklearn.base import is_classifier, is_regressor
 from matplotlib.font_manager import FontProperties
 from mlxtend.evaluate import create_counterfactual
 
 from explainy.core.explanation_base import ExplanationBase
+from explainy.core.explanation import Explanation
+from explainy.utils.utils import create_one_hot_sentence
 
 np.seterr(divide="ignore", invalid="ignore")
-RANDOM_SEED = 0
 
 
 class CounterfactualExplanation(ExplanationBase):
@@ -47,6 +48,9 @@ class CounterfactualExplanation(ExplanationBase):
         number_of_features: int = 4,
         config: Dict = None,
         y_desired: float = None,
+        delta: float = None,
+        random_state:int = 0,
+        **kwargs
     ) -> None:
         super(CounterfactualExplanation, self).__init__(config)
         """
@@ -69,8 +73,13 @@ class CounterfactualExplanation(ExplanationBase):
         self.y = y
         self.y_desired = y_desired
         self.model = model
-        self.feature_names = list(X)
-        self.number_of_features = number_of_features
+        self.delta = delta
+        self.feature_names = self.get_feature_names(self.X)
+        self.number_of_features = self.get_number_of_features(
+            number_of_features
+        )
+        self.kwargs = kwargs
+        self.kwargs['random_seed'] = random_state
 
         natural_language_text_empty = (
             "The sample would have had the desired prediction, {}."
@@ -87,9 +96,6 @@ class CounterfactualExplanation(ExplanationBase):
         self.explanation_name = "counterfactual"
         self.logger = self.setup_logger(self.explanation_name)
 
-        # TODO: handle hyperparameters
-        self.delta = self.config.get("delta", None)
-
     def _calculate_importance(self, sample_index=0):
         """
         Create the counter factual explanation for the given sample.
@@ -103,12 +109,11 @@ class CounterfactualExplanation(ExplanationBase):
             x_counter_factual (TYPE): DESCRIPTION.
 
         """
-
         if not self.y_desired:
-            self.y_desired = min(self.prediction * 1.25, self.y.values.max())
+            self.y_desired = min(self.prediction * 1.2, self.y.values.max())
 
         if not self.delta:
-            self.delta = self.prediction * 0.10
+            self.delta = self.prediction * 0.1
 
         x_ref = self.X.values[sample_index, :]
         count = 0
@@ -119,8 +124,8 @@ class CounterfactualExplanation(ExplanationBase):
                 y_desired=self.y_desired,
                 model=self.model,
                 X_dataset=self.X.values,
-                y_desired_proba=None,
-                lammbda=lammbda
+                lammbda=lammbda,
+                **self.kwargs
             )
 
             self.y_counter_factual = self.model.predict(
@@ -130,13 +135,18 @@ class CounterfactualExplanation(ExplanationBase):
             self._log_counterfactual(lammbda)
             self._log_output(sample_index, x_ref, x_counter_factual)
 
-            if np.abs(self.y_counter_factual - self.y_desired) < self.delta:
-                break
+            if is_regressor(self.model):
+                if np.abs(self.y_counter_factual - self.y_desired) < self.delta:
+                    break
+            elif is_classifier(self.model):
+                 if self.y_counter_factual == self.y_desired:
+                    break
+            
             if count > 40:
                 raise
             count += 1
 
-        self.logger.info("\nFinal Lambda:")
+        self.logger.debug("\nFinal Lambda:")
         self._log_counterfactual(lammbda)
         self._log_output(sample_index, x_ref, x_counter_factual)
         return x_ref, x_counter_factual
@@ -247,7 +257,7 @@ class CounterfactualExplanation(ExplanationBase):
             np.array(self.differences).argsort()[::-1]
         ].tolist()
 
-    def get_feature_values(self, x_ref, x_counter_factual, decimal=2):
+    def get_feature_values(self, x_ref, x_counter_factual, decimal=2, debug=False):
         """
         Arrange the reference and the counter factual features in a dataframe
 
@@ -278,7 +288,9 @@ class CounterfactualExplanation(ExplanationBase):
         try:
             self.df["difference of the new feature in the prediction"][
                 self.df["difference of the new feature in the prediction"] != 0
-            ].plot(kind="barh", figsize=(3, 5))
+            ]
+            if debug:
+                self.df.plot(kind="barh", figsize=(3, 5))
         except IndexError as e:
             print(e)
 
@@ -312,7 +324,15 @@ class CounterfactualExplanation(ExplanationBase):
 
                     self.df.loc[feature_name, col_name] = string
 
-    def plot(self, sample_index=None, show_rating=False):
+    def plot(self, sample_index=None, kind='table', **kwargs):
+
+        if kind == "table":
+           self.fig = self._plot_table(sample_index)
+        else:
+            raise Exception(f'Value of "kind" is not supported: {kind}!')
+
+
+    def _plot_table(self, sample_index=None):
         """
         Plot the table comparing the refence and the counter factual values
 
@@ -327,12 +347,12 @@ class CounterfactualExplanation(ExplanationBase):
         array_subset = self.df[columns].values[: self.number_of_features]
         rowLabels = list(self.df.index)[: self.number_of_features]
 
-        if show_rating:
-            score_row = np.array(
-                [f"{self.prediction:.1f}", f"{self.y_counter_factual:.1f}"]
-            ).reshape(1, -1)
-            array_subset = np.append(array_subset, score_row, axis=0)
-            rowLabels = rowLabels + ["Application rating"]
+        # if show_rating:
+        score_row = np.array(
+            [f"{self.prediction:.1f}", f"{self.y_counter_factual:.1f}"]
+        ).reshape(1, -1)
+        array_subset = np.append(array_subset, score_row, axis=0)
+        rowLabels = rowLabels + ["Prediction"]
 
         fig, ax = plt.subplots()
         fig.patch.set_visible(False)
@@ -350,14 +370,13 @@ class CounterfactualExplanation(ExplanationBase):
         table.set_fontsize(12)
         table.scale(1.25, 2)
 
-        if show_rating:
-
-            # make the last row bold
-            for (row, col), cell in table.get_celld().items():
-                if row == array_subset.shape[0]:
-                    cell.set_text_props(
-                        fontproperties=FontProperties(weight="bold")
-                    )
+        # if show_rating:
+        # make the last row bold
+        for (row, col), cell in table.get_celld().items():
+            if row == array_subset.shape[0]:
+                cell.set_text_props(
+                    fontproperties=FontProperties(weight="bold")
+                )
 
         plt.axis("off")
         plt.grid("off")
@@ -373,7 +392,7 @@ class CounterfactualExplanation(ExplanationBase):
         self.nbbox = matplotlib.transforms.Bbox.from_extents(
             points / plt.gcf().dpi
         )
-        plt.show(block=True)
+        plt.show()
         return fig
 
     def get_method_text(self):
@@ -406,7 +425,7 @@ class CounterfactualExplanation(ExplanationBase):
 
             # handle one-hot encoding case
             if " - " in feature_name:
-                sentence_filled = self.create_one_hot_sentence(
+                sentence_filled = create_one_hot_sentence(
                     feature_name, feature_value, self.sentence_text_empty
                 )
                 mode = "one-hot feature"
@@ -422,32 +441,7 @@ class CounterfactualExplanation(ExplanationBase):
         sentences = "if " + self.join_text_with_comma_and_and(sentences)
         return self.natural_language_text_empty.format(sentences)
 
-    @staticmethod
-    def create_one_hot_sentence(feature_name, feature_value, sentence):
-        """
-        Create sentence from one-hot-encoded feature value, split the
-        column name into feature and value and create sentence
-        based on if the value was 1 = True, or 0 = False
-
-        Args:
-            feature_name (TYPE): DESCRIPTION.
-            feature_value (TYPE): DESCRIPTION.
-            sentence (TYPE): DESCRIPTION.
-
-        Returns:
-            sentence_filled (TYPE): DESCRIPTION.
-
-        """
-
-        column, value = feature_name.split(" - ")
-
-        if int(feature_value) == 1:
-            sentence_filled = sentence.format(column, f"'{value}'")
-        else:
-            sentence_filled = sentence.format(column, f"not '{value}'")
-
-        return sentence_filled
-
+    
     def _setup(self, sample_index, sample_name):
         """[summary]
 
@@ -477,5 +471,7 @@ class CounterfactualExplanation(ExplanationBase):
         sample_name = self.get_sample_name(sample_index, sample_name)
         self._setup(sample_index, sample_name)
         self.score_text = self.get_score_text()
-        self.explanation = self.get_explanation(separator)
+        self.explanation = Explanation(
+            self.score_text, self.method_text, self.natural_language_text
+        )
         return self.explanation

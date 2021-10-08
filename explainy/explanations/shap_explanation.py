@@ -25,6 +25,7 @@ import shap
 import sklearn
 
 from explainy.core.explanation_base import ExplanationBase
+from explainy.core.explanation import Explanation
 
 
 class ShapExplanation(ExplanationBase):
@@ -38,6 +39,7 @@ class ShapExplanation(ExplanationBase):
         model: sklearn.base.BaseEstimator,
         number_of_features: int = 4,
         config: Dict = None,
+        **kwargs
     ) -> None:
         super(ShapExplanation, self).__init__(config)
         """
@@ -57,14 +59,15 @@ class ShapExplanation(ExplanationBase):
         self.X = X
         self.y = y
         self.model = model
-        self.feature_names = list(self.X)
+        self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(
             number_of_features
         )
+        self.kwargs = kwargs
 
         natural_language_text_empty = (
-            "The {} features which were most important for this particular"
-            " sample were (from highest to lowest): {}."
+            "The {} features which contributed most to the prediction of this particular"
+            " sample were: {}."
         )
         method_text_empty = (
             "The feature importance was calculated using the SHAP method."
@@ -88,8 +91,10 @@ class ShapExplanation(ExplanationBase):
             None.
 
         """
-        self.explainer = shap.TreeExplainer(self.model)
+        self.explainer = shap.TreeExplainer(self.model, **self.kwargs)
         self.shap_values = self.explainer.shap_values(self.X)
+        
+        # print(self.shap_values)
 
         if isinstance(self.explainer.expected_value, np.ndarray):
             self.explainer.expected_value = self.explainer.expected_value[0]
@@ -123,21 +128,6 @@ class ShapExplanation(ExplanationBase):
                 )
             )
         return feature_values
-
-    # def get_score(self, sample_index: int = 0) -> float:
-    #     """
-    #     calculate the overall score of the sample (output-values)
-
-    #     Args:
-    #         sample_index (int, optional): sample for which the explanation should
-    #             be returned. Defaults to 0.
-    #     Returns:
-    #         None.
-    #     """
-    #     return (
-    #         np.sum(self.shap_values[sample_index, :])
-    #         + self.explainer.expected_value
-    #     )
 
     def plot(self, sample_index: int = 0, kind="bar") -> None:
         """
@@ -242,6 +232,7 @@ class ShapExplanation(ExplanationBase):
             None.
 
         """
+        print(sample_index)
         self._calculate_importance()
         self._log_output(sample_index)
         self.feature_values = self.get_feature_values(sample_index)
@@ -269,5 +260,7 @@ class ShapExplanation(ExplanationBase):
         self._setup(sample_index, sample_name)
 
         self.score_text = self.get_score_text()
-        self.explanation = self.get_explanation(separator)
+        self.explanation = Explanation(
+            self.score_text, self.method_text, self.natural_language_text
+        )
         return self.explanation

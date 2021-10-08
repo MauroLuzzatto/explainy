@@ -17,7 +17,7 @@ class SurrogateText(ExplanationMixin):
         self, text: str, model: object, X: np.array, feature_names: list
     ):
         """
-
+        Class to generate text explanation from Decision Trees
 
         Args:
             text (TYPE): DESCRIPTION.
@@ -29,7 +29,6 @@ class SurrogateText(ExplanationMixin):
             None.
 
         """
-
         self.text = text
         self.model = model
         self.X = X
@@ -39,6 +38,8 @@ class SurrogateText(ExplanationMixin):
         self.children_right = self.model.tree_.children_right
         self.feature = self.model.tree_.feature
         self.threshold = self.model.tree_.threshold
+        
+        # print(self.model.tree_.value, self.model.tree_.value.shape)
         self.values = self.model.tree_.value.reshape(
             self.model.tree_.value.shape[0], 1
         )

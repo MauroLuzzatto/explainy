@@ -16,7 +16,7 @@ class Explanation(object):
     def get_explanation(self, separator="\n"):
 
         if separator:
-            self.explanation = separator.join(
+            explanation = separator.join(
                 [self.score_text, self.method_text, self.natural_language_text]
             )
         else:
@@ -31,4 +31,4 @@ class Explanation(object):
         print(self.get_explanation(separator))
 
     def __str__(self, separator="\n"):
-        return self.print_output(separator)
+        return self.get_explanation(separator)

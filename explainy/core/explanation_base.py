@@ -9,9 +9,10 @@ import csv
 import os
 import warnings
 from abc import ABC, abstractmethod
-from typing import Dict
+from typing import Dict, Union, List
 
 import pandas as pd
+import numpy as np
 
 from explainy.core.explanation_mixin import ExplanationMixin
 from explainy.logger import Logger
@@ -56,6 +57,14 @@ class ExplanationBase(ABC, ExplanationMixin):
             "score_text_empty", score_text_empty
         )
 
+        description_text_empty = (
+            "This is a {} explanation, it creates {} and {} explanations."
+        )
+        self.description_text_empty = self.config.get(
+            "description_text_empty", description_text_empty
+        )
+
+
     def define_explanation_placeholder(
         self,
         natural_language_text_empty,
@@ -92,6 +101,22 @@ class ExplanationBase(ABC, ExplanationMixin):
                 f" features. The value is set to {self.X.shape[1]}"
             )
         return min(number_of_features, self.X.shape[1])
+
+    def get_feature_names(self, X: Union[pd.DataFrame, np.array]) -> List[str]:
+        """get the feature names based on the given dataset
+
+        Args:
+            X (Union[pd.DataFrame, np.array]): dataset
+
+        Returns:
+            List[str]: list of feature names
+        """
+        if isinstance(X, pd.DataFrame):
+            feature_names = list(X)
+        else:
+            feature_names = [f'feature_{index}' for index in range(X.shape[1])]
+        return feature_names
+
 
     def set_paths(self):
         """
@@ -178,6 +203,19 @@ class ExplanationBase(ABC, ExplanationMixin):
             self.num_to_str[self.number_of_features], self.sentences
         )
 
+    def get_description_text(self):
+        """
+        Example:
+        This is a SHAP explanation, it creates local and non-contrastive explanations.
+
+        Returns:
+            [type]: [description]
+        """
+        return self.description_text_empty.format(
+            self.explanation_name, self.explanation_type, self.explanation_style
+        )
+
+
     def get_score_text(self):
         """
 
@@ -217,32 +255,6 @@ class ExplanationBase(ABC, ExplanationMixin):
             )
         return plot_name
 
-    def get_explanation(self, separator="\n"):
-
-        assert hasattr(self, "method_text"), "instance lacks method_text"
-        assert hasattr(self, "score_text"), "instance lacks score_text"
-        assert hasattr(
-            self, "natural_language_text"
-        ), "instance lacks natural_language_text"
-
-        if separator:
-            explanation = separator.join(
-                [self.score_text, self.method_text, self.natural_language_text]
-            )
-        else:
-            explanation = (
-                self.score_text,
-                self.method_text,
-                self.natural_language_text,
-            )
-        return explanation
-
-    def print_output(self, separator="\n"):
-        print(self.get_explanation(separator))
-
-    def __str__(self, separator="\n"):
-        return self.print_output(separator)
-
     def get_sample_name(self, sample_index, sample_name):
         if not sample_name:
             sample_name = str(sample_index)
@@ -257,8 +269,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             sample_index ([type]): [description]
             sample_name ([type], optional): [description]. Defaults to None.
         """
-        if not sample_name:
-            sample_name = sample_index
+        sample_name = self.get_sample_name(sample_index, sample_name)
 
         self.save_csv(sample_name)
 

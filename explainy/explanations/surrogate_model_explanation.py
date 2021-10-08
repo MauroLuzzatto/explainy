@@ -25,8 +25,10 @@ import numpy as np
 from sklearn.base import is_classifier, is_regressor  # type: ignore
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from IPython.display import display
 
 from explainy.core.explanation_base import ExplanationBase
+from explainy.core.explanation import Explanation
 from explainy.utils.surrogate_plot import SurrogatePlot
 from explainy.utils.surrogate_text import SurrogateText
 
@@ -43,7 +45,8 @@ class SurrogateModelExplanation(ExplanationBase):
         model,
         number_of_features: int = 4,
         config: Dict = None,
-        kind="tree",
+        kind:str = "tree",
+        **kwargs
     ):
         super(SurrogateModelExplanation, self).__init__(config)
         """
@@ -62,11 +65,12 @@ class SurrogateModelExplanation(ExplanationBase):
         """
         self.X = X
         self.y = y
-        self.feature_names = list(X)
+        self.feature_names = self.get_feature_names(self.X)
         self.model = model
         self.number_of_features = np.log2(number_of_features)
         self.number_of_groups = number_of_features
         self.kind = kind
+        self.kwargs = kwargs
 
         kinds = ["tree", "linear"]
         assert (
@@ -74,14 +78,13 @@ class SurrogateModelExplanation(ExplanationBase):
         ), f"'{self.kind}' is not a valid option, select from {kinds}"
 
         natural_language_text_empty = (
-            "The features which were most important for the predictions were as"
-            " follows: {}"
+            "The following thresholds were important for the predictions: {}"
         )
         method_text_empty = (
             "The feature importance was calculated using a {} surrogate model."
             " {} tree nodes are shown."
         )
-        sentence_text_empty = "The samples got a value of {:.2f} if {}"
+        sentence_text_empty = "\nThe samples got a value of {:.2f} if {}"
 
         self.define_explanation_placeholder(
             natural_language_text_empty, method_text_empty, sentence_text_empty
@@ -92,7 +95,7 @@ class SurrogateModelExplanation(ExplanationBase):
 
         self._setup()
 
-    def _calculate_importance(self, max_leaf_nodes=100):
+    def _calculate_importance(self):
         """
         Train a surrogate model (Decision Tree) on the predicted values
         from the original model
@@ -105,7 +108,7 @@ class SurrogateModelExplanation(ExplanationBase):
             elif is_classifier(self.model):
                 estimator = DecisionTreeClassifier
 
-            self.tree_surrgate(estimator, max_leaf_nodes=max_leaf_nodes)
+            self.tree_surrogate(estimator)
 
         elif self.kind == "linear":
             if is_regressor(self.model):
@@ -122,14 +125,14 @@ class SurrogateModelExplanation(ExplanationBase):
 
         self.surrogate_model.fit(self.X, y_hat)
         self.logger.info(
-            "Surrogate Model R2 score: {:.2f}".format(
+            "Surrogate Model score: {:.2f}".format(
                 self.surrogate_model.score(self.X, y_hat)
             )
         )
 
-    def tree_surrgate(self, estimator, max_leaf_nodes, **kwargs):
+    def tree_surrogate(self, estimator):
         """
-
+        Initialize the tree surrogate model
 
         Args:
             estimator (TYPE): DESCRIPTION.
@@ -140,41 +143,39 @@ class SurrogateModelExplanation(ExplanationBase):
             None.
 
         """
-
         self.surrogate_model = estimator(
-            max_depth=self.number_of_features, max_leaf_nodes=max_leaf_nodes
+            max_depth=self.number_of_features, **self.kwargs
         )
 
-    def linear_surrogate(self, estimator, **kwargs):
+    def linear_surrogate(self, estimator):
         """
-
+        Initialize the linear surrogate model
 
         Args:
             estimator (TYPE): DESCRIPTION.
-            **kwargs (TYPE): DESCRIPTION.
 
         Returns:
             None.
 
         """
-        self.surrogate_model = estimator(**kwargs)
+        self.surrogate_model = estimator(**self.kwargs)
 
     def get_feature_values():
         pass
 
-    def plot(self, index_sample=None, **kwargs):
+    def plot(self, index_sample=None):
 
         if self.kind == "tree":
-            self.plot_tree(index_sample, **kwargs)
+            self._plot_tree(index_sample)
         elif self.kind == "linear":
-            self.plot_bar(index_sample, **kwargs)
+            self._plot_bar(index_sample)
         else:
             raise Exception(f'Value of "kind" is not supported: {self.kind}!')
 
-    def plot_bar(self, sample_index):
+    def _plot_bar(self, sample_index):
         raise NotImplementedError("to be done")
 
-    def plot_tree(self, sample_index=None, precision=2, **kwargs):
+    def _plot_tree(self, sample_index=None, precision=2, **kwargs):
         """
         use garphix to plot the decision tree
         """
@@ -188,12 +189,13 @@ class SurrogateModelExplanation(ExplanationBase):
         name, extension = os.path.splitext(self.plot_name)
 
         try:
-            graphviz.Source(
+            gvz = graphviz.Source(
                 self.dot_file,
                 filename=os.path.join(self.path_plot, name),
                 format=extension.replace(".", ""),
-            ).view()
-
+            )
+            # gvz.view()
+            display(gvz)
         except subprocess.CalledProcessError:
             warnings.warn("plot already open!")
 
@@ -275,5 +277,7 @@ class SurrogateModelExplanation(ExplanationBase):
 
         self.get_prediction(sample_index)
         self.score_text = self.get_score_text()
-        self.explanation = self.get_explanation(separator)
+        self.explanation = Explanation(
+            self.score_text, self.method_text, self.natural_language_text
+        )
         return self.explanation

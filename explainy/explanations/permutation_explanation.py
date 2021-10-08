@@ -21,8 +21,7 @@ https://christophm.github.io/interpretable-ml-book/
 [2] https://scikit-learn.org/stable/modules/permutation_importance.html
 
 """
-import os
-from typing import Dict
+from typing import Dict, Optional, List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -31,8 +30,8 @@ import sklearn
 from sklearn.inspection import permutation_importance
 
 from explainy.core.explanation_base import ExplanationBase
+from explainy.core.explanation import Explanation
 
-RANDOM_SEED = 0
 
 class PermutationExplanation(ExplanationBase):
     """
@@ -46,6 +45,9 @@ class PermutationExplanation(ExplanationBase):
         model: sklearn.base.BaseEstimator,
         number_of_features: int = 4,
         config: Dict = None,
+        n_repeats: Optional[int] = 30,
+        random_state: Optional[int] = 0,
+        **kwargs
     ):
         super(PermutationExplanation, self).__init__(config)
         """        
@@ -65,14 +67,16 @@ class PermutationExplanation(ExplanationBase):
         self.X = X
         self.y = y
         self.model = model
-        self.feature_names = list(self.X)
+        self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(
             number_of_features
         )
+        self.kwargs = kwargs
+        self.kwargs['n_repeats'] = n_repeats
+        self.kwargs['random_state'] = random_state
 
         natural_language_text_empty = (
-            "The {} features which were most important for the predictions were"
-            " (from highest to lowest): {}."
+            "The {} features which were most important for the predictions were: {}."
         )
         method_text_empty = (
             "The feature importance was calculated using the Permutation"
@@ -87,13 +91,9 @@ class PermutationExplanation(ExplanationBase):
         self.explanation_name = "permutation"
         self.logger = self.setup_logger(self.explanation_name)
 
-        # hyparameters
-        n_repeats = self.config.get("n_repeats", 30)
-        # TODO: how to solve the hyperparamter issue
-        # self._setup(**kwargs)
-        self._setup(n_repeats)
+        self._setup()
 
-    def _calculate_importance(self, n_repeats=30):
+    def _calculate_importance(self):
         """
         Calculate the feature importance using the Permuation Feature Importance
 
@@ -108,17 +108,13 @@ class PermutationExplanation(ExplanationBase):
             self.model,
             self.X.values,
             self.y.values,
-            n_repeats=n_repeats,
-            random_state=RANDOM_SEED,
+            **self.kwargs
         )
 
-    def get_feature_values(self):
+    def get_feature_values(self) -> List[Tuple[str, float]]:
         """
-        extract the feature name and its importance per sample
-
-        Args:
-            sample (int, optional): sample for which the explanation should
-            be returned. Defaults to 0.
+        extract the feature name and its importance per sample,
+        sort by importance -> highest to lowest
 
         Returns:
             feature_values (list(tuple(str, float))): list of tuples for each
@@ -126,22 +122,20 @@ class PermutationExplanation(ExplanationBase):
 
         """
         feature_values = []
-        # sort by importance -> highest to lowest
         for index in self.r.importances_mean.argsort()[::-1][
             : self.number_of_features
         ]:
             feature_values.append(
                 (self.feature_names[index], self.r.importances_mean[index])
             )
-
         return feature_values
 
-    def _box_plot(self):
+    def _box_plot(self) -> plt.figure:
         """
         Plot the sorted permutation feature importance using a boxplot
 
         Returns:
-            None.
+            plt.figure: a figure object
 
         """
         sorted_idx = self.r.importances_mean.argsort()
@@ -161,25 +155,20 @@ class PermutationExplanation(ExplanationBase):
         plt.show()
         return fig
 
-    def _bar_plot(self):
+    def _bar_plot(self) -> plt.figure:
         """
         Plot the sorted permutation feature importance using a barplot
 
         Returns:
-            None.
-
+            plt.figure: a figure object
         """
         sorted_idx = self.r.importances_mean.argsort()
-        # values = self.r.importances[sorted_idx].T
         labels = [self.feature_names[i] for i in sorted_idx][
             -self.number_of_features :
         ]
-
-        # width = np.mean(values[:, -self.number_of_features :], axis=0)
         width = [self.r.importances_mean[i] for i in sorted_idx][
             -self.number_of_features :
         ]
-
         y = np.arange(self.number_of_features)
 
         fig = plt.figure(
@@ -194,7 +183,7 @@ class PermutationExplanation(ExplanationBase):
         plt.show()
         return fig
 
-    def plot(self, sample_index=None, kind="bar"):
+    def plot(self, sample_index:int=None, kind:str="bar") -> None:
         """
         Plot method that calls different kinds of plot types
 
@@ -211,7 +200,7 @@ class PermutationExplanation(ExplanationBase):
         else:
             raise Exception(f'Value of "kind" is not supported: {kind}!')
 
-    def _setup(self, n_repeats):
+    def _setup(self) -> None:
         """
         Since the plots and values are calculate once per trained model,
         the feature importance computatoin is done at the beginning
@@ -220,7 +209,7 @@ class PermutationExplanation(ExplanationBase):
         Returns:
             None.
         """
-        self._calculate_importance(n_repeats=n_repeats)
+        self._calculate_importance()
         self.feature_values = self.get_feature_values()
 
         self.sentences = self.get_sentences(
@@ -230,7 +219,7 @@ class PermutationExplanation(ExplanationBase):
         self.method_text = self.get_method_text()
         self.plot_name = self.get_plot_name()
 
-    def explain(self, sample_index, sample_name=None, separator="\n"):
+    def explain(self, sample_index:int, sample_name:str=None, separator="\n"):
         """
         main function to create the explanation of the given sample. The
         method_text, natural_language_text and the plots are create per sample.
@@ -244,5 +233,7 @@ class PermutationExplanation(ExplanationBase):
         sample_name = self.get_sample_name(sample_index, sample_name)
         self.get_prediction(sample_index)
         self.score_text = self.get_score_text()
-        self.explanation = self.get_explanation(separator)
+        self.explanation = Explanation(
+            self.score_text, self.method_text, self.natural_language_text
+        )
         return self.explanation

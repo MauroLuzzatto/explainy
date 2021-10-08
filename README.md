@@ -51,9 +51,11 @@ y_test = pd.DataFrame(y_test)
 model = RandomForestRegressor(random_state=0).fit(X_train, y_train)
 ```
 
-Pass the trained model and the to be explained dataset into a `PermutationExplanation` (or any other explanation) object. 
+Initialize the `PermutationExplanation` (or any other explanation) object and pass in the trained model and the to be explained dataset. 
 
-Define the number of features used in the explanation and the index of the sample that should be explained.
+Addtionally, define the number of features used in the explanation. This allows you to configure the verbosity of your exaplanation.
+
+ Set the index of the sample that should be explained.
 
 ```python
 from explainy.explanations.permutation_explanation import PermutationExplanation
@@ -68,7 +70,7 @@ explainer = PermutationExplanation(
 Call the `explain()` method and print the explanation for the sample (in case of a local explanation every sample has a different explanation).
 
 ```python
-explanation = explainer.explain(sample_index)
+explanation = explainer.explain(sample_index=1)
 print(explanation)
 ```
 > The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8.
