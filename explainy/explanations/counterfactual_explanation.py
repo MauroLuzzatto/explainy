@@ -49,8 +49,8 @@ class CounterfactualExplanation(ExplanationBase):
         config: Dict = None,
         y_desired: float = None,
         delta: float = None,
-        random_state:int = 0,
-        **kwargs
+        random_state: int = 0,
+        **kwargs,
     ) -> None:
         super(CounterfactualExplanation, self).__init__(config)
         """
@@ -125,7 +125,7 @@ class CounterfactualExplanation(ExplanationBase):
                 model=self.model,
                 X_dataset=self.X.values,
                 lammbda=lammbda,
-                **self.kwargs
+                **self.kwargs,
             )
 
             self.y_counter_factual = self.model.predict(
@@ -139,9 +139,9 @@ class CounterfactualExplanation(ExplanationBase):
                 if np.abs(self.y_counter_factual - self.y_desired) < self.delta:
                     break
             elif is_classifier(self.model):
-                 if self.y_counter_factual == self.y_desired:
+                if self.y_counter_factual == self.y_desired:
                     break
-            
+
             if count > 40:
                 raise
             count += 1
@@ -168,7 +168,8 @@ class CounterfactualExplanation(ExplanationBase):
         )
         self.logger.debug(
             f"y_counterfactual: {self.y_counter_factual:.2f}, desired:"
-            f" {self.y_desired:.2f}, y_pred: {self.prediction:.2f}, delta: {self.delta}"
+            f" {self.y_desired:.2f}, y_pred: {self.prediction:.2f}, delta:"
+            f" {self.delta}"
         )
         self.logger.debug("---" * 15)
 
@@ -197,7 +198,6 @@ class CounterfactualExplanation(ExplanationBase):
         self.logger.debug(
             "Features of the countefactual: {}".format(x_counter_factual)
         )
-       
 
     def get_prediction_from_new_value(self, ii, x_ref, x_counter_factual):
         """
@@ -257,7 +257,9 @@ class CounterfactualExplanation(ExplanationBase):
             np.array(self.differences).argsort()[::-1]
         ].tolist()
 
-    def get_feature_values(self, x_ref, x_counter_factual, decimal=2, debug=False):
+    def get_feature_values(
+        self, x_ref, x_counter_factual, decimal=2, debug=False
+    ):
         """
         Arrange the reference and the counter factual features in a dataframe
 
@@ -327,10 +329,9 @@ class CounterfactualExplanation(ExplanationBase):
     def plot(self, sample_index=None, kind='table', **kwargs):
 
         if kind == "table":
-           self.fig = self._plot_table(sample_index)
+            self.fig = self._plot_table(sample_index)
         else:
             raise Exception(f'Value of "kind" is not supported: {kind}!')
-
 
     def _plot_table(self, sample_index=None):
         """
@@ -441,7 +442,6 @@ class CounterfactualExplanation(ExplanationBase):
         sentences = "if " + self.join_text_with_comma_and_and(sentences)
         return self.natural_language_text_empty.format(sentences)
 
-    
     def _setup(self, sample_index, sample_name):
         """[summary]
 

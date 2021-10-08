@@ -1,18 +1,17 @@
-
-
 class Explanation(object):
     """
     Explanation class
     """
 
-    def __init__(self, score_text, method_text, natural_language_text, separator="\n"):
-        """
-        """
+    def __init__(
+        self, score_text, method_text, natural_language_text, separator="\n"
+    ):
+        """ """
         self.score_text = score_text
         self.method_text = method_text
         self.natural_language_text = natural_language_text
         self.explanation = self.get_explanation(separator=separator)
-    
+
     def get_explanation(self, separator="\n"):
 
         if separator:

@@ -38,7 +38,7 @@ class SurrogateText(ExplanationMixin):
         self.children_right = self.model.tree_.children_right
         self.feature = self.model.tree_.feature
         self.threshold = self.model.tree_.threshold
-        
+
         # print(self.model.tree_.value, self.model.tree_.value.shape)
         self.values = self.model.tree_.value.reshape(
             self.model.tree_.value.shape[0], 1

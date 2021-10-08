@@ -45,8 +45,8 @@ class SurrogateModelExplanation(ExplanationBase):
         model,
         number_of_features: int = 4,
         config: Dict = None,
-        kind:str = "tree",
-        **kwargs
+        kind: str = "tree",
+        **kwargs,
     ):
         super(SurrogateModelExplanation, self).__init__(config)
         """
@@ -199,7 +199,7 @@ class SurrogateModelExplanation(ExplanationBase):
         except subprocess.CalledProcessError:
             warnings.warn("plot already open!")
 
-    def save(self, sample_index:int, sample_name:str=None) -> None:
+    def save(self, sample_index: int, sample_name: str = None) -> None:
         """
         Save the explanations to a csv file, save the plots
 

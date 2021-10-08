@@ -7,8 +7,9 @@ Created on Mon Aug 16 21:58:56 2021
 
 import pytest
 
-from explainy.explanations.surrogate_model_explanation import \
-    SurrogateModelExplanation
+from explainy.explanations.surrogate_model_explanation import (
+    SurrogateModelExplanation,
+)
 
 from .utils import get_regression_model
 
@@ -27,11 +28,13 @@ def test_counterfactual_explanation_4_features():
 
     assert (
         explanation.score_text
-        == "The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8."
+        == "The RandomForestRegressor used 10 features to produce the"
+        " predictions. The prediction of this sample was 251.8."
     )
     assert (
         explanation.method_text
-        == "The feature importance was calculated using a DecisionTreeRegressor surrogate model. Four tree nodes are shown."
+        == "The feature importance was calculated using a DecisionTreeRegressor"
+        " surrogate model. Four tree nodes are shown."
     )
     # assert (
     #     natural_language_text
@@ -50,14 +53,16 @@ def test_counterfactual_explanation_8_features():
         X_test, y_test, model, number_of_features
     )
     explanation = explainer.explain(sample_index, separator=None)
-   
+
     assert (
         explanation.score_text
-        == "The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8."
+        == "The RandomForestRegressor used 10 features to produce the"
+        " predictions. The prediction of this sample was 251.8."
     )
     assert (
         explanation.method_text
-        == "The feature importance was calculated using a DecisionTreeRegressor surrogate model. Eight tree nodes are shown."
+        == "The feature importance was calculated using a DecisionTreeRegressor"
+        " surrogate model. Eight tree nodes are shown."
     )
     # assert (
     #     natural_language_text

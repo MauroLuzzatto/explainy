@@ -32,6 +32,7 @@ class ShapExplanation(ExplanationBase):
     """
     Non-contrastive, local Explanation
     """
+
     def __init__(
         self,
         X: pd.DataFrame,
@@ -39,7 +40,7 @@ class ShapExplanation(ExplanationBase):
         model: sklearn.base.BaseEstimator,
         number_of_features: int = 4,
         config: Dict = None,
-        **kwargs
+        **kwargs,
     ) -> None:
         super(ShapExplanation, self).__init__(config)
         """
@@ -66,8 +67,8 @@ class ShapExplanation(ExplanationBase):
         self.kwargs = kwargs
 
         natural_language_text_empty = (
-            "The {} features which contributed most to the prediction of this particular"
-            " sample were: {}."
+            "The {} features which contributed most to the prediction of this"
+            " particular sample were: {}."
         )
         method_text_empty = (
             "The feature importance was calculated using the SHAP method."
@@ -93,7 +94,7 @@ class ShapExplanation(ExplanationBase):
         """
         self.explainer = shap.TreeExplainer(self.model, **self.kwargs)
         self.shap_values = self.explainer.shap_values(self.X)
-        
+
         # print(self.shap_values)
 
         if isinstance(self.explainer.expected_value, np.ndarray):
@@ -102,7 +103,9 @@ class ShapExplanation(ExplanationBase):
             self.explainer.expected_value, float
         ), "self.explainer.expected_value has wrong type"
 
-    def get_feature_values(self, sample_index: int = 0) -> List[Tuple[str, float]]:
+    def get_feature_values(
+        self, sample_index: int = 0
+    ) -> List[Tuple[str, float]]:
         """
         extract the feature name and its importance per sample
         - get absolute values to get the strongst postive and negative contribution
@@ -213,14 +216,10 @@ class ShapExplanation(ExplanationBase):
         self.logger.debug(
             f"The expected_value was: {self.explainer.expected_value:.2f}"
         )
-        self.logger.debug(
-            f"The y_value was: {self.y.values[sample_index][0]}"
-        )
-        self.logger.debug(
-            f"The predicted value was: {self.prediction}"
-        )
+        self.logger.debug(f"The y_value was: {self.y.values[sample_index][0]}")
+        self.logger.debug(f"The predicted value was: {self.prediction}")
 
-    def _setup(self, sample_index:int, sample_name:str):
+    def _setup(self, sample_index: int, sample_name: str):
         """
         Helper function to call all methods to create the explanations
 

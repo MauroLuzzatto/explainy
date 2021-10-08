@@ -47,7 +47,7 @@ class PermutationExplanation(ExplanationBase):
         config: Dict = None,
         n_repeats: Optional[int] = 30,
         random_state: Optional[int] = 0,
-        **kwargs
+        **kwargs,
     ):
         super(PermutationExplanation, self).__init__(config)
         """        
@@ -76,7 +76,8 @@ class PermutationExplanation(ExplanationBase):
         self.kwargs['random_state'] = random_state
 
         natural_language_text_empty = (
-            "The {} features which were most important for the predictions were: {}."
+            "The {} features which were most important for the predictions"
+            " were: {}."
         )
         method_text_empty = (
             "The feature importance was calculated using the Permutation"
@@ -105,10 +106,7 @@ class PermutationExplanation(ExplanationBase):
             None
         """
         self.r = permutation_importance(
-            self.model,
-            self.X.values,
-            self.y.values,
-            **self.kwargs
+            self.model, self.X.values, self.y.values, **self.kwargs
         )
 
     def get_feature_values(self) -> List[Tuple[str, float]]:
@@ -183,7 +181,7 @@ class PermutationExplanation(ExplanationBase):
         plt.show()
         return fig
 
-    def plot(self, sample_index:int=None, kind:str="bar") -> None:
+    def plot(self, sample_index: int = None, kind: str = "bar") -> None:
         """
         Plot method that calls different kinds of plot types
 
@@ -219,7 +217,9 @@ class PermutationExplanation(ExplanationBase):
         self.method_text = self.get_method_text()
         self.plot_name = self.get_plot_name()
 
-    def explain(self, sample_index:int, sample_name:str=None, separator="\n"):
+    def explain(
+        self, sample_index: int, sample_name: str = None, separator="\n"
+    ):
         """
         main function to create the explanation of the given sample. The
         method_text, natural_language_text and the plots are create per sample.

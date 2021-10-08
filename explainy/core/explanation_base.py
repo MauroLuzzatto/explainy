@@ -64,7 +64,6 @@ class ExplanationBase(ABC, ExplanationMixin):
             "description_text_empty", description_text_empty
         )
 
-
     def define_explanation_placeholder(
         self,
         natural_language_text_empty,
@@ -98,7 +97,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         if number_of_features > self.X.shape[1]:
             warnings.warn(
                 'The "number_of_features" is larger than the number of dataset'
-                f" features. The value is set to {self.X.shape[1]}"
+                f' features. The value is set to {self.X.shape[1]}'
             )
         return min(number_of_features, self.X.shape[1])
 
@@ -116,7 +115,6 @@ class ExplanationBase(ABC, ExplanationMixin):
         else:
             feature_names = [f'feature_{index}' for index in range(X.shape[1])]
         return feature_names
-
 
     def set_paths(self):
         """
@@ -215,7 +213,6 @@ class ExplanationBase(ABC, ExplanationMixin):
             self.explanation_name, self.explanation_type, self.explanation_style
         )
 
-
     def get_score_text(self):
         """
 
@@ -260,8 +257,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             sample_name = str(sample_index)
         return sample_name
 
-
-    def save(self, sample_index:int, sample_name:str=None) -> None:
+    def save(self, sample_index: int, sample_name: str = None) -> None:
         """
         Save the explanations to a csv file, save the plots
 
