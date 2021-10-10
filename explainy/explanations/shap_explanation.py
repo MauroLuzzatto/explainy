@@ -123,7 +123,7 @@ class ShapExplanation(ExplanationBase):
         """
         indexes = np.argsort(abs(self.shap_values[sample_index, :]))
         feature_values = []
-        for index in indexes.tolist()[::-1][: self.number_of_features]:
+        for index in indexes.tolist()[::-1]:
             feature_values.append(
                 (
                     self.feature_names[index],
@@ -235,10 +235,7 @@ class ShapExplanation(ExplanationBase):
         self._calculate_importance()
         self._log_output(sample_index)
         self.feature_values = self.get_feature_values(sample_index)
-
-        self.sentences = self.get_sentences(
-            self.feature_values, self.sentence_text_empty
-        )
+        self.sentences = self.get_sentences()
         self.natural_language_text = self.get_natural_language_text()
         self.method_text = self.get_method_text()
         self.plot_name = self.get_plot_name(sample_name)
@@ -255,10 +252,10 @@ class ShapExplanation(ExplanationBase):
             None.
         """
         sample_name = self.get_sample_name(sample_index, sample_name)
-        self.get_prediction(sample_index)
-        self._setup(sample_index, sample_name)
-
+        self.prediction = self.get_prediction(sample_index)
         self.score_text = self.get_score_text()
+
+        self._setup(sample_index, sample_name)
         self.explanation = Explanation(
             self.score_text, self.method_text, self.natural_language_text
         )

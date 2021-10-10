@@ -34,6 +34,10 @@ from explainy.utils.utils import create_one_hot_sentence
 
 np.seterr(divide="ignore", invalid="ignore")
 
+COLUMN_REF = "Reference Values"
+COLUMN_COUNTERFACTUAL = "Counterfactual Values"
+COLUMN_DIFF = "Prediction Difference"
+
 
 class CounterfactualExplanation(ExplanationBase):
     """
@@ -67,7 +71,6 @@ class CounterfactualExplanation(ExplanationBase):
         
         Returns:
             None.
-
         """
         self.X = X
         self.y = y
@@ -107,7 +110,6 @@ class CounterfactualExplanation(ExplanationBase):
         Returns:
             x_ref (TYPE): DESCRIPTION.
             x_counter_factual (TYPE): DESCRIPTION.
-
         """
         if not self.y_desired:
             self.y_desired = min(self.prediction * 1.2, self.y.values.max())
@@ -151,7 +153,7 @@ class CounterfactualExplanation(ExplanationBase):
         self._log_output(sample_index, x_ref, x_counter_factual)
         return x_ref, x_counter_factual
 
-    def _log_counterfactual(self, lammbda):
+    def _log_counterfactual(self, lammbda:float):
         """
         Log the values from the counterfactual output
 
@@ -160,7 +162,6 @@ class CounterfactualExplanation(ExplanationBase):
 
         Returns:
             None.
-
         """
         self.logger.debug(f"lambda: {lammbda}")
         self.logger.debug(
@@ -184,7 +185,6 @@ class CounterfactualExplanation(ExplanationBase):
 
         Returns:
             None.
-
         """
         self.logger.debug("True label: {}".format(self.y.values[sample]))
         self.logger.debug("Predicted label: {}".format(self.prediction))
@@ -270,31 +270,25 @@ class CounterfactualExplanation(ExplanationBase):
 
         Returns:
             None.
-
         """
         self.df = (
             pd.DataFrame(
                 [x_ref, x_counter_factual, self.differences],
-                index=[
-                    "Reference Values",
-                    "Counter Factual Values",
-                    "difference of the new feature in the prediction",
-                ],
+                index=[COLUMN_REF, COLUMN_COUNTERFACTUAL, COLUMN_DIFF],
                 columns=self.feature_names,
-            )
-            .round(decimal)
-            .T
+            ).round(decimal).T
         )
         # reorder dataframe according the the feature importance
         self.df = self.df.loc[self.feature_sort, :]
         try:
-            self.df["difference of the new feature in the prediction"][
-                self.df["difference of the new feature in the prediction"] != 0
-            ]
+            self.df[COLUMN_DIFF][self.df[COLUMN_DIFF] != 0]
             if debug:
                 self.df.plot(kind="barh", figsize=(3, 5))
         except IndexError as e:
             print(e)
+    
+    def importance(self):
+        return self.df.round(2)g
 
     def format_features_for_plot(self):
         """
@@ -306,7 +300,7 @@ class CounterfactualExplanation(ExplanationBase):
 
         """
         for feature_name in list(self.df.index)[: self.number_of_features]:
-            for col_name in ["Reference Values", "Counter Factual Values"]:
+            for col_name in [COLUMN_REF, COLUMN_COUNTERFACTUAL]:
 
                 feature_value = self.df.loc[feature_name, col_name]
                 self.df.loc[feature_name, col_name] = self.map_category(
@@ -335,14 +329,14 @@ class CounterfactualExplanation(ExplanationBase):
 
     def _plot_table(self, sample_index=None):
         """
-        Plot the table comparing the refence and the counter factual values
+        Plot the table comparing the refence and the counterfactual values
 
         Returns:
             None.
         """
 
-        colLabels = ["Sample", "Counterfactual Values"]
-        columns = ["Reference Values", "Counter Factual Values"]
+        colLabels = ["Sample", "Counterfactual Sample"]
+        columns = [COLUMN_REF, COLUMN_COUNTERFACTUAL]
 
         self.format_features_for_plot()
         array_subset = self.df[columns].values[: self.number_of_features]
@@ -415,7 +409,7 @@ class CounterfactualExplanation(ExplanationBase):
         Returns:
             None.
         """
-        feature_values = self.df["Counter Factual Values"].tolist()[
+        feature_values = self.df[COLUMN_COUNTERFACTUAL].tolist()[
             : self.number_of_features
         ]
         feature_names = list(self.df.index)[: self.number_of_features]
@@ -443,13 +437,12 @@ class CounterfactualExplanation(ExplanationBase):
         return self.natural_language_text_empty.format(sentences)
 
     def _setup(self, sample_index, sample_name):
-        """[summary]
+        """
 
         Args:
             sample_index ([type]): [description]
             sample_name ([type]): [description]
         """
-        self.get_prediction(sample_index)
         x_ref, x_counter_factual = self._calculate_importance(sample_index)
         self.get_feature_importance(x_ref, x_counter_factual)
         self.get_feature_values(x_ref, x_counter_factual)
@@ -469,8 +462,10 @@ class CounterfactualExplanation(ExplanationBase):
             None.
         """
         sample_name = self.get_sample_name(sample_index, sample_name)
-        self._setup(sample_index, sample_name)
+        self.prediction = self.get_prediction(sample_index)
         self.score_text = self.get_score_text()
+
+        self._setup(sample_index, sample_name)
         self.explanation = Explanation(
             self.score_text, self.method_text, self.natural_language_text
         )

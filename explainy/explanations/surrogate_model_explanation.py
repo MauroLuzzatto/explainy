@@ -22,9 +22,11 @@ from typing import Dict
 
 import graphviz
 import numpy as np
+import sklearn
 from sklearn.base import is_classifier, is_regressor  # type: ignore
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.tree import export_text
 from IPython.display import display
 
 from explainy.core.explanation_base import ExplanationBase
@@ -160,8 +162,14 @@ class SurrogateModelExplanation(ExplanationBase):
         """
         self.surrogate_model = estimator(**self.kwargs)
 
-    def get_feature_values():
+    def get_feature_values(self):
         pass
+
+    def importance(self):
+
+        if isinstance(self.surrogate_model, (DecisionTreeClassifier, DecisionTreeRegressor)):
+            tree_rules = export_text(self.surrogate_model, feature_names=self.feature_names)
+        return tree_rules
 
     def plot(self, index_sample=None):
 
@@ -272,10 +280,8 @@ class SurrogateModelExplanation(ExplanationBase):
         Returns:
             None.
         """
-        if not sample_name:
-            sample_name = sample_index
-
-        self.get_prediction(sample_index)
+        sample_name = self.get_sample_name(sample_index, sample_name)
+        self.prediction = self.get_prediction(sample_index)
         self.score_text = self.get_score_text()
         self.explanation = Explanation(
             self.score_text, self.method_text, self.natural_language_text

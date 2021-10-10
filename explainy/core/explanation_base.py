@@ -146,8 +146,14 @@ class ExplanationBase(ABC, ExplanationMixin):
     @abstractmethod
     def get_feature_values(self):
         raise NotImplementedError("Subclasses should implement this!")
+    
+    def importance(self):
+        return pd.DataFrame(
+            self.feature_values, 
+            columns=['Feature', 'Importance']
+        ).round(2)
 
-    def get_prediction(self, sample: int = 0) -> float:
+    def get_prediction(self, sample_index: int = 0) -> float:
         """
         Get the model prediction
 
@@ -156,11 +162,8 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             None.
-
         """
-        assert hasattr(self, "model")
-        # x = self.X.values[sample, :].reshape(1, -1)
-        self.prediction = self.model.predict(self.X.values)[sample]
+        return self.model.predict(self.X.values)[sample_index]
 
     def get_method_text(self) -> None:
         """
@@ -173,7 +176,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             self.num_to_str[self.number_of_features]
         )
 
-    def get_sentences(self, feature_values: list, sentence_empty: str) -> None:
+    def get_sentences(self) -> None:
         """
         Generate the output sentences
 
@@ -182,9 +185,14 @@ class ExplanationBase(ABC, ExplanationMixin):
         Returns:
             None
         """
+        # TODO: change the selection of number of features to be done here
         values = []
-        for feature_name, feature_value in feature_values:
-            values.append(sentence_empty.format(feature_name, feature_value))
+        for feature_name, feature_value in self.feature_values[
+            : self.number_of_features
+        ]:
+            values.append(
+                self.sentence_text_empty.format(feature_name, feature_value)
+            )
 
         sentences = self.join_text_with_comma_and_and(values)
         return sentences
@@ -213,9 +221,10 @@ class ExplanationBase(ABC, ExplanationMixin):
             self.explanation_name, self.explanation_type, self.explanation_style
         )
 
-    def get_score_text(self):
+    def get_score_text(self) -> str:
         """
-
+        Generate the text explaining the prediction score of 
+        the sample
 
         Args:
             feature_values (list): DESCRIPTION.

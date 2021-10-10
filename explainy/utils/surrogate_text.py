@@ -147,7 +147,7 @@ class SurrogateText(ExplanationMixin):
                     else:
                         text = (
                             f"'{feature_name_per_node}' was less or equal than"
-                            f" {self.threshold[node]:.1f}"
+                            f" {self.threshold[node]:.2f}"
                         )
                 else:
 
@@ -156,7 +156,7 @@ class SurrogateText(ExplanationMixin):
                     else:
                         text = (
                             f"'{feature_name_per_node}' was greater than"
-                            f" {self.threshold[node]:.1f}"
+                            f" {self.threshold[node]:.2f}"
                         )
                 mask.append(text)
 

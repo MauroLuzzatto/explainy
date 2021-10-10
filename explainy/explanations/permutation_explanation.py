@@ -120,9 +120,7 @@ class PermutationExplanation(ExplanationBase):
 
         """
         feature_values = []
-        for index in self.r.importances_mean.argsort()[::-1][
-            : self.number_of_features
-        ]:
+        for index in self.r.importances_mean.argsort()[::-1]:
             feature_values.append(
                 (self.feature_names[index], self.r.importances_mean[index])
             )
@@ -209,10 +207,7 @@ class PermutationExplanation(ExplanationBase):
         """
         self._calculate_importance()
         self.feature_values = self.get_feature_values()
-
-        self.sentences = self.get_sentences(
-            self.feature_values, self.sentence_text_empty
-        )
+        self.sentences = self.get_sentences()
         self.natural_language_text = self.get_natural_language_text()
         self.method_text = self.get_method_text()
         self.plot_name = self.get_plot_name()
@@ -231,7 +226,7 @@ class PermutationExplanation(ExplanationBase):
             None.
         """
         sample_name = self.get_sample_name(sample_index, sample_name)
-        self.get_prediction(sample_index)
+        self.prediction = self.get_prediction(sample_index)
         self.score_text = self.get_score_text()
         self.explanation = Explanation(
             self.score_text, self.method_text, self.natural_language_text
