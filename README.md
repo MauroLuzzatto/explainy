@@ -34,6 +34,11 @@ pip install explainy
 
 ## Usage
 
+📚 A comprehensive example of the `explainy` API can be found in this example ![Jupyter Notebook](https://github.com/MauroLuzzatto/explainy/blob/main/examples/01-explainy-intro.ipynb) 
+ 
+📖 Or in the [example section](https://explainy.readthedocs.io/en/latest/examples/01-explainy-intro.html) of the documentation
+
+
 Initialize and train a `scikit-learn` model:
 ```python
 import pandas as pd
