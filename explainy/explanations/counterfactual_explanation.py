@@ -288,7 +288,7 @@ class CounterfactualExplanation(ExplanationBase):
             print(e)
     
     def importance(self):
-        return self.df.round(2)g
+        return self.df.round(2)
 
     def format_features_for_plot(self):
         """

@@ -29,15 +29,11 @@ class ExplanationBase(ABC, ExplanationMixin):
         config: Dict = None,
     ) -> None:
         """
+        Initialize the explanation base class
 
         Args:
-            config (Dict, optional): DESCRIPTION. Defaults to None.
-             (TYPE): DESCRIPTION.
-
-        Returns:
-            None: DESCRIPTION.
+            config (Dict, optional): config file that contains explanation settings. Defaults to None.
         """
-
         if not config:
             self.config = {}
         else:
@@ -53,10 +49,6 @@ class ExplanationBase(ABC, ExplanationMixin):
             "The {} used {} features to produce the predictions. The prediction"
             " of this sample was {:.1f}."
         )
-        self.score_text_empty = self.config.get(
-            "score_text_empty", score_text_empty
-        )
-
         description_text_empty = (
             "This is a {} explanation, it creates {} and {} explanations."
         )
@@ -64,15 +56,25 @@ class ExplanationBase(ABC, ExplanationMixin):
             "description_text_empty", description_text_empty
         )
 
+        self.score_text_empty = self.config.get(
+            "score_text_empty", score_text_empty
+        )
+
     def define_explanation_placeholder(
         self,
-        natural_language_text_empty,
-        method_text_empty,
-        sentence_text_empty,
-    ):
+        natural_language_text_empty: str,
+        method_text_empty: str,
+        sentence_text_empty: str,
+    ) -> None:
         """
-        Either set the explanation text or load it from defaults
+        Set the explanation text, if defined else load it from defaults
+
+        Args:
+            natural_language_text_empty (str): natural language explanation placeholder
+            method_text_empty (str): method placeholder
+            sentence_text_empty (str): sentence text placeholder
         """
+
         self.natural_language_text_empty = self.config.get(
             "natural_language_text_empty", natural_language_text_empty
         )
@@ -116,13 +118,12 @@ class ExplanationBase(ABC, ExplanationMixin):
             feature_names = [f'feature_{index}' for index in range(X.shape[1])]
         return feature_names
 
-    def set_paths(self):
+    def set_paths(self) -> None:
         """
         Set the paths where the output should be saved
 
         Returns:
             None.
-
         """
         self.path = os.path.join(
             os.path.dirname(os.getcwd()), "reports", self.folder
@@ -185,7 +186,6 @@ class ExplanationBase(ABC, ExplanationMixin):
         Returns:
             None
         """
-        # TODO: change the selection of number of features to be done here
         values = []
         for feature_name, feature_value in self.feature_values[
             : self.number_of_features
@@ -193,29 +193,29 @@ class ExplanationBase(ABC, ExplanationMixin):
             values.append(
                 self.sentence_text_empty.format(feature_name, feature_value)
             )
-
         sentences = self.join_text_with_comma_and_and(values)
         return sentences
 
-    def get_natural_language_text(self):
+    def get_natural_language_text(self) -> str:
         """
         Generate the output of the explanation in natural language.
 
         Returns:
-            TYPE: DESCRIPTION.
+            str: return the natural_language_text explanation
 
         """
         return self.natural_language_text_empty.format(
             self.num_to_str[self.number_of_features], self.sentences
         )
 
-    def get_description_text(self):
-        """
+    def get_description_text(self) -> str:
+        """ 
+        WIP
         Example:
         This is a SHAP explanation, it creates local and non-contrastive explanations.
 
         Returns:
-            [type]: [description]
+            str: return the explanation method description
         """
         return self.description_text_empty.format(
             self.explanation_name, self.explanation_type, self.explanation_style
@@ -226,42 +226,55 @@ class ExplanationBase(ABC, ExplanationMixin):
         Generate the text explaining the prediction score of 
         the sample
 
-        Args:
-            feature_values (list): DESCRIPTION.
-
         Returns:
-            TYPE: DESCRIPTION.
+            str: return the score_text for the sample.
 
         """
-        number_of_dataset_features = self.X.shape[1]
+        self.number_of_dataset_features = self.X.shape[1]
         return self.score_text_empty.format(
             self.model.__class__.__name__,
-            number_of_dataset_features,
+             self.number_of_dataset_features,
             self.prediction,
         )
 
-    def get_model_text(self):
-        return str(self.model)
-
-    def get_plot_name(self, sample=None):
-        """[summary]
-
-        Args:
-            sample ([type], optional): [description]. Defaults to None.
+    def get_model_text(self) -> str:
+        """
+        WIP
+        Generate text the explains the used machine learning model
 
         Returns:
-            [type]: [description]
+            str: return the description of the machine learning model
         """
+        return str(self.model)
 
-        if sample:
-            plot_name = f"{self.explanation_name}_sample_{sample}_sparse_{self.number_of_features}.png"
+    def get_plot_name(self, sample_name:str=None) -> str:
+        """
+        Get the name of the plot
+
+        Args:
+            sample_name (str, optional): [description]. Defaults to None.
+
+        Returns:
+            str: return the name of the plot
+        """
+        prefix = f"{self.explanation_name}_features_{self.number_of_features}"
+        if sample_name:
+            plot_name = f"{prefix}_sample_{sample_name}_.png"
         else:
-            plot_name = (
-                f"{self.explanation_name}_sparse_{self.number_of_features}.png"
-            )
+            plot_name = f"{prefix}.png"
         return plot_name
 
-    def get_sample_name(self, sample_index, sample_name):
+    def get_sample_name(self, sample_index:int, sample_name:str = None) -> str:
+        """
+        Determine the name of the sample, if no sample_name provide, use the sample_index
+
+        Args:
+            sample_index (int): index of the sample
+            sample_name (str, optional): name of the sample. Defaults to None.
+
+        Returns:
+            str: name of the sample
+        """
         if not sample_name:
             sample_name = str(sample_index)
         return sample_name
@@ -271,8 +284,8 @@ class ExplanationBase(ABC, ExplanationMixin):
         Save the explanations to a csv file, save the plots
 
         Args:
-            sample_index ([type]): [description]
-            sample_name ([type], optional): [description]. Defaults to None.
+            sample_index (int): [description]
+            sample_name (str, optional): name of the sample. Defaults to None.
         """
         sample_name = self.get_sample_name(sample_index, sample_name)
 

@@ -1,16 +1,19 @@
 
-<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="180" height="180" align="right"/>
-
+<!-- <img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="180" height="180" align="right"/> -->
+<p align="center">
+<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="280" height="280"/>
+</p>
 <!-- # explainy - machine learning model explanations for humans -->
+<!-- # explainy - black-box model explanations for humans -->
 
-# explainy - black-box model explanations for humans
-
+<h1 align="center">explainy - black-box model explanations for humans</h1>
 
 [![pypi version](https://img.shields.io/pypi/v/explainy.svg)](https://pypi.python.org/pypi/explainy)
 [![travis](https://app.travis-ci.com/MauroLuzzatto/explainy.svg?branch=main)](https://app.travis-ci.com/github/MauroLuzzatto/explainy?branch=master)
 [![docs](https://readthedocs.org/projects/explainy/badge/?version=latest)](https://explainy.readthedocs.io/en/latest/?version=latest)
 [![Supported versions](https://img.shields.io/pypi/pyversions/explainy.svg)](https://pypi.org/project/explainy)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/ambv/black)
+[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 [![Downloads](https://pepy.tech/badge/explainy)](https://pepy.tech/project/explainy)
 
 
@@ -75,7 +78,7 @@ explainer = PermutationExplanation(
 Call the `explain()` method and print the explanation for the sample (in case of a local explanation every sample has a different explanation).
 
 ```python
-explanation = explainer.explain(sample_index=1)
+explanation = explainer.explain(sample_index=sample_index)
 print(explanation)
 ```
 > The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8.
@@ -136,6 +139,6 @@ Description:
 
 Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. https://christophm.github.io/interpretable-ml-book/
 
-## Authors
-* **Mauro Luzzatto** - [Maurol](https://github.com/MauroLuzzatto)
+## Author
+**Mauro Luzzatto** - [Maurol](https://github.com/MauroLuzzatto)
 
