@@ -37,7 +37,7 @@ pip install explainy
 
 ## Usage
 
-📚 A comprehensive example of the `explainy` API can be found in this example ![Jupyter Notebook](https://github.com/MauroLuzzatto/explainy/blob/main/examples/01-explainy-intro.ipynb) 
+📚 A comprehensive example of the `explainy` API can be found in this ![Jupyter Notebook](https://github.com/MauroLuzzatto/explainy/blob/main/examples/01-explainy-intro.ipynb) 
  
 📖 Or in the [example section](https://explainy.readthedocs.io/en/latest/examples/01-explainy-intro.html) of the documentation
 
@@ -112,12 +112,16 @@ explainer.save(sample_index)
 | Method				|Type | Explanations | Classification | Regression | 
 | --- 				| --- | :---: | :---: | :---: | 
 |[Permutation Feature Importance](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.permutation_explanation)	| non-contrastive | global |  :star: | :star:|
-|[Shap Values](https://explainy.readthedocs.io/en/latest/explainy.explanations.html?highlight=shap#module-explainy.explanations.shap_explanation)		| non-contrastive | local |   :star: | :star:|
-|[Surrogate Model](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.surrogate_model_explanation)|contrastive | global | :star: | WIP|
+|[Shap Values](https://explainy.readthedocs.io/en/latest/explainy.explanations.html?highlight=shap#module-explainy.explanations.shap_explanation)		| non-contrastive | local |   	:construction: | :star:|
+|[Surrogate Model](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.surrogate_model_explanation)|contrastive | global | :construction: | :star: | 
 |[Counterfactual Example](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.counterfactual_explanation)| contrastive | local |:star:| :star:|
 
+Legend
+- :star: implemented
+- :construction:: work in progress
 
-Description:
+
+Description
 - **global**: explanation of system functionality (all samples have the same explanation)
 - **local**: explanation of decision rationale (each sample has its own explanation)
 - **contrastive**: tracing of decision path (differences to other outcomes are described)
@@ -127,6 +131,7 @@ Description:
 ## Features
 - Algorithms for inspecting black-box machine learning models 
 - Support for the machine learning frameworks `scikit-learn` and `xgboost`
+- **explainy** offers a standrdized API with three core methods `explain()`, `plot()`, `importance()`
 
 ### Other Machine Learning Explainability libraries to watch
 - [shap](https://github.com/slundberg/shap): A game theoretic approach to explain the output of any machine learning model
