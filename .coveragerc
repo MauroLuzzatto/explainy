@@ -1,3 +1,16 @@
-[run]
-source=explainy
+[paths]
+source =
+   src
+   */site-packages
 
+[run]
+branch = true
+source =
+    explainy
+    tests
+parallel = true
+
+[report]
+show_missing = true
+precision = 2
+omit = *migrations*
