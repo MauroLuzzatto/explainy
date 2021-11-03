@@ -34,9 +34,9 @@ from explainy.utils.utils import create_one_hot_sentence
 
 np.seterr(divide="ignore", invalid="ignore")
 
-COLUMN_REF = "Reference Values"
+COLUMN_REFERENCE = "Reference Values"
 COLUMN_COUNTERFACTUAL = "Counterfactual Values"
-COLUMN_DIFF = "Prediction Difference"
+COLUMN_DIFFERENCE = "Prediction Difference"
 
 
 class CounterfactualExplanation(ExplanationBase):
@@ -274,14 +274,14 @@ class CounterfactualExplanation(ExplanationBase):
         self.df = (
             pd.DataFrame(
                 [x_ref, x_counter_factual, self.differences],
-                index=[COLUMN_REF, COLUMN_COUNTERFACTUAL, COLUMN_DIFF],
+                index=[COLUMN_REFERENCE, COLUMN_COUNTERFACTUAL, COLUMN_DIFFERENCE],
                 columns=self.feature_names,
             ).round(decimal).T
         )
         # reorder dataframe according the the feature importance
         self.df = self.df.loc[self.feature_sort, :]
         try:
-            self.df[COLUMN_DIFF][self.df[COLUMN_DIFF] != 0]
+            self.df[COLUMN_DIFFERENCE][self.df[COLUMN_DIFFERENCE] != 0]
             if debug:
                 self.df.plot(kind="barh", figsize=(3, 5))
         except IndexError as e:
@@ -300,7 +300,7 @@ class CounterfactualExplanation(ExplanationBase):
 
         """
         for feature_name in list(self.df.index)[: self.number_of_features]:
-            for col_name in [COLUMN_REF, COLUMN_COUNTERFACTUAL]:
+            for col_name in [COLUMN_REFERENCE, COLUMN_COUNTERFACTUAL]:
 
                 feature_value = self.df.loc[feature_name, col_name]
                 self.df.loc[feature_name, col_name] = self.map_category(
@@ -336,7 +336,7 @@ class CounterfactualExplanation(ExplanationBase):
         """
 
         colLabels = ["Sample", "Counterfactual Sample"]
-        columns = [COLUMN_REF, COLUMN_COUNTERFACTUAL]
+        columns = [COLUMN_REFERENCE, COLUMN_COUNTERFACTUAL]
 
         self.format_features_for_plot()
         array_subset = self.df[columns].values[: self.number_of_features]
