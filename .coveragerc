@@ -1,14 +1,6 @@
 [paths]
-source =
-   explainy
-   */site-packages
+source = explainy
 
-[run]
-branch = true
-source =
-    explainy
-    tests
-parallel = true
 
 [report]
 show_missing = true
