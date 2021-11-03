@@ -23,7 +23,7 @@ class ExplanationMixin:
 
         """
         # TODO: fix path
-        path_json = r"C:\Users\maurol\OneDrive\Dokumente\Python_Scripts\model_explanation_study\dataset\training\mapping"
+        path_json = r""
         if f"{feature_name}.json" in os.listdir(path_json):
             mapper = CategoryMapper(path_json, feature_name)
             # print(mapper[int(feature_value)])
