@@ -17,7 +17,7 @@ jobs:
 
       - name: Run tests and collect coverage
         run: |
-          coverage run --source explainy -m pytest
-          coverage xml
+          python -m coverage run --source explainy -m pytest
+          python -m coverage xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
