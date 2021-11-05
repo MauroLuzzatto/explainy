@@ -209,8 +209,8 @@ class ExplanationBase(ABC, ExplanationMixin):
         )
 
     def get_description_text(self) -> str:
-        """ 
-        WIP
+        """WIP
+        
         Example:
         This is a SHAP explanation, it creates local and non-contrastive explanations.
 
@@ -233,7 +233,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         self.number_of_dataset_features = self.X.shape[1]
         return self.score_text_empty.format(
             self.model.__class__.__name__,
-             self.number_of_dataset_features,
+            self.number_of_dataset_features,
             self.prediction,
         )
 
@@ -259,7 +259,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         """
         prefix = f"{self.explanation_name}_features_{self.number_of_features}"
         if sample_name:
-            plot_name = f"{prefix}_sample_{sample_name}_.png"
+            plot_name = f"{prefix}_sample_{sample_name}.png"
         else:
             plot_name = f"{prefix}.png"
         return plot_name
