@@ -8,6 +8,7 @@ Created on Sat Dec 19 11:41:28 2020
 import numpy as np
 
 from explainy.core.explanation_mixin import ExplanationMixin
+from sklearn.base import is_classifier
 
 
 class SurrogateText(ExplanationMixin):
@@ -38,11 +39,15 @@ class SurrogateText(ExplanationMixin):
         self.children_right = self.model.tree_.children_right
         self.feature = self.model.tree_.feature
         self.threshold = self.model.tree_.threshold
-
-        # print(self.model.tree_.value, self.model.tree_.value.shape)
-        self.values = self.model.tree_.value.reshape(
-            self.model.tree_.value.shape[0], 1
-        )
+        
+        if is_classifier(self.model):
+            self.values = np.argmax(self.model.tree_.value, axis=2).reshape(
+                self.model.tree_.value.shape[0], 1
+            )
+        else:        
+            self.values = self.model.tree_.value.reshape(
+                self.model.tree_.value.shape[0], 1
+            )
 
     def get_text(self):
         """
