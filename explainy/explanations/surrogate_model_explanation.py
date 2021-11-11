@@ -23,7 +23,6 @@ from typing import Dict, Union
 import pandas as pd
 import graphviz
 import numpy as np
-from sklearn.base import is_classifier, is_regressor  # type: ignore
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.tree import export_text
@@ -38,7 +37,7 @@ from explainy.utils.typing import ModelType
 
 class SurrogateModelExplanation(ExplanationBase):
     """
-    Contrastive, global Explanation (global surrogate model)
+    Contrastive, global Explanation
     """
 
     def __init__(
@@ -51,9 +50,8 @@ class SurrogateModelExplanation(ExplanationBase):
         kind: str = "tree",
         **kwargs: dict,
     ):
-        super(SurrogateModelExplanation, self).__init__(config)
-        """
-        Init the specific explanation class, the base class is "Explanation"
+        super(SurrogateModelExplanation, self).__init__(model, config)
+        """Init the specific explanation class, the base class is "Explanation"
 
         Args:
             X (df): (Test) samples and features to calculate the importance for (sample, features)
@@ -69,12 +67,10 @@ class SurrogateModelExplanation(ExplanationBase):
         self.X = X
         self.y = y
         self.feature_names = self.get_feature_names(self.X)
-        self.model = model
         self.number_of_features = np.log2(number_of_features)
         self.number_of_groups = number_of_features
         self.kind = kind
         self.kwargs = kwargs
-        self.is_classifier = is_classifier(self.model)
 
         kinds = ["tree", "linear"]
         assert (
@@ -88,6 +84,7 @@ class SurrogateModelExplanation(ExplanationBase):
         )
         self.explanation_name = "surrogate"
         self.logger = self.setup_logger(self.explanation_name)
+        
         self._setup()
 
     def set_defaults(self):
@@ -114,13 +111,13 @@ class SurrogateModelExplanation(ExplanationBase):
             Exception: if the kind is not known
 
         """
-        if self.kind == "tree" and is_regressor(self.model):
+        if self.kind == "tree" and not self.is_classifier:
             estimator = DecisionTreeRegressor
-        elif self.kind == "tree" and is_classifier(self.model):
+        elif self.kind == "tree" and self.is_classifier:
             estimator = DecisionTreeClassifier
-        elif self.kind == "linear" and is_regressor(self.model):
+        elif self.kind == "linear" and not self.is_classifier:
             estimator = LinearRegression
-        elif self.kind == "linear" and is_classifier(self.model):
+        elif self.kind == "linear" and self.is_classifier:
             estimator = LogisticRegression
         else:
             raise Exception(f'Value of "kind" is not supported: {self.kind}!')

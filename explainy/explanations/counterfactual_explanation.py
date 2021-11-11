@@ -56,7 +56,7 @@ class CounterfactualExplanation(ExplanationBase):
         random_state: int = 0,
         **kwargs,
     ) -> None:
-        super(CounterfactualExplanation, self).__init__(config)
+        super(CounterfactualExplanation, self).__init__(model, config)
         """
         This implementation is a thin wrapper around `smlxtend.evaluate.create_counterfactual
         <http://rasbt.github.io/mlxtend/user_guide/evaluate/create_counterfactual>`
@@ -75,7 +75,6 @@ class CounterfactualExplanation(ExplanationBase):
         self.X = X
         self.y = y
         self.y_desired = y_desired
-        self.model = model
         self.delta = delta
         self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(
@@ -95,7 +94,6 @@ class CounterfactualExplanation(ExplanationBase):
         self.define_explanation_placeholder(
             natural_language_text_empty, method_text_empty, sentence_text_empty
         )
-
         self.explanation_name = "counterfactual"
         self.logger = self.setup_logger(self.explanation_name)
 
@@ -287,10 +285,10 @@ class CounterfactualExplanation(ExplanationBase):
         except IndexError as e:
             print(e)
     
-    def importance(self):
+    def importance(self) -> pd.DataFrame:
         return self.df.round(2)
 
-    def format_features_for_plot(self):
+    def format_features_for_plot(self) -> None:
         """
         - map categorical variables
         - replace one-hot-encoded value with True, False strings
@@ -320,12 +318,21 @@ class CounterfactualExplanation(ExplanationBase):
 
                     self.df.loc[feature_name, col_name] = string
 
-    def plot(self, sample_index=None, kind='table', **kwargs):
+    def plot(self, sample_index:int, kind: str ='table', **kwargs: dict) -> None:
+        """Create the plot of the counterfactual table
 
+        Args:
+            sample_index (int): index of the sample in scope
+            kind (str, optional): kind of plot. Defaults to 'table'.
+
+        Raises:
+            Exception: raise Exception if the "kind" of plot is not supported
+
+        """
         if kind == "table":
             self.fig = self._plot_table(sample_index)
         else:
-            raise Exception(f'Value of "kind" is not supported: {kind}!')
+            raise Exception(f'Value of "kind = {kind}" is not supported!')
 
     def _plot_table(self, sample_index=None):
         """
@@ -333,8 +340,8 @@ class CounterfactualExplanation(ExplanationBase):
 
         Returns:
             None.
+        
         """
-
         colLabels = ["Sample", "Counterfactual Sample"]
         columns = [COLUMN_REFERENCE, COLUMN_COUNTERFACTUAL]
 
@@ -390,24 +397,24 @@ class CounterfactualExplanation(ExplanationBase):
         plt.show()
         return fig
 
-    def get_method_text(self):
+    def get_method_text(self) -> str:
         """
         Define the method introduction text of the explanation type.
 
         Returns:
-            None.
+            str: method text explanation
         """
         return self.method_text_empty.format(
             self.num_to_str[self.number_of_features], self.y_counter_factual
         )
 
-    def get_natural_language_text(self):
-        """
-        Define the natural language output using the feature names
+    def get_natural_language_text(self) -> str:
+        """ Define the natural language output using the feature names
         and its values for this explanation type
 
         Returns:
-            None.
+            str: natural language explanation
+
         """
         feature_values = self.df[COLUMN_COUNTERFACTUAL].tolist()[
             : self.number_of_features
@@ -436,12 +443,12 @@ class CounterfactualExplanation(ExplanationBase):
         sentences = "if " + self.join_text_with_comma_and_and(sentences)
         return self.natural_language_text_empty.format(sentences)
 
-    def _setup(self, sample_index, sample_name):
-        """
+    def _setup(self, sample_index: int, sample_name:str) -> None:
+        """Helper function to setup the counterfactual explanation
 
         Args:
-            sample_index ([type]): [description]
-            sample_name ([type]): [description]
+            sample_index (int): index of sample in scope
+            sample_name (str): name of the sample in scope
         """
         x_ref, x_counter_factual = self._calculate_importance(sample_index)
         self.get_feature_importance(x_ref, x_counter_factual)

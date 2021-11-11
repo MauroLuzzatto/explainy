@@ -31,6 +31,7 @@ from sklearn.inspection import permutation_importance
 
 from explainy.core.explanation_base import ExplanationBase
 from explainy.core.explanation import Explanation
+from explainy.utils.typing import ModelType
 
 
 class PermutationExplanation(ExplanationBase):
@@ -42,14 +43,14 @@ class PermutationExplanation(ExplanationBase):
         self,
         X: pd.DataFrame,
         y: np.array,
-        model: sklearn.base.BaseEstimator,
+        model: ModelType,
         number_of_features: int = 4,
         config: Dict = None,
         n_repeats: Optional[int] = 30,
         random_state: Optional[int] = 0,
         **kwargs,
-    ):
-        super(PermutationExplanation, self).__init__(config)
+    ) -> None:
+        super(PermutationExplanation, self).__init__(model, config)
         """        
         This implementation is a thin wrapper around `sklearn.inspection.permutation_importance
         <https://scikit-learn.org/stable/modules/permutation_importance.html>`
@@ -63,10 +64,10 @@ class PermutationExplanation(ExplanationBase):
 
         Returns:
             None.
+
         """
         self.X = X
         self.y = y
-        self.model = model
         self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(
             number_of_features
@@ -94,7 +95,7 @@ class PermutationExplanation(ExplanationBase):
 
         self._setup()
 
-    def _calculate_importance(self):
+    def _calculate_importance(self) -> None:
         """
         Calculate the feature importance using the Permuation Feature Importance
 
