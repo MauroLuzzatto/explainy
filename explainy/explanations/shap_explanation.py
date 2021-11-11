@@ -24,6 +24,7 @@ import pandas as pd
 import shap
 import sklearn
 
+
 from explainy.core.explanation_base import ExplanationBase
 from explainy.core.explanation import Explanation
 
@@ -42,7 +43,7 @@ class ShapExplanation(ExplanationBase):
         config: Dict = None,
         **kwargs,
     ) -> None:
-        super(ShapExplanation, self).__init__(config)
+        super(ShapExplanation, self).__init__(model, config)
         """
         This implementation is a thin wrapper around `shap.TreeExplainer
         <https://shap-lrjball.readthedocs.io/en/docs_update/generated/shap.TreeExplainer.html>`
@@ -59,7 +60,6 @@ class ShapExplanation(ExplanationBase):
         """
         self.X = X
         self.y = y
-        self.model = model
         self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(
             number_of_features
@@ -84,6 +84,9 @@ class ShapExplanation(ExplanationBase):
         self.explanation_name = "shap"
         self.logger = self.setup_logger(self.explanation_name)
 
+        self._calculate_importance()
+
+
     def _calculate_importance(self) -> None:
         """
         Explain model predictions using SHAP library
@@ -95,13 +98,12 @@ class ShapExplanation(ExplanationBase):
         self.explainer = shap.TreeExplainer(self.model, **self.kwargs)
         self.shap_values = self.explainer.shap_values(self.X)
 
-        # print(self.shap_values)
 
-        if isinstance(self.explainer.expected_value, np.ndarray):
-            self.explainer.expected_value = self.explainer.expected_value[0]
-        assert isinstance(
-            self.explainer.expected_value, float
-        ), "self.explainer.expected_value has wrong type"
+        # if isinstance(self.explainer.expected_value, np.ndarray):
+        #     self.explainer.expected_value = self.explainer.expected_value[0]
+        # assert isinstance(
+        #     self.explainer.expected_value, float
+        # ), "self.explainer.expected_value has wrong type"
 
     def get_feature_values(
         self, sample_index: int = 0
@@ -121,18 +123,25 @@ class ShapExplanation(ExplanationBase):
             feature and its importance of a sample.
 
         """
-        indexes = np.argsort(abs(self.shap_values[sample_index, :]))
+        if not self.is_classifier:
+            indexes = np.argsort(abs(self.shap_values[sample_index, :]))
+            sample_shap_value = self.shap_values
+        else:
+            indexes = np.argsort(abs(self.shap_values[self.prediction][sample_index, :]))
+            sample_shap_value = self.shap_values[self.prediction]
+            self.logger.info(f'SHAP values are taken from predicted class: {self.prediction}')
+    
         feature_values = []
         for index in indexes.tolist()[::-1]:
             feature_values.append(
                 (
                     self.feature_names[index],
-                    self.shap_values[sample_index, index],
+                    sample_shap_value[sample_index, index],
                 )
             )
         return feature_values
 
-    def plot(self, sample_index: int = 0, kind="bar") -> None:
+    def plot(self, sample_index: int, kind="bar") -> None:
         """
         Plot the shap values
 
@@ -148,9 +157,9 @@ class ShapExplanation(ExplanationBase):
         elif kind == "shap":
             self.fig = self._shap_plot(sample_index)
         else:
-            raise Exception(f'Value of "kind" is not supported: {kind}!')
+            raise Exception(f'Value of "kind = {kind}" is not supported!')
 
-    def _bar_plot(self, sample_index: int = 0) -> plt.figure:
+    def _bar_plot(self, sample_index: int) -> plt.figure:
         """
         Create a bar plot of the shape values for a selected sample
 
@@ -161,12 +170,22 @@ class ShapExplanation(ExplanationBase):
             None
 
         """
-        indexes = np.argsort(abs(self.shap_values[sample_index, :]))
-        sorted_idx = indexes.tolist()[::-1][: self.number_of_features]
+        # width = [value for _, value in self.feature_values[: self.number_of_features]]
+        # labels = [name for name, _ in self.feature_values[: self.number_of_features]]
+        # y = np.arange(self.number_of_features, 0, -1)
 
-        width = self.shap_values[sample_index, sorted_idx]
-        y = np.arange(self.number_of_features, 0, -1)
+
+        if not self.is_classifier:
+            shap_value = self.shap_values
+        else:
+            shap_value = self.shap_values[self.prediction]
+        
+        indexes = np.argsort(abs(shap_value[sample_index, :]))
+        sorted_idx = indexes.tolist()[::-1][: self.number_of_features]
+        
+        width = shap_value[sample_index, sorted_idx]
         labels = [self.feature_names[i] for i in sorted_idx]
+        y = np.arange(self.number_of_features, 0, -1)
 
         fig = plt.figure(
             figsize=(6, max(2, int(0.5 * self.number_of_features)))
@@ -178,7 +197,7 @@ class ShapExplanation(ExplanationBase):
         plt.show()
         return fig
 
-    def _shap_plot(self, sample_index: int = 0) -> plt.figure:
+    def _shap_plot(self, sample_index: int) -> plt.figure:
         """
         visualize the first prediction's explanation
 
@@ -186,17 +205,28 @@ class ShapExplanation(ExplanationBase):
             sample_index (int, optional): sample for which the explanation should
                 be returned. Defaults to 0.
         Returns:
-            None.
+            plt.figure: return a matplotlib figure containg the plot
+
         """
-        shap.force_plot(
-            base_value=self.explainer.expected_value,
-            shap_values=np.around(
+        if not self.is_classifier:
+            base_value=self.explainer.expected_value
+            shap_value=np.around(
                 self.shap_values[sample_index, :], decimals=2
-            ),
+            )
+        else:
+            base_value=self.explainer.expected_value[self.prediction]
+            shap_value=np.around(
+                    self.shap_values[self.prediction][sample_index, :], decimals=2
+            )
+
+        shap.force_plot(
+            base_value=base_value,
+            shap_values=shap_value,
             features=self.X.iloc[sample_index, :],
             matplotlib=True,
             show=False,
         )
+
         fig = plt.gcf()
         fig.set_figheight(4)
         fig.set_figwidth(8)
@@ -213,9 +243,12 @@ class ShapExplanation(ExplanationBase):
         Returns:
             None.
         """
-        self.logger.debug(
-            f"The expected_value was: {self.explainer.expected_value:.2f}"
-        )
+        if not self.is_classifier:
+            message =  f"The expected_value was: {self.explainer.expected_value}"
+        else:
+            message =  f"The expected_value was: {self.explainer.expected_value[self.prediction]}"
+
+        self.logger.debug(message)    
         self.logger.debug(f"The y_value was: {self.y.values[sample_index][0]}")
         self.logger.debug(f"The predicted value was: {self.prediction}")
 
@@ -232,7 +265,6 @@ class ShapExplanation(ExplanationBase):
 
         """
         print(sample_index)
-        self._calculate_importance()
         self._log_output(sample_index)
         self.feature_values = self.get_feature_values(sample_index)
         self.sentences = self.get_sentences()

@@ -13,31 +13,36 @@ from typing import Dict, Union, List
 
 import pandas as pd
 import numpy as np
+from sklearn.base import is_classifier
 
 from explainy.core.explanation_mixin import ExplanationMixin
 from explainy.logger import Logger
 from explainy.utils.utils import create_folder
+from explainy.utils.typing import ModelType
 
 
 class ExplanationBase(ABC, ExplanationMixin):
-    """
-    Explanation base class
-    """
 
     def __init__(
         self,
+        model: ModelType,
         config: Dict = None,
     ) -> None:
-        """
-        Initialize the explanation base class
+        """Initialize the explanation base class
 
         Args:
+            model (ModelType): trained model that should be explained
             config (Dict, optional): config file that contains explanation settings. Defaults to None.
+        
         """
+        self.model = model
+
         if not config:
             self.config = {}
         else:
             self.config = config
+
+        self.is_classifier = is_classifier(self.model)
 
         self.folder = self.config.get("folder", "explanation")
         self.file_name = self.config.get("file_name", "explanations.csv")
@@ -45,17 +50,23 @@ class ExplanationBase(ABC, ExplanationMixin):
         self.set_paths()
         self.get_number_to_string_dict()
 
-        score_text_empty = (
-            "The {} used {} features to produce the predictions. The prediction"
-            " of this sample was {:.1f}."
-        )
+        if self.is_classifier:
+            score_text_empty = (
+                "The {} used {} features to produce the predictions. The class"
+                " of this sample was {:.0f}."
+            )
+        else:
+            score_text_empty = (
+                "The {} used {} features to produce the predictions. The prediction"
+                " of this sample was {:.1f}."
+            )
+
         description_text_empty = (
             "This is a {} explanation, it creates {} and {} explanations."
         )
         self.description_text_empty = self.config.get(
             "description_text_empty", description_text_empty
         )
-
         self.score_text_empty = self.config.get(
             "score_text_empty", score_text_empty
         )
@@ -66,15 +77,14 @@ class ExplanationBase(ABC, ExplanationMixin):
         method_text_empty: str,
         sentence_text_empty: str,
     ) -> None:
-        """
-        Set the explanation text, if defined else load it from defaults
+        """Set the explanation text, if defined else load it from defaults
 
         Args:
             natural_language_text_empty (str): natural language explanation placeholder
             method_text_empty (str): method placeholder
             sentence_text_empty (str): sentence text placeholder
+        
         """
-
         self.natural_language_text_empty = self.config.get(
             "natural_language_text_empty", natural_language_text_empty
         )
@@ -86,8 +96,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         )
 
     def get_number_of_features(self, number_of_features: int) -> int:
-        """
-        Set the number of features based on the defined number and the max
+        """Set the number of features based on the defined number and the max
         number of features
 
         Args:
@@ -104,13 +113,14 @@ class ExplanationBase(ABC, ExplanationMixin):
         return min(number_of_features, self.X.shape[1])
 
     def get_feature_names(self, X: Union[pd.DataFrame, np.array]) -> List[str]:
-        """get the feature names based on the given dataset
+        """Get the feature names based on the given dataset
 
         Args:
-            X (Union[pd.DataFrame, np.array]): dataset
+            X (Union[pd.DataFrame, np.array]): features dataset
 
         Returns:
             List[str]: list of feature names
+
         """
         if isinstance(X, pd.DataFrame):
             feature_names = list(X)
@@ -119,11 +129,11 @@ class ExplanationBase(ABC, ExplanationMixin):
         return feature_names
 
     def set_paths(self) -> None:
-        """
-        Set the paths where the output should be saved
+        """Set the paths where the output should be saved
 
         Returns:
             None.
+
         """
         self.path = os.path.join(
             os.path.dirname(os.getcwd()), "reports", self.folder
@@ -154,37 +164,35 @@ class ExplanationBase(ABC, ExplanationMixin):
             columns=['Feature', 'Importance']
         ).round(2)
 
-    def get_prediction(self, sample_index: int = 0) -> float:
-        """
-        Get the model prediction
+    def get_prediction(self, sample_index: int) -> float:
+        """Get the model prediction
 
         Args:
-            sample (TYPE, optional): DESCRIPTION. Defaults to 0.
+            sample_index (int): sample_index for a which a predction shall be made
 
         Returns:
-            None.
+            float: predction of the model for that sample
+
         """
         return self.model.predict(self.X.values)[sample_index]
 
     def get_method_text(self) -> None:
-        """
-        Generate the output of the method explanation.
+        """Generate the output of the method explanation.
 
         Returns:
             None
+
         """
         return self.method_text_empty.format(
             self.num_to_str[self.number_of_features]
         )
 
     def get_sentences(self) -> None:
-        """
-        Generate the output sentences
+        """Generate the output sentences
 
-        Args:
-            feature_values -> list(tuple(name, value))
         Returns:
             None
+
         """
         values = []
         for feature_name, feature_value in self.feature_values[
@@ -197,8 +205,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         return sentences
 
     def get_natural_language_text(self) -> str:
-        """
-        Generate the output of the explanation in natural language.
+        """Generate the output of the explanation in natural language.
 
         Returns:
             str: return the natural_language_text explanation
@@ -216,14 +223,14 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             str: return the explanation method description
+
         """
         return self.description_text_empty.format(
             self.explanation_name, self.explanation_type, self.explanation_style
         )
 
     def get_score_text(self) -> str:
-        """
-        Generate the text explaining the prediction score of 
+        """Generate the text explaining the prediction score of 
         the sample
 
         Returns:
@@ -244,6 +251,7 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             str: return the description of the machine learning model
+
         """
         return str(self.model)
 
@@ -256,6 +264,7 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             str: return the name of the plot
+
         """
         prefix = f"{self.explanation_name}_features_{self.number_of_features}"
         if sample_name:
@@ -274,6 +283,7 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             str: name of the sample
+
         """
         if not sample_name:
             sample_name = str(sample_index)
@@ -286,11 +296,10 @@ class ExplanationBase(ABC, ExplanationMixin):
         Args:
             sample_index (int): [description]
             sample_name (str, optional): name of the sample. Defaults to None.
+
         """
         sample_name = self.get_sample_name(sample_index, sample_name)
-
         self.save_csv(sample_name)
-
         self.fig.savefig(
             os.path.join(self.path_plot, self.plot_name),
             bbox_inches="tight",
@@ -309,13 +318,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             None.
 
         """
-        assert hasattr(self, "method_text"), "instance lacks method_text"
-        assert hasattr(self, "score_text"), "instance lacks score_text"
-        assert hasattr(
-            self, "natural_language_text"
-        ), "instance lacks natural_language_text"
         assert hasattr(self, "plot_name"), "instance lacks plot_name"
-        assert hasattr(self, "prediction"), "instance lacks prediction"
 
         output = {
             "score_text": self.score_text,
