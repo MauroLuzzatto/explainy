@@ -2,9 +2,7 @@
 .pypi
 reports
 example.py
-example_v2.py
-example_v3.py
-
+example_v*.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
