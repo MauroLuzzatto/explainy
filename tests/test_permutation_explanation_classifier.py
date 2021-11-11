@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 16 21:58:56 2021
-
-@author: maurol
-"""
-
 import pytest
 
 from explainy.explanations.permutation_explanation import PermutationExplanation
@@ -28,7 +21,7 @@ def test_permuation_explanation_2_features():
     assert (
         explanation.score_text
         == "The RandomForestClassifier used 4 features to produce the"
-        " predictions. The prediction of this sample was 1.0."
+        " predictions. The class of this sample was 1."
     )
     assert (
         explanation.method_text
@@ -58,7 +51,7 @@ def test_permuation_explanation_4_features():
     assert (
         explanation.score_text
         == "The RandomForestClassifier used 4 features to produce the"
-        " predictions. The prediction of this sample was 2.0."
+        " predictions. The class of this sample was 2."
     )
     assert (
         explanation.method_text
