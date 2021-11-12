@@ -24,7 +24,6 @@ import pandas as pd
 import shap
 import sklearn
 
-
 from explainy.core.explanation_base import ExplanationBase
 from explainy.core.explanation import Explanation
 
@@ -170,11 +169,6 @@ class ShapExplanation(ExplanationBase):
             None
 
         """
-        # width = [value for _, value in self.feature_values[: self.number_of_features]]
-        # labels = [name for name, _ in self.feature_values[: self.number_of_features]]
-        # y = np.arange(self.number_of_features, 0, -1)
-
-
         if not self.is_classifier:
             shap_value = self.shap_values
         else:
@@ -264,7 +258,6 @@ class ShapExplanation(ExplanationBase):
             None.
 
         """
-        print(sample_index)
         self._log_output(sample_index)
         self.feature_values = self.get_feature_values(sample_index)
         self.sentences = self.get_sentences()

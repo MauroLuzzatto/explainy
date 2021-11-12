@@ -1,15 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 16 21:58:56 2021
-
-@author: maurol
-"""
-
 import pytest
+from unittest import mock
+
+import matplotlib.pyplot as plt
 
 from explainy.explanations.shap_explanation import ShapExplanation
 
-from .utils import get_regression_model
+from tests.utils import get_regression_model
 
 
 def test_shap_explanation_4_features():
@@ -67,7 +63,42 @@ def test_shap_explanation_8_features():
     )
 
 
+def explainer_wrapper():
+    model, X_test, y_test = get_regression_model()
+    number_of_features = 8
+    return ShapExplanation(X_test, y_test, model, number_of_features)    
+
+
+@mock.patch("explainy.explanations.shap_explanation.plt")
+def test_shap_plot_bar(mock_plt):
+
+    explainer = explainer_wrapper()
+    sample_index = 1
+    explainer.explain(sample_index, separator=None)
+    explainer.plot(sample_index, kind='bar')
+
+    mock_plt.xlabel.assert_called_once_with("Shap Values")
+    # Assert plt.figure got called
+    assert mock_plt.figure.called
+
+
+@mock.patch("explainy.explanations.shap_explanation.plt")
+def test_shap_plot_shap(mock_plt):
+
+    explainer = explainer_wrapper()
+    sample_index = 1
+    explainer.explain(sample_index, separator=None)
+    explainer.plot(sample_index, kind='shap')
+
+    mock_plt.gcf().set_figheight.assert_called_once_with(4)
+    mock_plt.gcf().set_figwidth.assert_called_once_with(8)
+    assert mock_plt.gcf.called
+
+
 if __name__ == "__main__":
 
-    test_shap_explanation_4_features()
-    test_shap_explanation_8_features()
+    test_shap_plot_shap()
+    test_shap_plot_bar()
+
+    # test_shap_explanation_4_features()
+    # test_shap_explanation_8_features()
