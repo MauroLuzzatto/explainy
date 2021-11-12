@@ -1,11 +1,9 @@
-
 import pytest
 
 from explainy.core.explanation import Explanation
+from explainy.core.explanation_base import ExplanationBase
 from tests.utils import get_classification_model
 
-from explainy.core.explanation_base import ExplanationBase
- 
 
 class ExplanationConcrete(ExplanationBase):
     def _calculate_importance(self):
@@ -17,15 +15,16 @@ class ExplanationConcrete(ExplanationBase):
     def get_feature_values(self):
         pass
 
+
 config = {}
+
 
 def get_ExplanationConcrete():
     return ExplanationConcrete(config)
 
 
-
 def test_get_natural_language_text():
-    
+
     explainer = get_ExplanationConcrete()
     explainer.natural_language_text_empty = '{} and {}'
     explainer.number_of_features = 3
@@ -49,6 +48,7 @@ def test_get_sentences():
     print(sentences)
     assert expected == sentences
 
+
 def test_get_plot_name():
 
     explainer = get_ExplanationConcrete()
@@ -69,4 +69,3 @@ if __name__ == "__main__":
     test_get_natural_language_text()
     test_get_sentences()
     test_get_plot_name()
-    

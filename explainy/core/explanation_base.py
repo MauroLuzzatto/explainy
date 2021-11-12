@@ -9,20 +9,19 @@ import csv
 import os
 import warnings
 from abc import ABC, abstractmethod
-from typing import Dict, Union, List
+from typing import Dict, List, Union
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 from sklearn.base import is_classifier
 
 from explainy.core.explanation_mixin import ExplanationMixin
 from explainy.logger import Logger
-from explainy.utils.utils import create_folder
 from explainy.utils.typing import ModelType
+from explainy.utils.utils import create_folder
 
 
 class ExplanationBase(ABC, ExplanationMixin):
-
     def __init__(
         self,
         model: ModelType,
@@ -33,7 +32,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         Args:
             model (ModelType): trained model that should be explained
             config (Dict, optional): config file that contains explanation settings. Defaults to None.
-        
+
         """
         self.model = model
 
@@ -57,8 +56,8 @@ class ExplanationBase(ABC, ExplanationMixin):
             )
         else:
             score_text_empty = (
-                "The {} used {} features to produce the predictions. The prediction"
-                " of this sample was {:.1f}."
+                "The {} used {} features to produce the predictions. The"
+                " prediction of this sample was {:.1f}."
             )
 
         description_text_empty = (
@@ -67,9 +66,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         self.description_text_empty = self.config.get(
             "description_text_empty", description_text_empty
         )
-        self.score_text_empty = self.config.get(
-            "score_text_empty", score_text_empty
-        )
+        self.score_text_empty = self.config.get("score_text_empty", score_text_empty)
 
     def define_explanation_placeholder(
         self,
@@ -83,14 +80,12 @@ class ExplanationBase(ABC, ExplanationMixin):
             natural_language_text_empty (str): natural language explanation placeholder
             method_text_empty (str): method placeholder
             sentence_text_empty (str): sentence text placeholder
-        
+
         """
         self.natural_language_text_empty = self.config.get(
             "natural_language_text_empty", natural_language_text_empty
         )
-        self.method_text_empty = self.config.get(
-            "method_text_empty", method_text_empty
-        )
+        self.method_text_empty = self.config.get("method_text_empty", method_text_empty)
         self.sentence_text_empty = self.config.get(
             "sentence_text_empty", sentence_text_empty
         )
@@ -135,9 +130,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             None.
 
         """
-        self.path = os.path.join(
-            os.path.dirname(os.getcwd()), "reports", self.folder
-        )
+        self.path = os.path.join(os.path.dirname(os.getcwd()), "reports", self.folder)
         self.path_plot = create_folder(os.path.join(self.path, "plot"))
         self.path_result = create_folder(os.path.join(self.path, "results"))
         self.path_log = create_folder(os.path.join(self.path, "logs"))
@@ -157,11 +150,10 @@ class ExplanationBase(ABC, ExplanationMixin):
     @abstractmethod
     def get_feature_values(self):
         raise NotImplementedError("Subclasses should implement this!")
-    
+
     def importance(self):
         return pd.DataFrame(
-            self.feature_values, 
-            columns=['Feature', 'Importance']
+            self.feature_values, columns=['Feature', 'Importance']
         ).round(2)
 
     def get_prediction(self, sample_index: int) -> float:
@@ -183,9 +175,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             None
 
         """
-        return self.method_text_empty.format(
-            self.num_to_str[self.number_of_features]
-        )
+        return self.method_text_empty.format(self.num_to_str[self.number_of_features])
 
     def get_sentences(self) -> None:
         """Generate the output sentences
@@ -198,9 +188,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         for feature_name, feature_value in self.feature_values[
             : self.number_of_features
         ]:
-            values.append(
-                self.sentence_text_empty.format(feature_name, feature_value)
-            )
+            values.append(self.sentence_text_empty.format(feature_name, feature_value))
         sentences = self.join_text_with_comma_and_and(values)
         return sentences
 
@@ -217,7 +205,7 @@ class ExplanationBase(ABC, ExplanationMixin):
 
     def get_description_text(self) -> str:
         """WIP
-        
+
         Example:
         This is a SHAP explanation, it creates local and non-contrastive explanations.
 
@@ -230,7 +218,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         )
 
     def get_score_text(self) -> str:
-        """Generate the text explaining the prediction score of 
+        """Generate the text explaining the prediction score of
         the sample
 
         Returns:
@@ -255,7 +243,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         """
         return str(self.model)
 
-    def get_plot_name(self, sample_name:str=None) -> str:
+    def get_plot_name(self, sample_name: str = None) -> str:
         """
         Get the name of the plot
 
@@ -273,7 +261,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             plot_name = f"{prefix}.png"
         return plot_name
 
-    def get_sample_name(self, sample_index:int, sample_name:str = None) -> str:
+    def get_sample_name(self, sample_index: int, sample_name: str = None) -> str:
         """
         Determine the name of the sample, if no sample_name provide, use the sample_index
 

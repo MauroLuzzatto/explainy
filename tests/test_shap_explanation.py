@@ -1,10 +1,9 @@
-import pytest
 from unittest import mock
 
 import matplotlib.pyplot as plt
+import pytest
 
 from explainy.explanations.shap_explanation import ShapExplanation
-
 from tests.utils import get_regression_model
 
 
@@ -66,7 +65,7 @@ def test_shap_explanation_8_features():
 def explainer_wrapper():
     model, X_test, y_test = get_regression_model()
     number_of_features = 8
-    return ShapExplanation(X_test, y_test, model, number_of_features)    
+    return ShapExplanation(X_test, y_test, model, number_of_features)
 
 
 @mock.patch("explainy.explanations.shap_explanation.plt")

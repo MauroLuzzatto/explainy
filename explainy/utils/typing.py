@@ -1,6 +1,5 @@
 from typing import Union
 
-from sklearn.base import ClassifierMixin 
-from sklearn.base import RegressorMixin
+from sklearn.base import ClassifierMixin, RegressorMixin
 
 ModelType = Union[ClassifierMixin, RegressorMixin]

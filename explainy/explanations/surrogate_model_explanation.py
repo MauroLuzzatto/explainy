@@ -20,16 +20,15 @@ import subprocess
 import warnings
 from typing import Dict, Union
 
-import pandas as pd
 import graphviz
 import numpy as np
-from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
-from sklearn.tree import export_text
+import pandas as pd
 from IPython.display import display
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_text
 
-from explainy.core.explanation_base import ExplanationBase
 from explainy.core.explanation import Explanation
+from explainy.core.explanation_base import ExplanationBase
 from explainy.utils.surrogate_plot import SurrogatePlot
 from explainy.utils.surrogate_text import SurrogateText
 from explainy.utils.typing import ModelType
@@ -77,14 +76,18 @@ class SurrogateModelExplanation(ExplanationBase):
             self.kind in kinds
         ), f"'{self.kind}' is not a valid option, select from {kinds}"
 
-        natural_language_text_empty, method_text_empty, sentence_text_empty = self.set_defaults()
-    
+        (
+            natural_language_text_empty,
+            method_text_empty,
+            sentence_text_empty,
+        ) = self.set_defaults()
+
         self.define_explanation_placeholder(
             natural_language_text_empty, method_text_empty, sentence_text_empty
         )
         self.explanation_name = "surrogate"
         self.logger = self.setup_logger(self.explanation_name)
-        
+
         self._setup()
 
     def set_defaults(self):
@@ -102,7 +105,11 @@ class SurrogateModelExplanation(ExplanationBase):
         else:
             sentence_text_empty = "\nThe sample has a value of {:.2f} if {}"
 
-        return natural_language_text_empty, method_text_empty, sentence_text_empty
+        return (
+            natural_language_text_empty,
+            method_text_empty,
+            sentence_text_empty,
+        )
 
     def _calculate_importance(self) -> None:
         """Train a surrogate model on the predicted values from the original model
@@ -144,13 +151,11 @@ class SurrogateModelExplanation(ExplanationBase):
         """
         if self.kind == 'tree':
             surrogate_model = estimator(
-                max_depth=self.number_of_features, 
-                **self.kwargs
-        )
+                max_depth=self.number_of_features, **self.kwargs
+            )
         elif self.kind == 'linear':
             surrogate_model = estimator(**self.kwargs)
         return surrogate_model
-
 
     def get_feature_values(self):
         pass
@@ -162,11 +167,16 @@ class SurrogateModelExplanation(ExplanationBase):
             str: importance of the surrogate model
 
         """
-        if isinstance(self.surrogate_model, (DecisionTreeClassifier, DecisionTreeRegressor)):
-            tree_rules = export_text(self.surrogate_model, feature_names=self.feature_names)
+        if isinstance(
+            self.surrogate_model,
+            (DecisionTreeClassifier, DecisionTreeRegressor),
+        ):
+            tree_rules = export_text(
+                self.surrogate_model, feature_names=self.feature_names
+            )
         return tree_rules
 
-    def plot(self, index_sample:int = None) -> None:
+    def plot(self, index_sample: int = None) -> None:
         """Plot the surrogate model
 
         Args:
@@ -183,10 +193,12 @@ class SurrogateModelExplanation(ExplanationBase):
         else:
             raise Exception(f'Value of "kind" is not supported: {self.kind}!')
 
-    def _plot_bar(self, sample_index:int) -> None:
+    def _plot_bar(self, sample_index: int) -> None:
         raise NotImplementedError("to be done")
 
-    def _plot_tree(self, sample_index:int = None, precision:int=2, **kwargs:dict) -> None:
+    def _plot_tree(
+        self, sample_index: int = None, precision: int = 2, **kwargs: dict
+    ) -> None:
         """
         use garphix to plot the decision tree
         """
@@ -203,7 +215,7 @@ class SurrogateModelExplanation(ExplanationBase):
             filename=os.path.join(self.path_plot, name),
             format=extension.replace(".", ""),
         )
-        try:            
+        try:
             # graphviz_source.view()
             display(graphviz_source)
         except subprocess.CalledProcessError:
@@ -227,13 +239,14 @@ class SurrogateModelExplanation(ExplanationBase):
         self.save_csv(sample_name)
 
         with open(
-            os.path.join(self.path_plot, f"{self.plot_name}.dot"), "w",
+            os.path.join(self.path_plot, f"{self.plot_name}.dot"),
+            "w",
         ) as file:
             file.write(self.dot_file)
 
     def get_method_text(self) -> str:
         """Define the method introduction text of the explanation type.
-    
+
         Returns:
             str: method_text explanation
 
@@ -273,9 +286,11 @@ class SurrogateModelExplanation(ExplanationBase):
         self.natural_language_text = self.get_natural_language_text()
         self.method_text = self.get_method_text()
 
-    def explain(self, sample_index:int, sample_name:str=None, separator:str='\n') -> Explanation:
-        """main function to create the explanation of the given sample. 
-        
+    def explain(
+        self, sample_index: int, sample_name: str = None, separator: str = '\n'
+    ) -> Explanation:
+        """main function to create the explanation of the given sample.
+
         The method_text, natural_language_text and the plots are create per sample.
 
         Args:

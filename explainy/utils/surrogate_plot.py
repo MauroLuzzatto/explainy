@@ -15,9 +15,7 @@ class SurrogatePlot(object):
     This class create the graphviz based surrogate plot using the trained sklearn DecisionTree
     """
 
-    def __init__(
-        self, precision=2, impurity=False, rounded=True, class_names=True
-    ):
+    def __init__(self, precision=2, impurity=False, rounded=True, class_names=True):
         self.precision = precision
         self.impurity = impurity
         self.rounded = rounded

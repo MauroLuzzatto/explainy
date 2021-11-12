@@ -24,12 +24,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import sklearn
-from sklearn.base import is_classifier, is_regressor
 from matplotlib.font_manager import FontProperties
 from mlxtend.evaluate import create_counterfactual
+from sklearn.base import is_classifier, is_regressor
 
-from explainy.core.explanation_base import ExplanationBase
 from explainy.core.explanation import Explanation
+from explainy.core.explanation_base import ExplanationBase
 from explainy.utils.utils import create_one_hot_sentence
 
 np.seterr(divide="ignore", invalid="ignore")
@@ -77,9 +77,7 @@ class CounterfactualExplanation(ExplanationBase):
         self.y_desired = y_desired
         self.delta = delta
         self.feature_names = self.get_feature_names(self.X)
-        self.number_of_features = self.get_number_of_features(
-            number_of_features
-        )
+        self.number_of_features = self.get_number_of_features(number_of_features)
         self.kwargs = kwargs
         self.kwargs['random_seed'] = random_state
 
@@ -151,7 +149,7 @@ class CounterfactualExplanation(ExplanationBase):
         self._log_output(sample_index, x_ref, x_counter_factual)
         return x_ref, x_counter_factual
 
-    def _log_counterfactual(self, lammbda:float):
+    def _log_counterfactual(self, lammbda: float):
         """
         Log the values from the counterfactual output
 
@@ -162,9 +160,7 @@ class CounterfactualExplanation(ExplanationBase):
             None.
         """
         self.logger.debug(f"lambda: {lammbda}")
-        self.logger.debug(
-            f"diff: {np.abs(self.y_counter_factual - self.y_desired)}"
-        )
+        self.logger.debug(f"diff: {np.abs(self.y_counter_factual - self.y_desired)}")
         self.logger.debug(
             f"y_counterfactual: {self.y_counter_factual:.2f}, desired:"
             f" {self.y_desired:.2f}, y_pred: {self.prediction:.2f}, delta:"
@@ -193,9 +189,7 @@ class CounterfactualExplanation(ExplanationBase):
             )
         )
         self.logger.debug("Features of the sample: {}".format(x_ref))
-        self.logger.debug(
-            "Features of the countefactual: {}".format(x_counter_factual)
-        )
+        self.logger.debug("Features of the countefactual: {}".format(x_counter_factual))
 
     def get_prediction_from_new_value(self, ii, x_ref, x_counter_factual):
         """
@@ -240,9 +234,7 @@ class CounterfactualExplanation(ExplanationBase):
         self.differences = []
         for ii in range(x_ref.shape[0]):
 
-            pred_new = self.get_prediction_from_new_value(
-                ii, x_ref, x_counter_factual
-            )
+            pred_new = self.get_prediction_from_new_value(ii, x_ref, x_counter_factual)
             difference = pred_new - pred_ref
             self.differences.append(difference)
             self.logger.debug(
@@ -255,9 +247,7 @@ class CounterfactualExplanation(ExplanationBase):
             np.array(self.differences).argsort()[::-1]
         ].tolist()
 
-    def get_feature_values(
-        self, x_ref, x_counter_factual, decimal=2, debug=False
-    ):
+    def get_feature_values(self, x_ref, x_counter_factual, decimal=2, debug=False):
         """
         Arrange the reference and the counter factual features in a dataframe
 
@@ -272,9 +262,15 @@ class CounterfactualExplanation(ExplanationBase):
         self.df = (
             pd.DataFrame(
                 [x_ref, x_counter_factual, self.differences],
-                index=[COLUMN_REFERENCE, COLUMN_COUNTERFACTUAL, COLUMN_DIFFERENCE],
+                index=[
+                    COLUMN_REFERENCE,
+                    COLUMN_COUNTERFACTUAL,
+                    COLUMN_DIFFERENCE,
+                ],
                 columns=self.feature_names,
-            ).round(decimal).T
+            )
+            .round(decimal)
+            .T
         )
         # reorder dataframe according the the feature importance
         self.df = self.df.loc[self.feature_sort, :]
@@ -284,7 +280,7 @@ class CounterfactualExplanation(ExplanationBase):
                 self.df.plot(kind="barh", figsize=(3, 5))
         except IndexError as e:
             print(e)
-    
+
     def importance(self) -> pd.DataFrame:
         return self.df.round(2)
 
@@ -318,7 +314,7 @@ class CounterfactualExplanation(ExplanationBase):
 
                     self.df.loc[feature_name, col_name] = string
 
-    def plot(self, sample_index:int, kind: str ='table', **kwargs: dict) -> None:
+    def plot(self, sample_index: int, kind: str = 'table', **kwargs: dict) -> None:
         """Create the plot of the counterfactual table
 
         Args:
@@ -340,7 +336,7 @@ class CounterfactualExplanation(ExplanationBase):
 
         Returns:
             None.
-        
+
         """
         colLabels = ["Sample", "Counterfactual Sample"]
         columns = [COLUMN_REFERENCE, COLUMN_COUNTERFACTUAL]
@@ -376,9 +372,7 @@ class CounterfactualExplanation(ExplanationBase):
         # make the last row bold
         for (row, col), cell in table.get_celld().items():
             if row == array_subset.shape[0]:
-                cell.set_text_props(
-                    fontproperties=FontProperties(weight="bold")
-                )
+                cell.set_text_props(fontproperties=FontProperties(weight="bold"))
 
         plt.axis("off")
         plt.grid("off")
@@ -391,9 +385,7 @@ class CounterfactualExplanation(ExplanationBase):
         points[1, :] += 10
 
         # get new bounding box in inches
-        self.nbbox = matplotlib.transforms.Bbox.from_extents(
-            points / plt.gcf().dpi
-        )
+        self.nbbox = matplotlib.transforms.Bbox.from_extents(points / plt.gcf().dpi)
         plt.show()
         return fig
 
@@ -409,7 +401,7 @@ class CounterfactualExplanation(ExplanationBase):
         )
 
     def get_natural_language_text(self) -> str:
-        """ Define the natural language output using the feature names
+        """Define the natural language output using the feature names
         and its values for this explanation type
 
         Returns:
@@ -443,7 +435,7 @@ class CounterfactualExplanation(ExplanationBase):
         sentences = "if " + self.join_text_with_comma_and_and(sentences)
         return self.natural_language_text_empty.format(sentences)
 
-    def _setup(self, sample_index: int, sample_name:str) -> None:
+    def _setup(self, sample_index: int, sample_name: str) -> None:
         """Helper function to setup the counterfactual explanation
 
         Args:

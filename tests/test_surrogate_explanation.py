@@ -7,9 +7,7 @@ Created on Mon Aug 16 21:58:56 2021
 
 import pytest
 
-from explainy.explanations.surrogate_model_explanation import (
-    SurrogateModelExplanation,
-)
+from explainy.explanations.surrogate_model_explanation import SurrogateModelExplanation
 
 from .utils import get_regression_model
 
@@ -21,9 +19,7 @@ def test_counterfactual_explanation_4_features():
     number_of_features = 4
     sample_index = 1
 
-    explainer = SurrogateModelExplanation(
-        X_test, y_test, model, number_of_features
-    )
+    explainer = SurrogateModelExplanation(X_test, y_test, model, number_of_features)
     explanation = explainer.explain(sample_index, separator=None)
 
     assert (
@@ -49,9 +45,7 @@ def test_counterfactual_explanation_8_features():
     number_of_features = 8
     sample_index = 1
 
-    explainer = SurrogateModelExplanation(
-        X_test, y_test, model, number_of_features
-    )
+    explainer = SurrogateModelExplanation(X_test, y_test, model, number_of_features)
     explanation = explainer.explain(sample_index, separator=None)
 
     assert (

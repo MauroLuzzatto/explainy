@@ -7,9 +7,7 @@ Created on Mon Aug 16 21:58:56 2021
 
 import pytest
 
-from explainy.explanations.counterfactual_explanation import (
-    CounterfactualExplanation,
-)
+from explainy.explanations.counterfactual_explanation import CounterfactualExplanation
 
 from .utils import get_classification_model
 

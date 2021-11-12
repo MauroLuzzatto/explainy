@@ -24,8 +24,8 @@ import pandas as pd
 import shap
 import sklearn
 
-from explainy.core.explanation_base import ExplanationBase
 from explainy.core.explanation import Explanation
+from explainy.core.explanation_base import ExplanationBase
 
 
 class ShapExplanation(ExplanationBase):
@@ -60,9 +60,7 @@ class ShapExplanation(ExplanationBase):
         self.X = X
         self.y = y
         self.feature_names = self.get_feature_names(self.X)
-        self.number_of_features = self.get_number_of_features(
-            number_of_features
-        )
+        self.number_of_features = self.get_number_of_features(number_of_features)
         self.kwargs = kwargs
 
         natural_language_text_empty = (
@@ -85,7 +83,6 @@ class ShapExplanation(ExplanationBase):
 
         self._calculate_importance()
 
-
     def _calculate_importance(self) -> None:
         """
         Explain model predictions using SHAP library
@@ -97,16 +94,13 @@ class ShapExplanation(ExplanationBase):
         self.explainer = shap.TreeExplainer(self.model, **self.kwargs)
         self.shap_values = self.explainer.shap_values(self.X)
 
-
         # if isinstance(self.explainer.expected_value, np.ndarray):
         #     self.explainer.expected_value = self.explainer.expected_value[0]
         # assert isinstance(
         #     self.explainer.expected_value, float
         # ), "self.explainer.expected_value has wrong type"
 
-    def get_feature_values(
-        self, sample_index: int = 0
-    ) -> List[Tuple[str, float]]:
+    def get_feature_values(self, sample_index: int = 0) -> List[Tuple[str, float]]:
         """
         extract the feature name and its importance per sample
         - get absolute values to get the strongst postive and negative contribution
@@ -126,10 +120,14 @@ class ShapExplanation(ExplanationBase):
             indexes = np.argsort(abs(self.shap_values[sample_index, :]))
             sample_shap_value = self.shap_values
         else:
-            indexes = np.argsort(abs(self.shap_values[self.prediction][sample_index, :]))
+            indexes = np.argsort(
+                abs(self.shap_values[self.prediction][sample_index, :])
+            )
             sample_shap_value = self.shap_values[self.prediction]
-            self.logger.info(f'SHAP values are taken from predicted class: {self.prediction}')
-    
+            self.logger.info(
+                f'SHAP values are taken from predicted class: {self.prediction}'
+            )
+
         feature_values = []
         for index in indexes.tolist()[::-1]:
             feature_values.append(
@@ -173,17 +171,15 @@ class ShapExplanation(ExplanationBase):
             shap_value = self.shap_values
         else:
             shap_value = self.shap_values[self.prediction]
-        
+
         indexes = np.argsort(abs(shap_value[sample_index, :]))
         sorted_idx = indexes.tolist()[::-1][: self.number_of_features]
-        
+
         width = shap_value[sample_index, sorted_idx]
         labels = [self.feature_names[i] for i in sorted_idx]
         y = np.arange(self.number_of_features, 0, -1)
 
-        fig = plt.figure(
-            figsize=(6, max(2, int(0.5 * self.number_of_features)))
-        )
+        fig = plt.figure(figsize=(6, max(2, int(0.5 * self.number_of_features))))
         plt.barh(y=y, width=width, height=0.5)
         plt.yticks(y, labels)
         plt.xlabel("Shap Values")
@@ -203,14 +199,12 @@ class ShapExplanation(ExplanationBase):
 
         """
         if not self.is_classifier:
-            base_value=self.explainer.expected_value
-            shap_value=np.around(
-                self.shap_values[sample_index, :], decimals=2
-            )
+            base_value = self.explainer.expected_value
+            shap_value = np.around(self.shap_values[sample_index, :], decimals=2)
         else:
-            base_value=self.explainer.expected_value[self.prediction]
-            shap_value=np.around(
-                    self.shap_values[self.prediction][sample_index, :], decimals=2
+            base_value = self.explainer.expected_value[self.prediction]
+            shap_value = np.around(
+                self.shap_values[self.prediction][sample_index, :], decimals=2
             )
 
         shap.force_plot(
@@ -238,11 +232,14 @@ class ShapExplanation(ExplanationBase):
             None.
         """
         if not self.is_classifier:
-            message =  f"The expected_value was: {self.explainer.expected_value}"
+            message = f"The expected_value was: {self.explainer.expected_value}"
         else:
-            message =  f"The expected_value was: {self.explainer.expected_value[self.prediction]}"
+            message = (
+                "The expected_value was:"
+                f" {self.explainer.expected_value[self.prediction]}"
+            )
 
-        self.logger.debug(message)    
+        self.logger.debug(message)
         self.logger.debug(f"The y_value was: {self.y.values[sample_index][0]}")
         self.logger.debug(f"The predicted value was: {self.prediction}")
 

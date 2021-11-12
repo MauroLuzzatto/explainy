@@ -21,7 +21,7 @@ https://christophm.github.io/interpretable-ml-book/
 [2] https://scikit-learn.org/stable/modules/permutation_importance.html
 
 """
-from typing import Dict, Optional, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -29,8 +29,8 @@ import pandas as pd
 import sklearn
 from sklearn.inspection import permutation_importance
 
-from explainy.core.explanation_base import ExplanationBase
 from explainy.core.explanation import Explanation
+from explainy.core.explanation_base import ExplanationBase
 from explainy.utils.typing import ModelType
 
 
@@ -69,16 +69,13 @@ class PermutationExplanation(ExplanationBase):
         self.X = X
         self.y = y
         self.feature_names = self.get_feature_names(self.X)
-        self.number_of_features = self.get_number_of_features(
-            number_of_features
-        )
+        self.number_of_features = self.get_number_of_features(number_of_features)
         self.kwargs = kwargs
         self.kwargs['n_repeats'] = n_repeats
         self.kwargs['random_state'] = random_state
 
         natural_language_text_empty = (
-            "The {} features which were most important for the predictions"
-            " were: {}."
+            "The {} features which were most important for the predictions" " were: {}."
         )
         method_text_empty = (
             "The feature importance was calculated using the Permutation"
@@ -139,9 +136,7 @@ class PermutationExplanation(ExplanationBase):
         values = self.r.importances[sorted_idx].T
         labels = [self.feature_names[i] for i in sorted_idx]
 
-        fig, ax = plt.subplots(
-            figsize=(6, max(2, int(0.5 * self.number_of_features)))
-        )
+        fig, ax = plt.subplots(figsize=(6, max(2, int(0.5 * self.number_of_features))))
         ax.boxplot(
             values[:, -self.number_of_features :],
             vert=False,
@@ -160,17 +155,13 @@ class PermutationExplanation(ExplanationBase):
             plt.figure: a figure object
         """
         sorted_idx = self.r.importances_mean.argsort()
-        labels = [self.feature_names[i] for i in sorted_idx][
-            -self.number_of_features :
-        ]
+        labels = [self.feature_names[i] for i in sorted_idx][-self.number_of_features :]
         width = [self.r.importances_mean[i] for i in sorted_idx][
             -self.number_of_features :
         ]
         y = np.arange(self.number_of_features)
 
-        fig = plt.figure(
-            figsize=(6, max(2, int(0.5 * self.number_of_features)))
-        )
+        fig = plt.figure(figsize=(6, max(2, int(0.5 * self.number_of_features))))
         plt.barh(y=y, width=width, height=0.5)
         plt.yticks(y, labels)
         plt.xlabel(
@@ -213,9 +204,7 @@ class PermutationExplanation(ExplanationBase):
         self.method_text = self.get_method_text()
         self.plot_name = self.get_plot_name()
 
-    def explain(
-        self, sample_index: int, sample_name: str = None, separator="\n"
-    ):
+    def explain(self, sample_index: int, sample_name: str = None, separator="\n"):
         """
         main function to create the explanation of the given sample. The
         method_text, natural_language_text and the plots are create per sample.

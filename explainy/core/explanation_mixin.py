@@ -24,9 +24,9 @@ class ExplanationMixin:
         # TODO: fix path
         path_json = r""
 
-        if not os.path.exists(path_json): 
+        if not os.path.exists(path_json):
             return feature_value
-        
+
         if f"{feature_name}.json" in os.listdir(path_json):
             mapper = CategoryMapper(path_json, feature_name)
             # print(mapper[int(feature_value)])

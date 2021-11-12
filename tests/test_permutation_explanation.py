@@ -19,9 +19,7 @@ def test_permuation_explanation_4_features():
     number_of_features = 4
     sample_index = 1
 
-    explainer = PermutationExplanation(
-        X_test, y_test, model, number_of_features
-    )
+    explainer = PermutationExplanation(X_test, y_test, model, number_of_features)
 
     explanation = explainer.explain(sample_index, separator=None)
 
@@ -49,9 +47,7 @@ def test_permuation_explanation_8_features():
     number_of_features = 8
     sample_index = 1
 
-    explainer = PermutationExplanation(
-        X_test, y_test, model, number_of_features
-    )
+    explainer = PermutationExplanation(X_test, y_test, model, number_of_features)
 
     explanation = explainer.explain(sample_index, separator=None)
 

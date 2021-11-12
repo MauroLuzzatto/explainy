@@ -8,6 +8,7 @@ Created on Mon Aug 16 21:58:56 2021
 import pytest
 
 from explainy.core.explanation import Explanation
+
 from ..utils import get_classification_model
 
 
@@ -26,7 +27,5 @@ def test_Explanation():
     assert explanation.natural_language_text == natural_language_text
 
 
-
 if __name__ == "__main__":
     pytest.main()
-    
