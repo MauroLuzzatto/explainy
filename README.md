@@ -26,6 +26,21 @@ The API is inspired by `scikit-learn` and has two core methods `explain()` and `
 **explainy** comes with four different algorithms to create either *global* or *local* and *contrastive* or *non-contrastive* model explanations.
 
 
+| Method				|Type | Explanations | Classification | Regression | 
+| --- 				| --- | :---: | :---: | :---: | 
+|[Permutation Feature Importance](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.permutation_explanation)	| non-contrastive | global |  :star: | :star:|
+|[Shap Values](https://explainy.readthedocs.io/en/latest/explainy.explanations.html?highlight=shap#module-explainy.explanations.shap_explanation)		| non-contrastive | local |   	:star: | :star:|
+|[Surrogate Model](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.surrogate_model_explanation)|contrastive | global | :star: | :star: | 
+|[Counterfactual Example](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.counterfactual_explanation)| contrastive | local |:star:| :star:|
+
+
+Description:
+- **global**: explanation of system functionality (all samples have the same explanation)
+- **local**: explanation of decision rationale (each sample has its own explanation)
+- **contrastive**: tracing of decision path (differences to other outcomes are described)
+- **non-contrastive**: parameter weighting (the feature importance is reported)
+
+
 ## Documentation
 https://explainy.readthedocs.io
 
@@ -57,7 +72,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 X_test = pd.DataFrame(X_test, columns=diabetes.feature_names)
 y_test = pd.DataFrame(y_test)
 
-model = RandomForestRegressor(random_state=0).fit(X_train, y_train)
+model = RandomForestRegressor(random_state=0)
+model.fit(X_train, y_train)
 ```
 
 Initialize the `PermutationExplanation` (or any other explanation) object and pass in the trained model and the to be explained dataset. 
@@ -70,7 +86,6 @@ Addtionally, define the number of features used in the explanation. This allows 
 from explainy.explanations import PermutationExplanation
 
 number_of_features = 4
-sample_index = 1
 
 explainer = PermutationExplanation(
     X_test, y_test, model, number_of_features
@@ -79,7 +94,7 @@ explainer = PermutationExplanation(
 Call the `explain()` method and print the explanation for the sample (in case of a local explanation every sample has a different explanation).
 
 ```python
-explanation = explainer.explain(sample_index=sample_index)
+explanation = explainer.explain(sample_index=1)
 print(explanation)
 ```
 > The RandomForestRegressor used 10 features to produce the predictions. The prediction of this sample was 251.8.
@@ -101,40 +116,45 @@ explainer.plot(kind='box')
 ```
 ![Permutation Feature Importance BoxPlot](https://github.com/MauroLuzzatto/explainy/raw/main/static/permutation_importance_box.png)
 
+
+Finally, you can also look at the importance values of the features (in form of a `pd.DataFrame`).
+
+```python
+feature_importance = explainer.importance()
+print(feature_importance)
+```
+
+```python
+  Feature  Importance
+0     bmi        0.15
+1      s5        0.12
+2      bp        0.03
+3     age        0.02
+4      s2       -0.00
+5     sex       -0.00
+6      s3       -0.00
+7      s1       -0.01
+8      s6       -0.01
+9      s4       -0.01
+```
+
 <!-- Finally the result can be saved
 
 ```python
 explainer.save(sample_index)
 ``` -->
 
-
+<!-- 
 ## Model Explanations
-
-| Method				|Type | Explanations | Classification | Regression | 
-| --- 				| --- | :---: | :---: | :---: | 
-|[Permutation Feature Importance](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.permutation_explanation)	| non-contrastive | global |  :star: | :star:|
-|[Shap Values](https://explainy.readthedocs.io/en/latest/explainy.explanations.html?highlight=shap#module-explainy.explanations.shap_explanation)		| non-contrastive | local |   	:star: | :star:|
-|[Surrogate Model](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.surrogate_model_explanation)|contrastive | global | :star: | :star: | 
-|[Counterfactual Example](https://explainy.readthedocs.io/en/latest/explainy.explanations.html#module-explainy.explanation.counterfactual_explanation)| contrastive | local |:star:| :star:|
-
-<!-- Legend
-- :star: implemented
-- :construction:: work in progress -->
-
-
-Description
-- **global**: explanation of system functionality (all samples have the same explanation)
-- **local**: explanation of decision rationale (each sample has its own explanation)
-- **contrastive**: tracing of decision path (differences to other outcomes are described)
-- **non-contrastive**: parameter weighting (the feature importance is reported)
+-->
 
 
 ## Features
 - Algorithms for inspecting black-box machine learning models 
 - Support for the machine learning frameworks `scikit-learn` and `xgboost`
-- **explainy** offers a standrdized API with three core methods `explain()`, `plot()`, `importance()`
+- **explainy** offers a standardized API with three core methods `explain()`, `plot()`, `importance()`
 
-### Other Machine Learning Explainability libraries to watch
+## Other Machine Learning Explainability libraries to watch
 - [shap](https://github.com/slundberg/shap): A game theoretic approach to explain the output of any machine learning model
 - [eli5](https://github.com/TeamHG-Memex/eli5): A library for debugging/inspecting machine learning classifiers and explaining their predictions 
 - [alibi](https://github.com/SeldonIO/alibi): Algorithms for explaining machine learning models 
