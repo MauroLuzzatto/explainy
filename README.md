@@ -21,7 +21,7 @@
 
 **explainy** is a library for generating machine learning models explanations in Python. It uses methods from **Machine Learning Explainability** and provides a standardized API to create feature importance explanations for samples. 
 
-The API is inspired by `scikit-learn` and has two core methods `explain()` and `plot()`. The explanations are generated in the form of texts and plots.
+The API is inspired by `scikit-learn` and has three core methods `explain()`, `plot()` and, `importance()`. The explanations are generated in the form of texts and plots.
 
 **explainy** comes with four different algorithms to create either *global* or *local* and *contrastive* or *non-contrastive* model explanations.
 
