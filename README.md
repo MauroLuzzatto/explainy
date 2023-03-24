@@ -9,7 +9,6 @@
 <h1 align="center">explainy - black-box model explanations for humans</h1>
 
 [![pypi version](https://img.shields.io/pypi/v/explainy.svg)](https://pypi.python.org/pypi/explainy)
-<!-- [![travis](https://app.travis-ci.com/MauroLuzzatto/explainy.svg?branch=main)](https://app.travis-ci.com/github/MauroLuzzatto/explainy?branch=master) -->
 [![codecov](https://codecov.io/gh/MauroLuzzatto/explainy/branch/main/graph/badge.svg?token=N6EKHMEAQR)](https://codecov.io/gh/MauroLuzzatto/explainy)
 [![docs](https://readthedocs.org/projects/explainy/badge/?version=latest)](https://explainy.readthedocs.io/en/latest/?version=latest)
 [![Supported versions](https://img.shields.io/pypi/pyversions/explainy.svg)](https://pypi.org/project/explainy)
@@ -17,6 +16,7 @@
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 [![Downloads](https://pepy.tech/badge/explainy)](https://pepy.tech/project/explainy)
 
+<!-- [![travis](https://app.travis-ci.com/MauroLuzzatto/explainy.svg?branch=main)](https://app.travis-ci.com/github/MauroLuzzatto/explainy?branch=master) -->
 
 
 **explainy** is a library for generating machine learning models explanations in Python. It uses methods from **Machine Learning Explainability** and provides a standardized API to create feature importance explanations for samples. 
