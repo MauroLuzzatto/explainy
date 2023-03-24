@@ -79,7 +79,7 @@ class CounterfactualExplanation(ExplanationBase):
         self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(number_of_features)
         self.kwargs = kwargs
-        self.kwargs['random_seed'] = random_state
+        self.kwargs["random_seed"] = random_state
 
         natural_language_text_empty = (
             "The sample would have had the desired prediction, {}."
@@ -116,7 +116,6 @@ class CounterfactualExplanation(ExplanationBase):
         x_ref = self.X.values[sample_index, :]
         count = 0
         for lammbda in np.arange(0, 10000, 0.1):
-
             x_counter_factual = create_counterfactual(
                 x_reference=x_ref,
                 y_desired=self.y_desired,
@@ -233,7 +232,6 @@ class CounterfactualExplanation(ExplanationBase):
 
         self.differences = []
         for ii in range(x_ref.shape[0]):
-
             pred_new = self.get_prediction_from_new_value(ii, x_ref, x_counter_factual)
             difference = pred_new - pred_ref
             self.differences.append(difference)
@@ -295,7 +293,6 @@ class CounterfactualExplanation(ExplanationBase):
         """
         for feature_name in list(self.df.index)[: self.number_of_features]:
             for col_name in [COLUMN_REFERENCE, COLUMN_COUNTERFACTUAL]:
-
                 feature_value = self.df.loc[feature_name, col_name]
                 self.df.loc[feature_name, col_name] = self.map_category(
                     feature_name, feature_value
@@ -314,7 +311,7 @@ class CounterfactualExplanation(ExplanationBase):
 
                     self.df.loc[feature_name, col_name] = string
 
-    def plot(self, sample_index: int, kind: str = 'table', **kwargs: dict) -> None:
+    def plot(self, sample_index: int, kind: str = "table", **kwargs: dict) -> None:
         """Create the plot of the counterfactual table
 
         Args:

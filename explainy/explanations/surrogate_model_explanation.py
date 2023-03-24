@@ -66,7 +66,7 @@ class SurrogateModelExplanation(ExplanationBase):
         self.X = X
         self.y = y
         self.feature_names = self.get_feature_names(self.X)
-        self.number_of_features = np.log2(number_of_features)
+        self.number_of_features = int(np.log2(number_of_features))
         self.number_of_groups = number_of_features
         self.kind = kind
         self.kwargs = kwargs
@@ -91,7 +91,6 @@ class SurrogateModelExplanation(ExplanationBase):
         self._setup()
 
     def set_defaults(self):
-
         natural_language_text_empty = (
             "The following thresholds were important for the predictions: {}"
         )
@@ -149,11 +148,11 @@ class SurrogateModelExplanation(ExplanationBase):
             ModelType: surrogate estimator with hyperparamters
 
         """
-        if self.kind == 'tree':
+        if self.kind == "tree":
             surrogate_model = estimator(
                 max_depth=self.number_of_features, **self.kwargs
             )
-        elif self.kind == 'linear':
+        elif self.kind == "linear":
             surrogate_model = estimator(**self.kwargs)
         return surrogate_model
 
@@ -287,7 +286,7 @@ class SurrogateModelExplanation(ExplanationBase):
         self.method_text = self.get_method_text()
 
     def explain(
-        self, sample_index: int, sample_name: str = None, separator: str = '\n'
+        self, sample_index: int, sample_name: str = None, separator: str = "\n"
     ) -> Explanation:
         """main function to create the explanation of the given sample.
 

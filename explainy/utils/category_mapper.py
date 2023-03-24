@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Apr 19 19:39:26 2021
-
-@author: maurol
-"""
 import json
 import os
 
@@ -66,7 +60,6 @@ class CategoryMapper(object):
 
 
 if __name__ == "__main__":
-
     path = r"C:\Users\maurol\OneDrive\Dokumente\Python_Scripts\model_explanation_study\dataset\training"
     feature = "State of residence"
     mapper = CategoryMapper(path, feature)

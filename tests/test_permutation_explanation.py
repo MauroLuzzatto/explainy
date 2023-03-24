@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 16 21:58:56 2021
-
-@author: maurol
-"""
-
-import pytest
 
 from explainy.explanations.permutation_explanation import PermutationExplanation
 
@@ -13,7 +5,6 @@ from .utils import get_regression_model
 
 
 def test_permuation_explanation_4_features():
-
     model, X_test, y_test = get_regression_model()
 
     number_of_features = 4
@@ -41,7 +32,6 @@ def test_permuation_explanation_4_features():
 
 
 def test_permuation_explanation_8_features():
-
     model, X_test, y_test = get_regression_model()
 
     number_of_features = 8

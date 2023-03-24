@@ -103,7 +103,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         if number_of_features > self.X.shape[1]:
             warnings.warn(
                 'The "number_of_features" is larger than the number of dataset'
-                f' features. The value is set to {self.X.shape[1]}'
+                f" features. The value is set to {self.X.shape[1]}"
             )
         return min(number_of_features, self.X.shape[1])
 
@@ -120,7 +120,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         if isinstance(X, pd.DataFrame):
             feature_names = list(X)
         else:
-            feature_names = [f'feature_{index}' for index in range(X.shape[1])]
+            feature_names = [f"feature_{index}" for index in range(X.shape[1])]
         return feature_names
 
     def set_paths(self) -> None:
@@ -153,7 +153,7 @@ class ExplanationBase(ABC, ExplanationMixin):
 
     def importance(self):
         return pd.DataFrame(
-            self.feature_values, columns=['Feature', 'Importance']
+            self.feature_values, columns=["Feature", "Importance"]
         ).round(2)
 
     def get_prediction(self, sample_index: int) -> float:

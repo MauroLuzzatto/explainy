@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 """The setup script."""
-import os
 from pathlib import Path
 
 from setuptools import find_packages, setup
@@ -11,33 +10,40 @@ def read_requirements(path):
     return list(Path(path).read_text().splitlines())
 
 
-with open('README.md') as readme_file:
+with open("README.md") as readme_file:
     readme = readme_file.read()
 
 print(readme)
 
-requirements = read_requirements(r'requirements.txt')
+requirements = read_requirements(r"requirements.txt")
 # docs_extras = read_requirements(r'requirements_dev.txt'))
-test_requirements = ['pytest>=3', ]
+test_requirements = [
+    "pytest>=3",
+]
 
 setup(
     author="Mauro Luzzatto",
-    author_email='mauroluzzatto@hotmail.com',
-    python_requires='>=3.6',
+    author_email="mauroluzzatto@hotmail.com",
+    python_requires=">=3.6",
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
+        "Development Status :: 2 - Pre-Alpha",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Natural Language :: English",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
     ],
-    description="explainy is a library for generating explanations for machine learning models in Python. It uses methods from Machine Learning Explainability and provides a standardized API to create feature importance explanations for samples. The explanations are generated in the form of plots and text.",
+    description=(
+        "explainy is a library for generating explanations for machine learning models"
+        " in Python. It uses methods from Machine Learning Explainability and provides"
+        " a standardized API to create feature importance explanations for samples. The"
+        " explanations are generated in the form of plots and text."
+    ),
     entry_points={
-        'console_scripts': [
-            'explainy=explainy.cli:main',
+        "console_scripts": [
+            "explainy=explainy.cli:main",
         ],
     },
     install_requires=requirements,
@@ -45,14 +51,14 @@ setup(
     license="MIT license",
     # long_description=f'"""{readme}"""',
     long_description=readme,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     include_package_data=True,
-    keywords='explainy',
-    name='explainy',
-    packages=find_packages(include=['explainy', 'explainy.*']),
-    test_suite='tests',
+    keywords="explainy",
+    name="explainy",
+    packages=find_packages(include=["explainy", "explainy.*"]),
+    test_suite="tests",
     tests_require=test_requirements,
-    url='https://github.com/MauroLuzzatto/explainy',
-    version='0.1.14',
+    url="https://github.com/MauroLuzzatto/explainy",
+    version="0.1.14",
     zip_safe=False,
 )

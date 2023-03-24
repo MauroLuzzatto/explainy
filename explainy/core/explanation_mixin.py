@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu May 13 21:49:43 2021
-
-@author: maurol
-"""
 import os
 
 from explainy.utils.category_mapper import CategoryMapper
