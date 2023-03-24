@@ -1,8 +1,8 @@
 Click
-scikit-learn=1.2.2
+scikit-learn==1.2.2
 pandas
 mlxtend
-shap=0.41.0
+shap==0.41.0
 matplotlib
 graphviz
 ipython
