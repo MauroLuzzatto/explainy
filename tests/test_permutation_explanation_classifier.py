@@ -1,12 +1,9 @@
-import pytest
-
 from explainy.explanations.permutation_explanation import PermutationExplanation
 
 from .utils import get_classification_model
 
 
 def test_permuation_explanation_2_features():
-
     model, X_test, y_test = get_classification_model()
 
     number_of_features = 2
@@ -34,7 +31,6 @@ def test_permuation_explanation_2_features():
 
 
 def test_permuation_explanation_4_features():
-
     model, X_test, y_test = get_classification_model()
 
     number_of_features = 4
@@ -63,6 +59,5 @@ def test_permuation_explanation_4_features():
 
 
 if __name__ == "__main__":
-
     test_permuation_explanation_2_features()
     test_permuation_explanation_4_features()

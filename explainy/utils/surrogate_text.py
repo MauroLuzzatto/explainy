@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Dec 19 11:41:28 2020
-
-@author: mauro
-"""
-
 import numpy as np
 from sklearn.base import is_classifier
 
@@ -133,7 +126,6 @@ class SurrogateText(ExplanationMixin):
         for index, node in enumerate(path):
             # check if we are not in the leaf
             if index != len(path) - 1:
-
                 feature_name_per_node = self.feature_names[self.feature[node]]
 
                 one_hot_feature_bool = " - " in feature_name_per_node
@@ -142,7 +134,6 @@ class SurrogateText(ExplanationMixin):
 
                 # if under the threshold
                 if self.children_left[node] == path[index + 1]:
-
                     if one_hot_feature_bool:
                         text = f"{feature_name}' was not '{feature_value}'"
                     else:
@@ -151,7 +142,6 @@ class SurrogateText(ExplanationMixin):
                             f" {self.threshold[node]:.2f}"
                         )
                 else:
-
                     if one_hot_feature_bool:
                         text = f"'{feature_name}' was '{feature_value}'"
                     else:

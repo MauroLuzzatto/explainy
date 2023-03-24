@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Dec 19 12:15:31 2020
-
-@author: mauro
-"""
-
 import re
 
 import sklearn
@@ -57,9 +50,7 @@ class SurrogatePlot(object):
         """
         values = re.findall(r'\[label="(.*?)"\]', f, re.DOTALL)
         for value in values:
-
             if " - " in value:
-
                 text = value.split("<=")[0].strip()
                 feature_name = text.split(" - ")[0]
                 feature_value = text.split(" - ")[1]

@@ -1,14 +1,11 @@
 from unittest import mock
 
-import matplotlib.pyplot as plt
-import pytest
 
 from explainy.explanations.shap_explanation import ShapExplanation
 from tests.utils import get_regression_model
 
 
 def test_shap_explanation_4_features():
-
     model, X_test, y_test = get_regression_model()
 
     number_of_features = 4
@@ -35,7 +32,6 @@ def test_shap_explanation_4_features():
 
 
 def test_shap_explanation_8_features():
-
     model, X_test, y_test = get_regression_model()
 
     number_of_features = 8
@@ -70,11 +66,10 @@ def explainer_wrapper():
 
 @mock.patch("explainy.explanations.shap_explanation.plt")
 def test_shap_plot_bar(mock_plt):
-
     explainer = explainer_wrapper()
     sample_index = 1
     explainer.explain(sample_index, separator=None)
-    explainer.plot(sample_index, kind='bar')
+    explainer.plot(sample_index, kind="bar")
 
     mock_plt.xlabel.assert_called_once_with("Shap Values")
     # Assert plt.figure got called
@@ -83,11 +78,10 @@ def test_shap_plot_bar(mock_plt):
 
 @mock.patch("explainy.explanations.shap_explanation.plt")
 def test_shap_plot_shap(mock_plt):
-
     explainer = explainer_wrapper()
     sample_index = 1
     explainer.explain(sample_index, separator=None)
-    explainer.plot(sample_index, kind='shap')
+    explainer.plot(sample_index, kind="shap")
 
     mock_plt.gcf().set_figheight.assert_called_once_with(4)
     mock_plt.gcf().set_figwidth.assert_called_once_with(8)
@@ -95,7 +89,6 @@ def test_shap_plot_shap(mock_plt):
 
 
 if __name__ == "__main__":
-
     test_shap_plot_shap()
     test_shap_plot_bar()
 

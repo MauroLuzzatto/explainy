@@ -26,7 +26,6 @@ from typing import Dict, List, Optional, Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import sklearn
 from sklearn.inspection import permutation_importance
 
 from explainy.core.explanation import Explanation
@@ -71,11 +70,11 @@ class PermutationExplanation(ExplanationBase):
         self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(number_of_features)
         self.kwargs = kwargs
-        self.kwargs['n_repeats'] = n_repeats
-        self.kwargs['random_state'] = random_state
+        self.kwargs["n_repeats"] = n_repeats
+        self.kwargs["random_state"] = random_state
 
         natural_language_text_empty = (
-            "The {} features which were most important for the predictions" " were: {}."
+            "The {} features which were most important for the predictions were: {}."
         )
         method_text_empty = (
             "The feature importance was calculated using the Permutation"

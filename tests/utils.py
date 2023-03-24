@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Sep 26 11:27:26 2021
 
-@author: maurol
-"""
 import pandas as pd
 from sklearn.datasets import load_diabetes, load_iris
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
@@ -11,7 +6,6 @@ from sklearn.model_selection import train_test_split
 
 
 def get_regression_model():
-
     diabetes = load_diabetes()
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -25,7 +19,6 @@ def get_regression_model():
 
 
 def get_classification_model():
-
     iris = load_iris()
 
     X_train, X_test, y_train, y_test = train_test_split(

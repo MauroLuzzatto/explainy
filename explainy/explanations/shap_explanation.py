@@ -76,8 +76,8 @@ class ShapExplanation(ExplanationBase):
             natural_language_text_empty, method_text_empty, sentence_text_empty
         )
 
-        self.explanation_type = 'local'
-        self.explanation_style = 'non-contrastive'
+        self.explanation_type = "local"
+        self.explanation_style = "non-contrastive"
         self.explanation_name = "shap"
         self.logger = self.setup_logger(self.explanation_name)
 
@@ -125,7 +125,7 @@ class ShapExplanation(ExplanationBase):
             )
             sample_shap_value = self.shap_values[self.prediction]
             self.logger.info(
-                f'SHAP values are taken from predicted class: {self.prediction}'
+                f"SHAP values are taken from predicted class: {self.prediction}"
             )
 
         feature_values = []

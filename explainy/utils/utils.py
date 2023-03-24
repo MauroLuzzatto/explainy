@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Jan 17 19:34:15 2021
-
-@author: maurol
-"""
 import os
 
 

@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 16 21:58:56 2021
-
-@author: maurol
-"""
-
-import pytest
 
 from explainy.explanations.counterfactual_explanation import CounterfactualExplanation
 
@@ -13,7 +5,6 @@ from .utils import get_classification_model
 
 
 def test_counterfactual_explanation_4_features():
-
     model, X_test, y_test = get_classification_model()
 
     number_of_features = 4
@@ -43,7 +34,6 @@ def test_counterfactual_explanation_4_features():
 
 
 def test_counterfactual_explanation_8_features():
-
     model, X_test, y_test = get_classification_model()
 
     number_of_features = 8
