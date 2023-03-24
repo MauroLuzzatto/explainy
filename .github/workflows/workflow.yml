@@ -1,5 +1,7 @@
 name: Workflow for Codecov example-python
+
 on: [push, pull_request]
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -24,5 +26,3 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
-
-          
