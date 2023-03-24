@@ -1,4 +1,3 @@
-
 import pandas as pd
 from sklearn.datasets import load_diabetes, load_iris
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor

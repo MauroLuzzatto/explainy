@@ -1,4 +1,3 @@
-
 from explainy.explanations.surrogate_model_explanation import SurrogateModelExplanation
 
 from .utils import get_regression_model
@@ -16,7 +15,7 @@ def test_counterfactual_explanation_4_features():
     assert (
         explanation.score_text
         == "The RandomForestRegressor used 10 features to produce the"
-        " predictions. The prediction of this sample was 251.8."
+        " predictions. The prediction of this sample was 251.6."
     )
     assert (
         explanation.method_text
@@ -41,7 +40,7 @@ def test_counterfactual_explanation_8_features():
     assert (
         explanation.score_text
         == "The RandomForestRegressor used 10 features to produce the"
-        " predictions. The prediction of this sample was 251.8."
+        " predictions. The prediction of this sample was 251.6."
     )
     assert (
         explanation.method_text

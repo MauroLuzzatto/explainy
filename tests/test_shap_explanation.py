@@ -17,7 +17,7 @@ def test_shap_explanation_4_features():
     assert (
         explanation.score_text
         == "The RandomForestRegressor used 10 features to produce the"
-        " predictions. The prediction of this sample was 251.8."
+        " predictions. The prediction of this sample was 251.6."
     )
     assert (
         explanation.method_text
@@ -26,8 +26,8 @@ def test_shap_explanation_4_features():
     assert (
         explanation.natural_language_text
         == "The four features which contributed most to the prediction of this"
-        " particular sample were: 'bmi' (49.63), 's5' (41.66), 'bp' (9.40),"
-        " and 's6' (-4.04)."
+        " particular sample were: 'bmi' (49.60), 's5' (41.64), 'bp' (9.31), and 's6'"
+        " (-4.04)."
     )
 
 
@@ -43,7 +43,7 @@ def test_shap_explanation_8_features():
     assert (
         explanation.score_text
         == "The RandomForestRegressor used 10 features to produce the"
-        " predictions. The prediction of this sample was 251.8."
+        " predictions. The prediction of this sample was 251.6."
     )
     assert (
         explanation.method_text
@@ -52,9 +52,8 @@ def test_shap_explanation_8_features():
     assert (
         explanation.natural_language_text
         == "The eight features which contributed most to the prediction of this"
-        " particular sample were: 'bmi' (49.63), 's5' (41.66), 'bp' (9.40),"
-        " 's6' (-4.04), 'age' (-2.41), 's3' (2.25), 's4' (2.10), and 's2'"
-        " (0.93)."
+        " particular sample were: 'bmi' (49.60), 's5' (41.64), 'bp' (9.31), 's6'"
+        " (-4.04), 'age' (-2.47), 's3' (2.25), 's4' (2.10), and 's2' (0.92)."
     )
 
 

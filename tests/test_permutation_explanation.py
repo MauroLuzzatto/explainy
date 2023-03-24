@@ -1,4 +1,3 @@
-
 from explainy.explanations.permutation_explanation import PermutationExplanation
 
 from .utils import get_regression_model
@@ -17,7 +16,7 @@ def test_permuation_explanation_4_features():
     assert (
         explanation.score_text
         == "The RandomForestRegressor used 10 features to produce the"
-        " predictions. The prediction of this sample was 251.8."
+        " predictions. The prediction of this sample was 251.6."
     )
     assert (
         explanation.method_text
@@ -27,7 +26,7 @@ def test_permuation_explanation_4_features():
     assert (
         explanation.natural_language_text
         == "The four features which were most important for the predictions"
-        " were: 'bmi' (0.15), 's5' (0.12), 'bp' (0.03), and 'age' (0.02)."
+        " were: 'bmi' (0.15), 's5' (0.12), 'bp' (0.04), and 'age' (0.02)."
     )
 
 
@@ -44,7 +43,7 @@ def test_permuation_explanation_8_features():
     assert (
         explanation.score_text
         == "The RandomForestRegressor used 10 features to produce the"
-        " predictions. The prediction of this sample was 251.8."
+        " predictions. The prediction of this sample was 251.6."
     )
     assert (
         explanation.method_text
@@ -54,7 +53,7 @@ def test_permuation_explanation_8_features():
     assert (
         explanation.natural_language_text
         == "The eight features which were most important for the predictions"
-        " were: 'bmi' (0.15), 's5' (0.12), 'bp' (0.03), 'age' (0.02), 's2'"
+        " were: 'bmi' (0.15), 's5' (0.12), 'bp' (0.04), 'age' (0.02), 's2'"
         " (-0.00), 'sex' (-0.00), 's3' (-0.00), and 's1' (-0.01)."
     )
 

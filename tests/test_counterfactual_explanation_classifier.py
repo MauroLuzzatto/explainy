@@ -1,4 +1,3 @@
-
 from explainy.explanations.counterfactual_explanation import CounterfactualExplanation
 
 from .utils import get_classification_model
