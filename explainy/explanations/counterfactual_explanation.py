@@ -373,16 +373,7 @@ class CounterfactualExplanation(ExplanationBase):
 
         plt.axis("off")
         plt.grid("off")
-        # draw canvas once
-        plt.gcf().canvas.draw()
-        # get bounding box of table
-        points = table.get_window_extent(plt.gcf()._cachedRenderer).get_points()
-        # add 10 pixel spacing
-        points[0, :] -= 10
-        points[1, :] += 10
-
-        # get new bounding box in inches
-        self.nbbox = matplotlib.transforms.Bbox.from_extents(points / plt.gcf().dpi)
+        plt.tight_layout()
         plt.show()
         return fig
 

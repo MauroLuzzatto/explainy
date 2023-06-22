@@ -4,7 +4,10 @@ reports
 example.py
 example_v*.py
 .travis.yaml
+TODO.md
+.ruff_cache
 .python-version
+runs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
