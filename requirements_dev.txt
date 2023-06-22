@@ -18,3 +18,4 @@ ipython
 black
 wheel
 ruff
+ipykernel

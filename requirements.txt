@@ -4,5 +4,5 @@ pandas
 mlxtend
 shap==0.41.0
 matplotlib
-graphviz
-ipython
+graphviz==0.16
+numpy==1.23.1
