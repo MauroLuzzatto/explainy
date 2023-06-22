@@ -1,8 +1,9 @@
-Click
+click
 scikit-learn==1.2.2
 pandas
-mlxtend
+mlxtend==0.18.0
 shap==0.41.0
 matplotlib
-graphviz
-ipython
+graphviz==0.16
+ipython==7.26.0
+numpy==1.23.1
