@@ -6,6 +6,7 @@ example_v*.py
 .travis.yaml
 TODO.md
 .ruff_cache
+.python-version
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
