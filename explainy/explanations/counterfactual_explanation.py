@@ -367,22 +367,13 @@ class CounterfactualExplanation(ExplanationBase):
 
         # if show_rating:
         # make the last row bold
-        for (row, _), cell in table.get_celld().items():
+        for (row, col), cell in table.get_celld().items():
             if row == array_subset.shape[0]:
                 cell.set_text_props(fontproperties=FontProperties(weight="bold"))
 
         plt.axis("off")
         plt.grid("off")
-        # draw canvas once
-        plt.gcf().canvas.draw()
-        # # get bounding box of table
-        # points = table.get_window_extent(plt.gcf()._cachedRenderer).get_points()
-        # # add 10 pixel spacing
-        # points[0, :] -= 10
-        # points[1, :] += 10
-
-        # # get new bounding box in inches
-        # self.nbbox = matplotlib.transforms.Bbox.from_extents(points / plt.gcf().dpi)
+        plt.tight_layout()
         plt.show()
         return fig
 
