@@ -15,3 +15,6 @@ nbsphinx
 nbsphinx-link
 isort
 ipython
+black
+wheel
+ruff
