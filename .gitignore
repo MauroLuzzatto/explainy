@@ -4,6 +4,7 @@ reports
 example.py
 example_v*.py
 .travis.yaml
+.python-version
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
