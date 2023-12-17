@@ -47,9 +47,31 @@ https://explainy.readthedocs.io
 
 ## Install explainy
 
+
+
 ```
 pip install explainy
 ```
+
+---
+
+Further, install `graphviz` (version 9.0.0 or later) for plotting tree surrogate models:
+
+#### Windows
+```
+choco install graphviz
+```
+
+#### Mac
+```
+brew install graphviz
+```
+#### Linux: Ubuntu packages
+```
+sudo apt install graphviz
+```
+
+Further details on how to install `graphviz` can be found in the official [graphviz docs](https://graphviz.org/download/).
 
 ## Usage
 
