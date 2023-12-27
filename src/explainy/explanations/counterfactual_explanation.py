@@ -139,7 +139,9 @@ class CounterfactualExplanation(ExplanationBase):
                 if self.y_counter_factual == self.y_desired:
                     break
 
+            print(lammbda, self.y_counter_factual, self.y_desired)
             if count > 40:
+                # TODO: write better error message
                 raise
             count += 1
 

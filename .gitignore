@@ -8,6 +8,8 @@ TODO.md
 .ruff_cache
 .python-version
 runs/
+.DS_Store
+main.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

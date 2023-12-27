@@ -14,9 +14,10 @@ sphinxemoji
 nbsphinx
 nbsphinx-link
 isort
-ipython
 black
 wheel
 ruff
 ipykernel
 matplotlib-inline==0.1.2
+ipython
+ipywidgets
