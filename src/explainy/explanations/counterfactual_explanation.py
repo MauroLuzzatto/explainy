@@ -140,6 +140,7 @@ class CounterfactualExplanation(ExplanationBase):
                     break
 
             print(lammbda, self.y_counter_factual, self.y_desired)
+            print("test")
             if count > 40:
                 # TODO: write better error message
                 raise
@@ -162,12 +163,12 @@ class CounterfactualExplanation(ExplanationBase):
         """
         self.logger.debug(f"lambda: {lammbda}")
         self.logger.debug(f"diff: {np.abs(self.y_counter_factual - self.y_desired)}")
-        self.logger.debug(
-            f"y_counterfactual: {self.y_counter_factual:.2f}, desired:"
-            f" {self.y_desired:.2f}, y_pred: {self.prediction:.2f}, delta:"
-            f" {self.delta}"
-        )
-        self.logger.debug("---" * 15)
+        # self.logger.debug(
+        #     f"y_counterfactual: {self.y_counter_factual:.2f}, desired:"
+        #     f" {self.y_desired:.2f}, y_pred: {self.prediction:.2f}, delta:"
+        #     f" {self.delta}"
+        # )
+        # self.logger.debug("---" * 15)
 
     def _log_output(self, sample, x_ref, x_counter_factual):
         """

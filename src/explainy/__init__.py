@@ -5,3 +5,5 @@ __email__ = "mauroluzzatto@hotmail.com"
 # fmt: off
 __version__ = '0.2.4'
 # fmt: on
+
+print("test")

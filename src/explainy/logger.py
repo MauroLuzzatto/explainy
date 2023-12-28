@@ -46,7 +46,7 @@ class Logger(object):
         # console log
         consoleHandler = logging.StreamHandler()
         # set the logging level for log file
-        consoleHandler.setLevel(level=logging.INFO)
+        consoleHandler.setLevel(level=logging.DEBUG)
         # set the logging format
         formatter = logging.Formatter(console_logging_format)
         consoleHandler.setFormatter(formatter)
