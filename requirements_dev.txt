@@ -8,7 +8,7 @@ twine==3.3.0
 pytest==6.2.4
 pydata-sphinx-theme
 recommonmark==0.7.1
-m2r2==0.3.0
+m2r2
 sphinx-markdown-tables
 sphinxemoji
 nbsphinx
@@ -17,4 +17,5 @@ isort
 black
 wheel
 ruff
-
+Jinja2==2.11.3
+markupsafe==2.0.1
