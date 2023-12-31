@@ -51,11 +51,11 @@ class CategoryMapper(object):
         self.map_index_dict = self.key_to_int(mapper)
 
     def __getitem__(self, index):
-        assert type(index) == int, "index is not an integer"
+        assert isinstance(index, int), "index is not an integer"
         return self.map_index_dict[index]
 
     def __call__(self, index):
-        assert type(index) == int, "index is not an integer"
+        assert isinstance(index, int), "index is not an integer"
         return self.map_index_dict[index]
 
 

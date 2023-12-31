@@ -15,6 +15,7 @@ Source
 [1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
 https://christophm.github.io/interpretable-ml-book/
 """
+
 import os
 import subprocess
 import warnings
@@ -25,7 +26,11 @@ import numpy as np
 import pandas as pd
 from IPython.display import display
 from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_text
+from sklearn.tree import (
+    DecisionTreeClassifier,
+    DecisionTreeRegressor,
+    export_text,
+)
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase

@@ -9,7 +9,7 @@ import csv
 import os
 import warnings
 from abc import ABC, abstractmethod
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -261,7 +261,9 @@ class ExplanationBase(ABC, ExplanationMixin):
             plot_name = f"{prefix}.png"
         return plot_name
 
-    def get_sample_name(self, sample_index: int, sample_name: str = None) -> str:
+    def get_sample_name(
+        self, sample_index: int, sample_name: Optional[str] = None
+    ) -> str:
         """
         Determine the name of the sample, if no sample_name provide, use the sample_index
 
