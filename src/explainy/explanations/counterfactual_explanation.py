@@ -80,6 +80,7 @@ class CounterfactualExplanation(ExplanationBase):
         self.delta = delta
         self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(number_of_features)
+        self.sample_index: int = None
 
         natural_language_text_empty = (
             "The sample would have had the desired prediction of '{}', {}."
@@ -331,7 +332,7 @@ class CounterfactualExplanation(ExplanationBase):
 
                     self.df.loc[feature_name, col_name] = string
 
-    def plot(self, kind: str = "table") -> None:
+    def plot(self, sample_index: int, kind: str = "table") -> None:
         """Create the plot of the counterfactual table
 
         Args:
@@ -341,6 +342,10 @@ class CounterfactualExplanation(ExplanationBase):
             Exception: raise Exception if the "kind" of plot is not supported
 
         """
+        assert (
+            sample_index == self.sample_index
+        ), "sample_index is not the same as the index used to calculate the counterfactual explanation"
+
         if kind == "table":
             self.fig = self._plot_table()
         else:
@@ -481,6 +486,7 @@ class CounterfactualExplanation(ExplanationBase):
         Returns:
             Explanation: explanation object
         """
+        self.sample_index = sample_index
         sample_name = self.get_sample_name(sample_index, sample_name)
         self.prediction = self.get_prediction(sample_index)
         self.score_text = self.get_score_text()
