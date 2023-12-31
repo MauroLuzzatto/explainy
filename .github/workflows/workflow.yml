@@ -1,6 +1,6 @@
 name: Workflow for Codecov example-python
 
-on: [commit]
+on: [push]
 
 jobs:
   run:
