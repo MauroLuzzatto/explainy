@@ -17,8 +17,10 @@ Source
 [1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
 https://christophm.github.io/interpretable-ml-book/
 """
-from typing import Dict, Tuple, Optional
+
 import warnings
+from typing import Dict, Optional, Tuple
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -49,10 +51,9 @@ class CounterfactualExplanation(ExplanationBase):
         y: np.ndarray,
         model: sklearn.base.BaseEstimator,
         number_of_features: int = 4,
-        config: Dict = None,
-        y_desired: float = None,
-        delta: float = None,
-        random_state: int = 0,
+        config: Optional[Dict] = None,
+        y_desired: Optional[float] = None,
+        delta: Optional[float] = None,
         lammbda: float = 0.01,
     ) -> None:
         super(CounterfactualExplanation, self).__init__(model, config)
@@ -82,10 +83,9 @@ class CounterfactualExplanation(ExplanationBase):
         self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(number_of_features)
         self.lammbda = lammbda
-        self.random_state = random_state
 
         natural_language_text_empty = (
-            "The sample would have had the desired prediction of {}, {}."
+            "The sample would have had the desired prediction of '{}', {}."
         )
         method_text_empty = (
             "The feature importance is shown using a counterfactual example."
@@ -126,8 +126,19 @@ class CounterfactualExplanation(ExplanationBase):
                 f"No delta value set, therefore using the value '{self.delta}'"
             )
 
+        start = -2
+        stop = 4
+        num = stop - start + 1
+        # try different seed values
         for random_seed in range(10):
-            for lammbda in np.arange(0, 10, 0.1):
+            # use exponential increase to search for the right lammbda value
+            for lammbda in np.logspace(
+                start=start,
+                stop=stop,
+                num=num,
+                base=10,
+                dtype="float",
+            ):
                 # catch the warning "Maximum number of function evaluations has been exceeded." warning
                 with warnings.catch_warnings(action="ignore"):
                     x_counter_factual = create_counterfactual(
@@ -143,32 +154,45 @@ class CounterfactualExplanation(ExplanationBase):
                     x_counter_factual.reshape(1, -1)
                 )[0]
 
+                self.logger.debug(
+                    f"y_counter_factual: {self.y_counter_factual:.2f},"
+                    f" y_desired: {self.y_desired:.2f}, y_pred:"
+                    f" {self.prediction:.2f}, label:"
+                    f" {self.y.values[sample_index][0]:.2f}, delta:"
+                    f" {self.delta}, lammbda: {lammbda}"
+                )
+
                 if is_regressor(self.model):
                     local_delta = np.abs(self.y_counter_factual - self.y_desired)
                     if local_delta < self.delta:
-                        self.logger.debug(f"found value below delta!")
+                        self.logger.debug("found value below delta!")
+                        is_value_found = True
                         break
                 elif is_classifier(self.model):
                     if self.y_counter_factual == self.y_desired:
-                        self.logger.debug(f"found the right class!")
+                        self.logger.debug("found the right class!")
+                        is_value_found = True
                         break
+
+            if is_value_found:
+                break
+
         else:
             raise ValueError(
-                "No counterfactual found, try to decrease the 'delta' value or adjust the desired prediction 'y_desired'"
+                "No counterfactual value found, try to decrease the 'delta'"
+                " value or adjust the desired prediction 'y_desired'"
             )
 
-        self.logger.debug(
-            f"y_counter_factual: {self.y_counter_factual:.2f}, y_desired:"
-            f" {self.y_desired:.2f}, y_pred: {self.prediction:.2f}, label: {self.y.values[sample_index][0]:.2f}, delta:"
-            f" {self.delta}"
-        )
         self.logger.debug(f"Features of the sample: {x_ref}")
         self.logger.debug(f"Features of the countefactual: {x_counter_factual}")
 
         return x_ref, x_counter_factual
 
     def get_prediction_from_new_feature_value(
-        self, feature_index: int, x_ref: np.ndarray, x_counter_factual: np.ndarray
+        self,
+        feature_index: int,
+        x_ref: np.ndarray,
+        x_counter_factual: np.ndarray,
     ) -> float:
         """
         replace the value of the feauture at the postition of thw feature_index and predict
@@ -220,7 +244,8 @@ class CounterfactualExplanation(ExplanationBase):
             difference = pred_new - pred_ref
             self.differences.append(difference)
             self.logger.debug(
-                f"name: {self.feature_names[feature_index]}, difference: {self.differences[feature_index]:.2f}"
+                f"name: {self.feature_names[feature_index]}, difference:"
+                f" {self.differences[feature_index]:.2f}"
             )
         # get the sorted feature_names
         self.feature_sort = np.array(self.feature_names)[
