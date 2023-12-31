@@ -54,7 +54,6 @@ class CounterfactualExplanation(ExplanationBase):
         config: Optional[Dict] = None,
         y_desired: Optional[float] = None,
         delta: Optional[float] = None,
-        lammbda: float = 0.01,
     ) -> None:
         super(CounterfactualExplanation, self).__init__(model, config)
         """
@@ -71,7 +70,6 @@ class CounterfactualExplanation(ExplanationBase):
             y_desired (float, optional): desired target value for the counter factual example. Defaults to max(y).
             delta (float, optional): maximum allowed difference between the desired target value and the predicted value. Defaults to prediction * 0.05.
             random_state (int, optional): random state for the counter factual example. Defaults to 0.
-            lammbda (float, optional): weighting parameter for the first loss term. Defaults to 0.01.
             
         Returns:
             None.
