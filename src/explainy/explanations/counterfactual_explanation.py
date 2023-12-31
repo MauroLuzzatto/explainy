@@ -80,7 +80,6 @@ class CounterfactualExplanation(ExplanationBase):
         self.delta = delta
         self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(number_of_features)
-        self.lammbda = lammbda
 
         natural_language_text_empty = (
             "The sample would have had the desired prediction of '{}', {}."
