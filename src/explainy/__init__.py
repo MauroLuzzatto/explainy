@@ -3,5 +3,5 @@
 __author__ = """Mauro Luzzatto"""
 __email__ = "mauroluzzatto@hotmail.com"
 # fmt: off
-__version__ = '0.2.3'
+__version__ = '0.2.5'
 # fmt: on

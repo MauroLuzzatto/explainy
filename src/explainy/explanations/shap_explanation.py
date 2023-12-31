@@ -16,6 +16,7 @@ Source
 [1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
 https://christophm.github.io/interpretable-ml-book/
 """
+
 from typing import Dict, List, Tuple
 
 import matplotlib.pyplot as plt
@@ -130,12 +131,10 @@ class ShapExplanation(ExplanationBase):
 
         feature_values = []
         for index in indexes.tolist()[::-1]:
-            feature_values.append(
-                (
-                    self.feature_names[index],
-                    sample_shap_value[sample_index, index],
-                )
-            )
+            feature_values.append((
+                self.feature_names[index],
+                sample_shap_value[sample_index, index],
+            ))
         return feature_values
 
     def plot(self, sample_index: int, kind="bar") -> None:

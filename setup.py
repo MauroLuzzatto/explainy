@@ -31,9 +31,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.11",
     ],
     description=(
         "explainy is a library for generating explanations for machine learning models"
@@ -55,11 +54,12 @@ setup(
     include_package_data=True,
     keywords="explainy",
     name="explainy",
-    packages=find_packages(include=["explainy", "explainy.*"]),
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
     test_suite="tests",
     tests_require=test_requirements,
     url="https://github.com/MauroLuzzatto/explainy",
-    version='0.2.3',
+    version='0.2.5',
     zip_safe=False,
 )
 # fmt: on

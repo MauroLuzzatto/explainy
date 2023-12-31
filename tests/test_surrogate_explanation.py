@@ -1,4 +1,6 @@
-from explainy.explanations.surrogate_model_explanation import SurrogateModelExplanation
+from explainy.explanations.surrogate_model_explanation import (
+    SurrogateModelExplanation,
+)
 
 from .utils import get_regression_model
 
@@ -10,7 +12,7 @@ def test_counterfactual_explanation_4_features():
     sample_index = 1
 
     explainer = SurrogateModelExplanation(X_test, y_test, model, number_of_features)
-    explanation = explainer.explain(sample_index, separator=None)
+    explanation = explainer.explain(sample_index)
 
     assert (
         explanation.score_text

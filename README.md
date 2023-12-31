@@ -73,6 +73,8 @@ sudo apt install graphviz
 
 Further details on how to install `graphviz` can be found in the official [graphviz docs](https://graphviz.org/download/).
 
+Also, make sure that the folder with the `dot` executable is added to your systems `PATH`. You can find further details [here](https://github.com/xflr6/graphviz?tab=readme-ov-file#installation).
+
 ## Usage
 
 📚 A comprehensive example of the `explainy` API can be found in this ![Jupyter Notebook](https://github.com/MauroLuzzatto/explainy/blob/main/examples/01-explainy-intro.ipynb) 
