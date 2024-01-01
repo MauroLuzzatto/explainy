@@ -19,7 +19,8 @@ https://christophm.github.io/interpretable-ml-book/
 import os
 import subprocess
 import warnings
-from typing import Dict, Union
+from typing import Dict, Union, Optional
+import shutil
 
 import graphviz
 import numpy as np
@@ -34,7 +35,7 @@ from sklearn.tree import (
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
-from explainy.utils.surrogate_plot import SurrogatePlot
+from explainy.utils.surrogate_plot import SurrogatePlot, GraphvizNotFoundError
 from explainy.utils.surrogate_text import SurrogateText
 from explainy.utils.typing import ModelType
 
@@ -44,13 +45,17 @@ class SurrogateModelExplanation(ExplanationBase):
     Contrastive, global Explanation
     """
 
+    explanation_type = "global"
+    explanation_style = "contrastive"
+    explanation_name = "surrogate"
+
     def __init__(
         self,
-        X: Union[pd.DataFrame, np.array],
-        y: Union[pd.DataFrame, np.array],
+        X: Union[pd.DataFrame, np.ndarray],
+        y: Union[pd.DataFrame, np.ndarray],
         model: ModelType,
         number_of_features: int = 4,
-        config: Dict = None,
+        config: Optional[Dict] = None,
         kind: str = "tree",
         **kwargs: dict,
     ):
@@ -61,9 +66,10 @@ class SurrogateModelExplanation(ExplanationBase):
             X (df): (Test) samples and features to calculate the importance for (sample, features)
             y (np.array): (Test) target values of the samples (samples, 1)
             model (object): trained (sckit-learn) model object
-            sparse (bool): boolean value to generate sparse or non sparse explanation
-            show_rating (bool):
-            save (bool, optional): boolean value to save the plots. Defaults to True.
+            number_of_features (int, optional): number of features to show. Defaults to 4.
+            config (dict, optional): config dictionary. Defaults to None.
+            kind (str, optional): kind of surrogate model. Defaults to "tree".
+            **kwargs (dict): hyperparamters for the surrogate model
            
         Returns:
             None.
@@ -75,27 +81,14 @@ class SurrogateModelExplanation(ExplanationBase):
         self.number_of_groups = number_of_features
         self.kind = kind
         self.kwargs = kwargs
+        self.sample_index: Optional[int] = None
 
         kinds = ["tree", "linear"]
         assert (
             self.kind in kinds
         ), f"'{self.kind}' is not a valid option, select from {kinds}"
 
-        (
-            natural_language_text_empty,
-            method_text_empty,
-            sentence_text_empty,
-        ) = self.set_defaults()
-
-        self.define_explanation_placeholder(
-            natural_language_text_empty, method_text_empty, sentence_text_empty
-        )
-        self.explanation_name = "surrogate"
-        self.logger = self.setup_logger(self.explanation_name)
-
-        self._setup()
-
-    def set_defaults(self):
+        # define text defaults
         natural_language_text_empty = (
             "The following thresholds were important for the predictions: {}"
         )
@@ -109,17 +102,18 @@ class SurrogateModelExplanation(ExplanationBase):
         else:
             sentence_text_empty = "\nThe sample has a value of {:.2f} if {}"
 
-        return (
-            natural_language_text_empty,
-            method_text_empty,
-            sentence_text_empty,
+        self.define_explanation_placeholder(
+            natural_language_text_empty, method_text_empty, sentence_text_empty
         )
+        self.logger = self.setup_logger(self.explanation_name)
+
+        self._setup()
 
     def _calculate_importance(self) -> None:
         """Train a surrogate model on the predicted values from the original model
 
         Raises:
-            Exception: if the kind is not known
+            Exception: if the 'kind' is not known
 
         """
         if self.kind == "tree" and not self.is_classifier:
@@ -131,7 +125,7 @@ class SurrogateModelExplanation(ExplanationBase):
         elif self.kind == "linear" and self.is_classifier:
             estimator = LogisticRegression
         else:
-            raise Exception(f'Value of "kind" is not supported: {self.kind}!')
+            raise ValueError(f"Value of kind '{self.kind}' is not supported!")
 
         y_hat = self.model.predict(self.X.values)
 
@@ -180,32 +174,39 @@ class SurrogateModelExplanation(ExplanationBase):
             )
         return tree_rules
 
-    def plot(self, index_sample: int = None) -> None:
+    def plot(self, sample_index: int) -> None:
         """Plot the surrogate model
 
         Args:
-            index_sample (int, optional): index of the sample in scope. Defaults to None.
+            sample_index (int): index of the sample in scope.
 
         Raises:
             Exception: if the type of kind is not supported
 
         """
+        assert (
+            sample_index == self.sample_index
+        ), "the provided index sample does not match the index the importance is calculated for"
+
         if self.kind == "tree":
-            self._plot_tree(index_sample)
+            self._plot_tree()
         elif self.kind == "linear":
-            self._plot_bar(index_sample)
+            self._plot_bar()
         else:
             raise Exception(f'Value of "kind" is not supported: {self.kind}!')
 
-    def _plot_bar(self, sample_index: int) -> None:
+    def _plot_bar(self) -> None:
         raise NotImplementedError("to be done")
 
-    def _plot_tree(
-        self, sample_index: int = None, precision: int = 2, **kwargs: dict
-    ) -> None:
+    def _plot_tree(self, precision: int = 2, **kwargs: dict) -> None:
         """
-        use garphix to plot the decision tree
+        use Graphviz to plot the decision tree
         """
+        if shutil.which("dot") is None:
+            raise GraphvizNotFoundError(
+                "Graphviz not found. Please install it following the instructions in the README."
+            )
+
         surrogatePlot = SurrogatePlot(precision=precision, **kwargs)
 
         self.dot_file = surrogatePlot(
@@ -225,13 +226,13 @@ class SurrogateModelExplanation(ExplanationBase):
         except subprocess.CalledProcessError:
             warnings.warn("plot already open!")
 
-    def save(self, sample_index: int, sample_name: str = None) -> None:
+    def save(self, sample_index: int, sample_name: Optional[str] = None) -> None:
         """
         Save the explanations to a csv file, save the plots
 
         Args:
-            sample_index ([type]): [description]
-            sample_name ([type], optional): [description]. Defaults to None.
+            sample_index (int): index of sample in scope
+            sample_name (str): name of the sample in scope
 
         Returns:
             None.
@@ -255,10 +256,11 @@ class SurrogateModelExplanation(ExplanationBase):
             str: method_text explanation
 
         """
-        return self.method_text_empty.format(
+        method_text = self.method_text_empty.format(
             self.surrogate_model.__class__.__name__,
             self.num_to_str[self.number_of_groups].capitalize(),
         )
+        return method_text
 
     def get_natural_language_text(self) -> str:
         """
@@ -291,7 +293,10 @@ class SurrogateModelExplanation(ExplanationBase):
         self.method_text = self.get_method_text()
 
     def explain(
-        self, sample_index: int, sample_name: str = None, separator: str = "\n"
+        self,
+        sample_index: int,
+        sample_name: Optional[str] = None,
+        separator: str = "\n",
     ) -> Explanation:
         """main function to create the explanation of the given sample.
 
@@ -303,15 +308,19 @@ class SurrogateModelExplanation(ExplanationBase):
             separator (str, optional): seprator for the string concatenation. Defaults to '\n'.
 
         Returns:
-            Explanation: explantion object containg the explainations
+            Explanation: Explanation object containg the explainations
 
         """
+        self.sample_index = sample_index
         sample_name = self.get_sample_name(sample_index, sample_name)
         self.plot_name = self.get_plot_name(sample_name)
 
         self.prediction = self.get_prediction(sample_index)
         self.score_text = self.get_score_text()
         self.explanation = Explanation(
-            self.score_text, self.method_text, self.natural_language_text
+            self.score_text,
+            self.method_text,
+            self.natural_language_text,
+            separator=separator,
         )
         return self.explanation

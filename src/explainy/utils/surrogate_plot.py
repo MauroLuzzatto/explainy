@@ -3,6 +3,10 @@ import re
 import sklearn
 
 
+class GraphvizNotFoundError(Exception):
+    pass
+
+
 class SurrogatePlot(object):
     """
     This class create the graphviz based surrogate plot using the trained sklearn DecisionTree
@@ -61,77 +65,6 @@ class SurrogatePlot(object):
                 f = f.replace(value, "\n".join(node))
 
         return f
-
-    # @staticmethod
-    # def simplify_plot(f):
-
-    #     # remove "value = xy" for all cells, except the lowest ones
-    #     values = re.findall(r"value = (\d{0,5}\.\d{0,5})", f)
-    #     print(values)
-    #     for idx, value in enumerate(values):
-    #         print(idx, value, len(values))
-    #         if (
-    #             (len(values) > 3 and idx in [0, 1, 4])
-    #             or (len(values) == 7 and idx in [0])
-    #             or (len(values) == 15 and idx in [0, 1, 2, 4, 5, 9, 12])
-    #         ):
-    #             if len(values) == 15:
-    #                 pass
-    #             else:
-    #                 f = re.sub(r"value = {}".format(value), "", f)
-
-    #     f = re.sub(r"value =", "Average rating:\n", f)
-    #     print(f)
-    #     return f
-
-    # @staticmethod
-    # def remove_text(f):
-    #     # change the string via regex
-    #     f = re.sub(r"(\\nsamples = \d{0,5})", "", f)
-    #     f = re.sub(r"(samples = \d{0,5})", "", f)
-    #     # f = re.sub(r"(\\n\\n)", "\\n", f)
-    #     f = re.sub(r"(\\nvalue)", "value", f)
-    #     # f = re.sub(r"<=", "<", f)
-    #     return f
-
-    # @staticmethod
-    # def add_labels(f):
-    #     """
-    #     Add True and False labels to the edges
-
-    #     Args:
-    #         f (TYPE): DESCRIPTION.
-
-    #     Returns:
-    #         f (TYPE): DESCRIPTION.
-
-    #     """
-
-    #     def get_label_based_on_nodes(idx):
-
-    #         true_list = []
-    #         label = idx in true_list
-    #         return label
-
-    #     matches = re.findall(r"\d -> \d ;", f)
-    #     for idx, match in enumerate(matches):
-    #         # check if even or not, give label based on this
-    #         label = bool(idx % 2 == 0)
-
-    #         first_number = re.match(r"(\d) -> \d ;", match).groups()[0]
-    #         second_number = re.match(r"\d -> (\d) ;", match).groups()[0]
-
-    #         if not label:
-    #             label = f"{label}"
-
-    #         f = re.sub(
-    #             r"{} -> {} ;".format(first_number, second_number),
-    #             r'{} -> {} [headlabel="{}     "] ;'.format(
-    #                 first_number, second_number, label
-    #             ),
-    #             f,
-    #         )
-    #     return f
 
     def __call__(self, model, feature_names):
         return self.get_plot(model, feature_names)
