@@ -45,6 +45,10 @@ class CounterfactualExplanation(ExplanationBase):
     Contrastive, local Explanation
     """
 
+    explanation_type = "local"
+    explanation_style = "contrastive"
+    explanation_name = "counterfactual"
+
     def __init__(
         self,
         X: pd.DataFrame,
@@ -93,7 +97,6 @@ class CounterfactualExplanation(ExplanationBase):
         self.define_explanation_placeholder(
             natural_language_text_empty, method_text_empty, sentence_text_empty
         )
-        self.explanation_name = "counterfactual"
         self.logger = self.setup_logger(self.explanation_name)
 
     def _calculate_importance(
@@ -472,7 +475,7 @@ class CounterfactualExplanation(ExplanationBase):
         self,
         sample_index: int,
         sample_name: Optional[str] = None,
-        separator: Optional[str] = None,
+        separator: str = "\n",
     ) -> Explanation:
         """
         main function to create the explanation of the given sample. The
@@ -481,10 +484,10 @@ class CounterfactualExplanation(ExplanationBase):
         Args:
             sample_index (int): number of the sample to create the explanation for
             sample_name (str, optional): name of the sample. Defaults to None.
-            separator (str, optional): separator for the natural language text. Defaults to None.
+            separator (str, optional): separator for the natural language text. Defaults to "\n".
 
         Returns:
-            Explanation: explanation object
+            Explanation: Explanation object containg the explainations
         """
         self.sample_index = sample_index
         sample_name = self.get_sample_name(sample_index, sample_name)

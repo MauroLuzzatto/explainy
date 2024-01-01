@@ -34,6 +34,10 @@ class ShapExplanation(ExplanationBase):
     Non-contrastive, local Explanation
     """
 
+    explanation_type = "local"
+    explanation_style = "non-contrastive"
+    explanation_name = "shap"
+
     def __init__(
         self,
         X: pd.DataFrame,
@@ -77,9 +81,6 @@ class ShapExplanation(ExplanationBase):
             natural_language_text_empty, method_text_empty, sentence_text_empty
         )
 
-        self.explanation_type = "local"
-        self.explanation_style = "non-contrastive"
-        self.explanation_name = "shap"
         self.logger = self.setup_logger(self.explanation_name)
 
         self._calculate_importance()
@@ -131,10 +132,12 @@ class ShapExplanation(ExplanationBase):
 
         feature_values = []
         for index in indexes.tolist()[::-1]:
-            feature_values.append((
-                self.feature_names[index],
-                sample_shap_value[sample_index, index],
-            ))
+            feature_values.append(
+                (
+                    self.feature_names[index],
+                    sample_shap_value[sample_index, index],
+                )
+            )
         return feature_values
 
     def plot(self, sample_index: int, kind="bar") -> None:

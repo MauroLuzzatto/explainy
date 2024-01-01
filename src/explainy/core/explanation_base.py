@@ -42,9 +42,8 @@ class ExplanationBase(ABC, ExplanationMixin):
             self.config = config
 
         self.is_classifier = is_classifier(self.model)
-
-        self.folder = self.config.get("folder", "explanation")
-        self.file_name = self.config.get("file_name", "explanations.csv")
+        self.folder: str = self.config.get("folder", "explanation")
+        self.file_name: str = self.config.get("file_name", "explanations.csv")
 
         self.set_paths()
         self.get_number_to_string_dict()
@@ -107,7 +106,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             )
         return min(number_of_features, self.X.shape[1])
 
-    def get_feature_names(self, X: Union[pd.DataFrame, np.array]) -> List[str]:
+    def get_feature_names(self, X: Union[pd.DataFrame, np.ndarray]) -> List[str]:
         """Get the feature names based on the given dataset
 
         Args:
@@ -128,7 +127,6 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             None.
-
         """
         self.path = os.path.join(os.path.dirname(os.getcwd()), "reports", self.folder)
         self.path_plot = create_folder(os.path.join(self.path, "plot"))
@@ -173,7 +171,6 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             None
-
         """
         return self.method_text_empty.format(self.num_to_str[self.number_of_features])
 
@@ -182,7 +179,6 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             None
-
         """
         values = []
         for feature_name, feature_value in self.feature_values[
@@ -211,7 +207,6 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             str: return the explanation method description
-
         """
         return self.description_text_empty.format(
             self.explanation_name, self.explanation_type, self.explanation_style
@@ -223,7 +218,6 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             str: return the score_text for the sample.
-
         """
         self.number_of_dataset_features = self.X.shape[1]
         return self.score_text_empty.format(
@@ -239,7 +233,6 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             str: return the description of the machine learning model
-
         """
         return str(self.model)
 
@@ -252,7 +245,6 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             str: return the name of the plot
-
         """
         prefix = f"{self.explanation_name}_features_{self.number_of_features}"
         if sample_name:
@@ -273,7 +265,6 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             str: name of the sample
-
         """
         if not sample_name:
             sample_name = str(sample_index)
@@ -286,7 +277,6 @@ class ExplanationBase(ABC, ExplanationMixin):
         Args:
             sample_index (int): [description]
             sample_name (str, optional): name of the sample. Defaults to None.
-
         """
         sample_name = self.get_sample_name(sample_index, sample_name)
         self.save_csv(sample_name)
@@ -295,18 +285,17 @@ class ExplanationBase(ABC, ExplanationMixin):
             bbox_inches="tight",
         )
 
-    def save_csv(self, sample: int) -> None:
+    def save_csv(self, sample_index: int) -> None:
         """
         Save the explanation to a csv. The columns contain the method_text,
         the natural_language_text, the name of the plot and the predicted
         value. The index is the Entry ID.
 
         Args:
-            sample (TYPE, optional): DESCRIPTION.
+            sample_index (int): index of the sample
 
         Returns:
             None.
-
         """
         assert hasattr(self, "plot_name"), "instance lacks plot_name"
 
@@ -319,13 +308,14 @@ class ExplanationBase(ABC, ExplanationMixin):
             "prediction": self.prediction,
         }
 
-        df = pd.DataFrame(output, index=[sample])
+        df = pd.DataFrame(output, index=[sample_index])
 
         for column in ["method_text", "natural_language_text", "score_text"]:
             df[column] = df[column].astype(str)
             df[column] = df[column].str.replace("\n", "\\n")
 
         # check if the file is already there, if not, create it
+        # TODO: don't duplicate code
         if not os.path.isfile(os.path.join(self.path_result, self.file_name)):
             df.to_csv(
                 os.path.join(self.path_result, self.file_name),

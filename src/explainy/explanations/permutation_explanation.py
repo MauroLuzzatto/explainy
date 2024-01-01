@@ -39,6 +39,10 @@ class PermutationExplanation(ExplanationBase):
     Non-contrastive, global Explanation
     """
 
+    explanation_type = "global"
+    explanation_style = "non-contrastive"
+    explanation_name = "permutation"
+
     def __init__(
         self,
         X: pd.DataFrame,
@@ -87,7 +91,6 @@ class PermutationExplanation(ExplanationBase):
             natural_language_text_empty, method_text_empty, sentence_text_empty
         )
 
-        self.explanation_name = "permutation"
         self.logger = self.setup_logger(self.explanation_name)
 
         self._setup()
