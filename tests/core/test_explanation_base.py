@@ -15,12 +15,12 @@ class ExplanationConcrete(ExplanationBase):
 config = {}
 
 
-def get_ExplanationConcrete():
+def get_explanation_concrete():
     return ExplanationConcrete(config)
 
 
 def test_get_natural_language_text():
-    explainer = get_ExplanationConcrete()
+    explainer = get_explanation_concrete()
     explainer.natural_language_text_empty = "{} and {}"
     explainer.number_of_features = 3
     explainer.sentences = "Test sentence"
@@ -32,7 +32,7 @@ def test_get_natural_language_text():
 
 
 def test_get_sentences():
-    explainer = get_ExplanationConcrete()
+    explainer = get_explanation_concrete()
     explainer.feature_values = [("test", 1), ("test2", 2)]
     explainer.number_of_features = 2
     explainer.sentence_text_empty = "feature: {} - value: {}"
@@ -44,7 +44,7 @@ def test_get_sentences():
 
 
 def test_get_plot_name():
-    explainer = get_ExplanationConcrete()
+    explainer = get_explanation_concrete()
     explainer.explanation_name = "testing"
     explainer.number_of_features = 4
 
