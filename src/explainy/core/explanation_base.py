@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Nov 24 21:15:30 2020
-
-@author: mauro
-"""
-
 import csv
 import os
 import warnings
@@ -25,7 +18,7 @@ class ExplanationBase(ABC, ExplanationMixin):
     def __init__(
         self,
         model: ModelType,
-        config: Dict = None,
+        config: Optional[Dict] = None,
     ) -> None:
         """Initialize the explanation base class
 
@@ -41,7 +34,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         else:
             self.config = config
 
-        self.is_classifier = is_classifier(self.model)
+        self.is_classifier: bool = is_classifier(self.model)
         self.folder: str = self.config.get("folder", "explanation")
         self.file_name: str = self.config.get("file_name", "explanations.csv")
 
@@ -59,13 +52,15 @@ class ExplanationBase(ABC, ExplanationMixin):
                 " prediction of this sample was {:.1f}."
             )
 
-        description_text_empty = (
+        description_text_empty: str = (
             "This is a {} explanation, it creates {} and {} explanations."
         )
-        self.description_text_empty = self.config.get(
+        self.description_text_empty: str = self.config.get(
             "description_text_empty", description_text_empty
         )
-        self.score_text_empty = self.config.get("score_text_empty", score_text_empty)
+        self.score_text_empty: str = self.config.get(
+            "score_text_empty", score_text_empty
+        )
 
     def define_explanation_placeholder(
         self,
@@ -81,11 +76,13 @@ class ExplanationBase(ABC, ExplanationMixin):
             sentence_text_empty (str): sentence text placeholder
 
         """
-        self.natural_language_text_empty = self.config.get(
+        self.natural_language_text_empty: str = self.config.get(
             "natural_language_text_empty", natural_language_text_empty
         )
-        self.method_text_empty = self.config.get("method_text_empty", method_text_empty)
-        self.sentence_text_empty = self.config.get(
+        self.method_text_empty: str = self.config.get(
+            "method_text_empty", method_text_empty
+        )
+        self.sentence_text_empty: str = self.config.get(
             "sentence_text_empty", sentence_text_empty
         )
 
@@ -139,20 +136,23 @@ class ExplanationBase(ABC, ExplanationMixin):
 
     @abstractmethod
     def _calculate_importance(self):
+        """Calculate the feature importance"""
         raise NotImplementedError("Subclasses should implement this!")
 
     @abstractmethod
-    def plot(self):
+    def plot(self, sample_index: int, kind: str) -> None:
+        """Plot the feature importance"""
         raise NotImplementedError("Subclasses should implement this!")
 
     @abstractmethod
     def get_feature_values(self):
+        """Get the feature values"""
         raise NotImplementedError("Subclasses should implement this!")
 
-    def importance(self):
-        return pd.DataFrame(
-            self.feature_values, columns=["Feature", "Importance"]
-        ).round(2)
+    def importance(self) -> pd.DataFrame:
+        """Get the feature importance"""
+        df = pd.DataFrame(self.feature_values, columns=["Feature", "Importance"])
+        return df.round(2)
 
     def get_prediction(self, sample_index: int) -> float:
         """Get the model prediction
@@ -164,22 +164,14 @@ class ExplanationBase(ABC, ExplanationMixin):
             float: predction of the model for that sample
 
         """
-        return self.model.predict(self.X.values)[sample_index]
+        return self.model.predict(self.X)[sample_index]
 
-    def get_method_text(self) -> None:
-        """Generate the output of the method explanation.
-
-        Returns:
-            None
-        """
+    def get_method_text(self) -> str:
+        """Generate the output of the method explanation."""
         return self.method_text_empty.format(self.num_to_str[self.number_of_features])
 
-    def get_sentences(self) -> None:
-        """Generate the output sentences
-
-        Returns:
-            None
-        """
+    def get_sentences(self) -> str:
+        """Generate the output sentences of the explanation."""
         values = []
         for feature_name, feature_value in self.feature_values[
             : self.number_of_features
@@ -200,10 +192,10 @@ class ExplanationBase(ABC, ExplanationMixin):
         )
 
     def get_description_text(self) -> str:
-        """WIP
+        """Generate the description of the explanation method.
 
         Example:
-        This is a SHAP explanation, it creates local and non-contrastive explanations.
+            This is a SHAP explanation, it creates local and non-contrastive explanations.
 
         Returns:
             str: return the explanation method description
@@ -213,8 +205,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         )
 
     def get_score_text(self) -> str:
-        """Generate the text explaining the prediction score of
-        the sample
+        """Generate the text explaining the prediction score of the sample
 
         Returns:
             str: return the score_text for the sample.
@@ -236,12 +227,12 @@ class ExplanationBase(ABC, ExplanationMixin):
         """
         return str(self.model)
 
-    def get_plot_name(self, sample_name: str = None) -> str:
+    def get_plot_name(self, sample_name: Optional[str] = None) -> str:
         """
         Get the name of the plot
 
         Args:
-            sample_name (str, optional): [description]. Defaults to None.
+            sample_name (str, optional): name of the sample. Defaults to None.
 
         Returns:
             str: return the name of the plot
@@ -270,7 +261,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             sample_name = str(sample_index)
         return sample_name
 
-    def save(self, sample_index: int, sample_name: str = None) -> None:
+    def save(self, sample_index: int, sample_name: Optional[str] = None) -> None:
         """
         Save the explanations to a csv file, save the plots
 

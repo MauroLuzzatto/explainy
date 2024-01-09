@@ -107,7 +107,7 @@ class PermutationExplanation(ExplanationBase):
             None
         """
         self.r = permutation_importance(
-            self.model, self.X.values, self.y.values, **self.kwargs
+            self.model, self.X, self.y.values, **self.kwargs
         )
 
     def get_feature_values(self) -> List[Tuple[str, float]]:

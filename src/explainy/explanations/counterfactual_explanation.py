@@ -115,6 +115,7 @@ class CounterfactualExplanation(ExplanationBase):
 
         x_ref = self.X.values[sample_index, :]
 
+        # TODO: remove this default
         if not self.y_desired:
             self.y_desired = min(self.prediction * 1.2, self.y.values.max())
             self.logger.info(
@@ -347,7 +348,7 @@ class CounterfactualExplanation(ExplanationBase):
         """
         assert (
             sample_index == self.sample_index
-        ), "sample_index is not the same as the index used to calculate the counterfactual explanation"
+        ), "sample_index is not the same as the index used to calculate the counterfactual explanation, re-run .explain(sample_index) to plot the correct sample"
 
         if kind == "table":
             self.fig = self._plot_table()
