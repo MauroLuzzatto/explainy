@@ -1,0 +1,14 @@
+[lint]
+select = [
+    "F",
+    "D", # pydocstring  
+    "I",  # isort
+    "N", # pep8-naming (N)
+    "UP", # pyupgrade (UP)
+    "ANN", # flake8-annotations (ANN) 
+]
+
+ignore = ["D107", "D415", "D104", "N806", "ANN101"]
+
+[lint.pydocstyle]
+convention = "google"
