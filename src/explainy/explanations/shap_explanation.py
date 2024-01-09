@@ -34,14 +34,14 @@ class ShapExplanation(ExplanationBase):
     Non-contrastive, local Explanation
     """
 
-    explanation_type = "local"
-    explanation_style = "non-contrastive"
-    explanation_name = "shap"
+    explanation_type: str = "local"
+    explanation_style: str = "non-contrastive"
+    explanation_name: str = "shap"
 
     def __init__(
         self,
         X: pd.DataFrame,
-        y: np.array,
+        y: np.ndarray,
         model: sklearn.base.BaseEstimator,
         number_of_features: int = 4,
         config: Dict = None,
@@ -91,7 +91,6 @@ class ShapExplanation(ExplanationBase):
 
         Returns:
             None.
-
         """
         self.explainer = shap.TreeExplainer(self.model, **self.kwargs)
         self.shap_values = self.explainer.shap_values(self.X)
@@ -140,7 +139,7 @@ class ShapExplanation(ExplanationBase):
             )
         return feature_values
 
-    def plot(self, sample_index: int, kind="bar") -> None:
+    def plot(self, sample_index: int, kind: str = "bar") -> None:
         """
         Plot the shap values
 
@@ -149,7 +148,7 @@ class ShapExplanation(ExplanationBase):
             kind (TYPE, optional): DESCRIPTION. Defaults to "bar".
 
         Returns:
-            None: DESCRIPTION.
+            None:
         """
         if kind == "bar":
             self.fig = self._bar_plot(sample_index)
@@ -158,7 +157,7 @@ class ShapExplanation(ExplanationBase):
         else:
             raise Exception(f'Value of "kind = {kind}" is not supported!')
 
-    def _bar_plot(self, sample_index: int) -> plt.figure:
+    def _bar_plot(self, sample_index: int) -> plt.Figure:
         """
         Create a bar plot of the shape values for a selected sample
 
@@ -166,7 +165,7 @@ class ShapExplanation(ExplanationBase):
             sample_index (int, optional): sample for which the explanation should
                 be returned. Defaults to 0.
         Returns:
-            None
+            plt.figure
 
         """
         if not self.is_classifier:
@@ -189,7 +188,7 @@ class ShapExplanation(ExplanationBase):
         plt.show()
         return fig
 
-    def _shap_plot(self, sample_index: int) -> plt.figure:
+    def _shap_plot(self, sample_index: int) -> plt.Figure:
         """
         visualize the first prediction's explanation
 
@@ -198,7 +197,6 @@ class ShapExplanation(ExplanationBase):
                 be returned. Defaults to 0.
         Returns:
             plt.figure: return a matplotlib figure containg the plot
-
         """
         if not self.is_classifier:
             base_value = self.explainer.expected_value
@@ -242,10 +240,10 @@ class ShapExplanation(ExplanationBase):
             )
 
         self.logger.debug(message)
-        self.logger.debug(f"The y_value was: {self.y.values[sample_index][0]}")
+        self.logger.debug(f"The y_value was: {self.y.values[sample_index]}")
         self.logger.debug(f"The predicted value was: {self.prediction}")
 
-    def _setup(self, sample_index: int, sample_name: str):
+    def _setup(self, sample_index: int, sample_name: str) -> None:
         """
         Helper function to call all methods to create the explanations
 
@@ -255,7 +253,6 @@ class ShapExplanation(ExplanationBase):
 
         Returns:
             None.
-
         """
         self._log_output(sample_index)
         self.feature_values = self.get_feature_values(sample_index)
@@ -264,7 +261,7 @@ class ShapExplanation(ExplanationBase):
         self.method_text = self.get_method_text()
         self.plot_name = self.get_plot_name(sample_name)
 
-    def explain(self, sample_index, sample_name=None, separator="\n") -> None:
+    def explain(self, sample_index, sample_name=None, separator="\n") -> Explanation:
         """
         main function to create the explanation of the given sample. The
         method_text, natural_language_text and the plots are create per sample.
@@ -281,6 +278,6 @@ class ShapExplanation(ExplanationBase):
 
         self._setup(sample_index, sample_name)
         self.explanation = Explanation(
-            self.score_text, self.method_text, self.natural_language_text
+            self.score_text, self.method_text, self.natural_language_text, separator
         )
         return self.explanation

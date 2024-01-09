@@ -17,25 +17,21 @@ https://christophm.github.io/interpretable-ml-book/
 """
 
 import os
+import shutil
 import subprocess
 import warnings
-from typing import Dict, Union, Optional
-import shutil
+from typing import Dict, Optional, Union
 
 import graphviz
 import numpy as np
 import pandas as pd
 from IPython.display import display
 from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.tree import (
-    DecisionTreeClassifier,
-    DecisionTreeRegressor,
-    export_text,
-)
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_text
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
-from explainy.utils.surrogate_plot import SurrogatePlot, GraphvizNotFoundError
+from explainy.utils.surrogate_plot import GraphvizNotFoundError, SurrogatePlot
 from explainy.utils.surrogate_text import SurrogateText
 from explainy.utils.typing import ModelType
 
@@ -186,7 +182,7 @@ class SurrogateModelExplanation(ExplanationBase):
         """
         assert (
             sample_index == self.sample_index
-        ), "the provided index sample does not match the index the importance is calculated for"
+        ), "the provided index sample does not match the index the importance is calculated for. re-run .explain(sample_index) to plot the correct sample"
 
         if self.kind == "tree":
             self._plot_tree()
