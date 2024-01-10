@@ -54,9 +54,9 @@ class CounterfactualExplanation(ExplanationBase):
         X: pd.DataFrame,
         y: np.ndarray,
         model: sklearn.base.BaseEstimator,
+        y_desired: float,
         number_of_features: int = 4,
         config: Optional[Dict] = None,
-        y_desired: Optional[float] = None,
         delta: Optional[float] = None,
     ) -> None:
         super(CounterfactualExplanation, self).__init__(model, config)
@@ -85,6 +85,8 @@ class CounterfactualExplanation(ExplanationBase):
         self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(number_of_features)
         self.sample_index: int = None
+
+        self.is_regressor = is_regressor(self.model)
 
         natural_language_text_empty = (
             "The sample would have had the desired prediction of '{}', {}."
@@ -115,24 +117,28 @@ class CounterfactualExplanation(ExplanationBase):
 
         x_ref = self.X.values[sample_index, :]
 
-        # TODO: remove this default
-        if not self.y_desired:
-            self.y_desired = min(self.prediction * 1.2, self.y.values.max())
-            self.logger.info(
-                f"No y_desired value set, therefore using the value '{self.y_desired}'"
-            )
-
         if not self.delta:
-            self.delta = self.prediction * 0.05
+            if self.is_regressor:
+                self.delta = self.prediction * 0.05
+            else:
+                # in case of a classifier, we are trying the find the right class
+                self.delta = 0
+
             self.logger.info(
                 f"No delta value set, therefore using the value '{self.delta}'"
             )
 
         start = -2
-        stop = 4
+        stop = 2
         num = stop - start + 1
+
+        self.logger.info(
+            "Start to calculate the counterfactual example. This may take a while..."
+        )
+
+        is_value_found = False
         # try different seed values
-        for random_seed in range(10):
+        for random_seed in range(14):
             # use exponential increase to search for the right lammbda value
             for lammbda in np.logspace(
                 start=start,
@@ -142,7 +148,7 @@ class CounterfactualExplanation(ExplanationBase):
                 dtype="float",
             ):
                 # catch the warning "Maximum number of function evaluations has been exceeded." warning
-                with warnings.catch_warnings(action="ignore"):
+                with warnings.catch_warnings(action="ignore", category=UserWarning):
                     x_counter_factual = create_counterfactual(
                         x_reference=x_ref,
                         y_desired=self.y_desired,
@@ -152,25 +158,30 @@ class CounterfactualExplanation(ExplanationBase):
                         random_seed=random_seed,
                     )
 
-                self.y_counter_factual = self.model.predict(
-                    x_counter_factual.reshape(1, -1)
-                )[0]
+                    self.y_counter_factual = self.model.predict(
+                        x_counter_factual.reshape(1, -1)
+                    )[0]
 
+                local_delta = np.abs(self.y_counter_factual - self.y_desired)
+
+                self.logger.info(
+                    f"y_counter_factual: {self.y_counter_factual:.2f}, lambda:"
+                    f" {lammbda}, local_delta: {local_delta}, random_seed:"
+                    f" {random_seed}"
+                )
                 self.logger.debug(
-                    f"y_counter_factual: {self.y_counter_factual:.2f},"
                     f" y_desired: {self.y_desired:.2f}, y_pred:"
                     f" {self.prediction:.2f}, label:"
-                    f" {self.y.values[sample_index][0]:.2f}, delta:"
-                    f" {self.delta}, lammbda: {lammbda}"
+                    f" {self.y.values[sample_index]}, delta:"
+                    f" {self.delta}, "
                 )
 
-                if is_regressor(self.model):
-                    local_delta = np.abs(self.y_counter_factual - self.y_desired)
+                if self.is_regressor:
                     if local_delta < self.delta:
                         self.logger.debug("found value below delta!")
                         is_value_found = True
                         break
-                elif is_classifier(self.model):
+                else:
                     if self.y_counter_factual == self.y_desired:
                         self.logger.debug("found the right class!")
                         is_value_found = True
@@ -216,7 +227,9 @@ class CounterfactualExplanation(ExplanationBase):
 
         # assign new value
         x_created[0, feature_index] = x_counter_factual.reshape(1, -1)[0, feature_index]
-        pred_new = self.model.predict(x_created)[0]
+
+        with warnings.catch_warnings(action="ignore", category=UserWarning):
+            pred_new = self.model.predict(x_created)[0]
         return pred_new
 
     def get_feature_importance(
@@ -236,7 +249,8 @@ class CounterfactualExplanation(ExplanationBase):
         Returns:
             list: list of the feature sorted by importance
         """
-        pred_ref = self.model.predict(x_ref.reshape(1, -1))[0]
+        with warnings.catch_warnings(action="ignore", category=UserWarning):
+            pred_ref = self.model.predict(x_ref.reshape(1, -1))[0]
 
         self.differences = []
         for feature_index in range(x_ref.shape[0]):
@@ -346,10 +360,12 @@ class CounterfactualExplanation(ExplanationBase):
             Exception: raise Exception if the "kind" of plot is not supported
 
         """
-        assert (
-            sample_index == self.sample_index
-        ), "sample_index is not the same as the index used to calculate the counterfactual explanation, re-run .explain(sample_index) to plot the correct sample"
-
+        if sample_index != self.sample_index:
+            raise ValueError(
+                "sample_index is not the same as the index used to calculate the"
+                " counterfactual explanation, re-run .explain(sample_index) to plot the"
+                " correct sample"
+            )
         if kind == "table":
             self.fig = self._plot_table()
         else:

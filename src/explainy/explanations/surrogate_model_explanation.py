@@ -123,14 +123,20 @@ class SurrogateModelExplanation(ExplanationBase):
         else:
             raise ValueError(f"Value of kind '{self.kind}' is not supported!")
 
-        y_hat = self.model.predict(self.X.values)
+        with warnings.catch_warnings(action="ignore", category=UserWarning):
+            y_hat = self.model.predict(self.X.values)
 
         self.surrogate_model = self.get_surrogate_model(estimator)
         self.surrogate_model.fit(self.X, y_hat)
+
+        score_docstring: str = self.surrogate_model.score.__doc__.strip()
+        score_description: str = (
+            score_docstring.split("\n")[0].strip().lower()[:-1].split("return the ")[-1]
+        )
+
         self.logger.info(
-            "Surrogate Model score: {:.2f}".format(
-                self.surrogate_model.score(self.X, y_hat)
-            )
+            f"Surrogate Model score ({score_description}):"
+            f" {self.surrogate_model.score(self.X, y_hat):.2f}"
         )
 
     def get_surrogate_model(self, estimator: ModelType) -> ModelType:
@@ -170,7 +176,7 @@ class SurrogateModelExplanation(ExplanationBase):
             )
         return tree_rules
 
-    def plot(self, sample_index: int) -> None:
+    def plot(self, sample_index: int = None) -> None:
         """Plot the surrogate model
 
         Args:
@@ -180,9 +186,6 @@ class SurrogateModelExplanation(ExplanationBase):
             Exception: if the type of kind is not supported
 
         """
-        assert (
-            sample_index == self.sample_index
-        ), "the provided index sample does not match the index the importance is calculated for. re-run .explain(sample_index) to plot the correct sample"
 
         if self.kind == "tree":
             self._plot_tree()
@@ -200,7 +203,8 @@ class SurrogateModelExplanation(ExplanationBase):
         """
         if shutil.which("dot") is None:
             raise GraphvizNotFoundError(
-                "Graphviz not found. Please install it following the instructions in the README."
+                "Graphviz not found. Please install it following the instructions in"
+                " the README."
             )
 
         surrogatePlot = SurrogatePlot(precision=precision, **kwargs)
