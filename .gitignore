@@ -10,6 +10,8 @@ TODO.md
 runs/
 .DS_Store
 main.py
+dev.ipynb
+explainy_test_mauro.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
