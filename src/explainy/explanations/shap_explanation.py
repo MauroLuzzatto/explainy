@@ -67,6 +67,7 @@ class ShapExplanation(ExplanationBase):
         self.feature_names = self.get_feature_names(self.X)
         self.number_of_features = self.get_number_of_features(number_of_features)
         self.kwargs = kwargs
+        self.sample_index: int = None
 
         natural_language_text_empty = (
             "The {} features which contributed most to the prediction of this"
@@ -126,17 +127,15 @@ class ShapExplanation(ExplanationBase):
             )
             sample_shap_value = self.shap_values[self.prediction]
             self.logger.info(
-                f"SHAP values are taken from predicted class: {self.prediction}"
+                f"SHAP values are taken from predicted class '{self.prediction}'"
             )
 
         feature_values = []
         for index in indexes.tolist()[::-1]:
-            feature_values.append(
-                (
-                    self.feature_names[index],
-                    sample_shap_value[sample_index, index],
-                )
-            )
+            feature_values.append((
+                self.feature_names[index],
+                sample_shap_value[sample_index, index],
+            ))
         return feature_values
 
     def plot(self, sample_index: int, kind: str = "bar") -> None:
@@ -150,6 +149,12 @@ class ShapExplanation(ExplanationBase):
         Returns:
             None:
         """
+        if sample_index != self.sample_index:
+            raise ValueError(
+                "the provided index sample does not match the index the importance is"
+                " calculated for. re-run .explain(sample_index) to plot the correct"
+                " sample"
+            )
         if kind == "bar":
             self.fig = self._bar_plot(sample_index)
         elif kind == "shap":
@@ -254,6 +259,7 @@ class ShapExplanation(ExplanationBase):
         Returns:
             None.
         """
+        self.sample_index = sample_index
         self._log_output(sample_index)
         self.feature_values = self.get_feature_values(sample_index)
         self.sentences = self.get_sentences()

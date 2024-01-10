@@ -10,7 +10,11 @@ def test_counterfactual_explanation_4_features():
     sample_index = 1
 
     explainer = CounterfactualExplanation(
-        X_test, y_test, model, number_of_features, y_desired=2
+        X_test,
+        y_test,
+        model,
+        y_desired=2,
+        number_of_features=number_of_features,
     )
     explanation = explainer.explain(sample_index, separator=None)
 
@@ -41,7 +45,11 @@ def test_counterfactual_explanation_8_features():
     sample_index = 1
 
     explainer = CounterfactualExplanation(
-        X_test, y_test, model, number_of_features, y_desired=2
+        X_test,
+        y_test,
+        model,
+        y_desired=2,
+        number_of_features=number_of_features,
     )
     explanation = explainer.explain(sample_index, separator=None)
 

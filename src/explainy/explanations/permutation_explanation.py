@@ -22,6 +22,7 @@ https://christophm.github.io/interpretable-ml-book/
 
 """
 
+import warnings
 from typing import Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
@@ -106,9 +107,10 @@ class PermutationExplanation(ExplanationBase):
         Returns:
             None
         """
-        self.r = permutation_importance(
-            self.model, self.X, self.y.values, **self.kwargs
-        )
+        with warnings.catch_warnings(action="ignore", category=UserWarning):
+            self.r = permutation_importance(
+                self.model, self.X, self.y.values, **self.kwargs
+            )
 
     def get_feature_values(self) -> List[Tuple[str, float]]:
         """

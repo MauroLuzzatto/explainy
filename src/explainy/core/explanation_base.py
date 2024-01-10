@@ -162,9 +162,10 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         Returns:
             float: predction of the model for that sample
-
         """
-        return self.model.predict(self.X)[sample_index]
+        with warnings.catch_warnings(action="ignore", category=UserWarning):
+            prediction: float = self.model.predict(self.X)[sample_index]
+        return prediction
 
     def get_method_text(self) -> str:
         """Generate the output of the method explanation."""
