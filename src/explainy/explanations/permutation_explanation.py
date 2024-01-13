@@ -35,8 +35,7 @@ from explainy.utils.typing import ModelType
 
 
 class PermutationExplanation(ExplanationBase):
-    """Non-contrastive, global Explanation
-    """
+    """Non-contrastive, global Explanation"""
 
     explanation_type = "global"
     explanation_style = "non-contrastive"

@@ -29,8 +29,7 @@ from explainy.core.explanation_base import ExplanationBase
 
 
 class ShapExplanation(ExplanationBase):
-    """Non-contrastive, local Explanation
-    """
+    """Non-contrastive, local Explanation"""
 
     explanation_type: str = "local"
     explanation_style: str = "non-contrastive"

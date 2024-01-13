@@ -36,8 +36,7 @@ from explainy.utils.typing import ModelType
 
 
 class SurrogateModelExplanation(ExplanationBase):
-    """Contrastive, global Explanation
-    """
+    """Contrastive, global Explanation"""
 
     explanation_type = "global"
     explanation_style = "contrastive"
@@ -195,8 +194,7 @@ class SurrogateModelExplanation(ExplanationBase):
         raise NotImplementedError("to be done")
 
     def _plot_tree(self, precision: int = 2, **kwargs: dict) -> None:
-        """Use Graphviz to plot the decision tree
-        """
+        """Use Graphviz to plot the decision tree"""
         if shutil.which("dot") is None:
             raise GraphvizNotFoundError(
                 "Graphviz not found. Please install it following the instructions in"

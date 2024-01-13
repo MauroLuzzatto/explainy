@@ -1,28 +1,5 @@
-import os
-
-from explainy.utils.category_mapper import CategoryMapper
-
-
 class ExplanationMixin:
-    def map_category(self, feature_name, feature_value):
-        """Args:
-            feature_name (TYPE): DESCRIPTION.
-            feature_value (TYPE): DESCRIPTION.
-
-        Returns:
-            feature_value (TYPE): DESCRIPTION.
-        """
-        # TODO: fix path
-        path_json = r""
-
-        if not os.path.exists(path_json):
-            return feature_value
-
-        if f"{feature_name}.json" in os.listdir(path_json):
-            mapper = CategoryMapper(path_json, feature_name)
-            # print(mapper[int(feature_value)])
-            feature_value = mapper[int(feature_value)]
-        return feature_value
+    """Mixin class for Explanation classes"""
 
     @staticmethod
     def join_text_with_comma_and_and(values: list) -> str:
@@ -46,8 +23,7 @@ class ExplanationMixin:
         return text
 
     def get_number_to_string_dict(self) -> None:
-        """Map number of features to string values
-        """
+        """Map number of features to string values"""
         number_text = (
             "one",
             "two",

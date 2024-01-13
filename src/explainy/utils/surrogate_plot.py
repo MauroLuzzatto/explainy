@@ -8,8 +8,7 @@ class GraphvizNotFoundError(Exception):
 
 
 class SurrogatePlot:
-    """This class create the graphviz based surrogate plot using the trained sklearn DecisionTree
-    """
+    """This class create the graphviz based surrogate plot using the trained sklearn DecisionTree"""
 
     def __init__(self, precision=2, impurity=False, rounded=True, class_names=True):
         self.precision = precision

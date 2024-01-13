@@ -30,7 +30,6 @@ from sklearn.base import is_regressor
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
-from explainy.utils.utils import create_one_hot_sentence
 
 np.seterr(divide="ignore", invalid="ignore")
 
@@ -40,12 +39,11 @@ COLUMN_DIFFERENCE = "Prediction Difference"
 
 
 class CounterfactualExplanation(ExplanationBase):
-    """Contrastive, local Explanation
-    """
+    """Contrastive, local Explanation"""
 
-    explanation_type = "local"
-    explanation_style = "contrastive"
-    explanation_name = "counterfactual"
+    explanation_type: str = "local"
+    explanation_style: str = "contrastive"
+    explanation_name: str = "counterfactual"
 
     def __init__(
         self,
@@ -313,35 +311,6 @@ class CounterfactualExplanation(ExplanationBase):
         """
         return self.df.round(2)
 
-    def format_features_for_plot(self) -> None:
-        """Format the features for the plot:
-            - map categorical variables
-            - replace one-hot-encoded value with True, False strings
-
-        Returns:
-            None.
-
-        """
-        for feature_name in list(self.df.index)[: self.number_of_features]:
-            for col_name in [COLUMN_REFERENCE, COLUMN_COUNTERFACTUAL]:
-                feature_value = self.df.loc[feature_name, col_name]
-                self.df.loc[feature_name, col_name] = self.map_category(
-                    feature_name, feature_value
-                )
-
-                # replace one-hot-encoded value with True, False strings
-                if " - " in feature_name:
-                    self.logger.debug(
-                        f"{feature_name}, {col_name},"
-                        f" {self.df.loc[feature_name, col_name]}"
-                    )
-                    if self.df.loc[feature_name, col_name] == 1.0:
-                        string = "Yes"  # "True"
-                    else:
-                        string = "No"  # "False"
-
-                    self.df.loc[feature_name, col_name] = string
-
     def plot(self, sample_index: int, kind: str = "table") -> None:
         """Create the plot of the counterfactual table
 
@@ -373,7 +342,6 @@ class CounterfactualExplanation(ExplanationBase):
         colLabels = ["Sample", "Counterfactual Sample"]
         columns = [COLUMN_REFERENCE, COLUMN_COUNTERFACTUAL]
 
-        self.format_features_for_plot()
         array_subset = self.df[columns].values[: self.number_of_features]
         rowLabels = list(self.df.index)[: self.number_of_features]
 
@@ -438,21 +406,9 @@ class CounterfactualExplanation(ExplanationBase):
 
         sentences = []
         for feature_name, feature_value in zip(feature_names, feature_values):
-            feature_value = self.map_category(feature_name, feature_value)
-
-            # handle one-hot encoding case
-            if " - " in feature_name:
-                sentence_filled = create_one_hot_sentence(
-                    feature_name, feature_value, self.sentence_text_empty
-                )
-                mode = "one-hot feature"
-            else:
-                sentence_filled = self.sentence_text_empty.format(
-                    feature_name, f"'{feature_value}'"
-                )
-                mode = "standard feature"
-
-            self.logger.debug(f"{mode}: {sentence_filled}")
+            sentence_filled = self.sentence_text_empty.format(
+                feature_name, f"'{feature_value}'"
+            )
             sentences.append(sentence_filled)
 
         sentences = "if " + self.join_text_with_comma_and_and(sentences)

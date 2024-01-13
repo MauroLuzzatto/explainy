@@ -55,6 +55,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         description_text_empty: str = (
             "This is a {} explanation, it creates {} and {} explanations."
         )
+
         self.description_text_empty: str = self.config.get(
             "description_text_empty", description_text_empty
         )
