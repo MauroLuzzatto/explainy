@@ -8,13 +8,12 @@ import numpy as np
 import pandas as pd
 from sklearn.base import is_classifier
 
-from explainy.core.explanation_mixin import ExplanationMixin
 from explainy.logger import Logger
 from explainy.utils.typing import Config, ModelType
 from explainy.utils.utils import create_folder, join_text_with_comma_and_and, num_to_str
 
 
-class ExplanationBase(ABC, ExplanationMixin):
+class ExplanationBase(ABC):
     def __init__(
         self,
         model: ModelType,
