@@ -36,7 +36,6 @@ class ExplanationBase(ABC):
         self.number_of_features: int
 
         self.set_paths()
-        self.get_number_to_string_dict()
 
         if self.is_classifier:
             score_text_empty = (
@@ -164,7 +163,7 @@ class ExplanationBase(ABC):
 
     def get_method_text(self) -> str:
         """Generate the output of the method explanation."""
-        return self.method_text_empty.format(self.num_to_str[self.number_of_features])
+        return self.method_text_empty.format(num_to_str[self.number_of_features])
 
     def get_sentences(self) -> str:
         """Generate the output sentences of the explanation."""

@@ -1,11 +1,10 @@
 import numpy as np
 from sklearn.base import is_classifier
 
-from explainy.core.explanation_mixin import ExplanationMixin
 from explainy.utils.utils import join_text_with_comma_and_and
 
 
-class SurrogateText(ExplanationMixin):
+class SurrogateText:
     """"""
 
     def __init__(self, text: str, model: object, X: np.array, feature_names: list):
