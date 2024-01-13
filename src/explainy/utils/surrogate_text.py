@@ -8,8 +8,7 @@ class SurrogateText(ExplanationMixin):
     """"""
 
     def __init__(self, text: str, model: object, X: np.array, feature_names: list):
-        """
-        Class to generate text explanation from Decision Trees
+        """Class to generate text explanation from Decision Trees
 
         Args:
             text (TYPE): DESCRIPTION.
@@ -41,14 +40,10 @@ class SurrogateText(ExplanationMixin):
             )
 
     def get_text(self):
-        """
-
-
-        Returns:
-            TYPE: DESCRIPTION.
+        """Returns:
+        TYPE: DESCRIPTION.
 
         """
-
         paths = self.get_paths()
 
         texts = []
@@ -61,11 +56,8 @@ class SurrogateText(ExplanationMixin):
         return " ".join([text + "." for text in texts])
 
     def get_paths(self):
-        """
-
-
-        Returns:
-            None.
+        """Returns:
+        None.
 
         """
         # Leaves
@@ -80,10 +72,7 @@ class SurrogateText(ExplanationMixin):
         return paths
 
     def find_path(self, node_numb, path, x):
-        """
-
-
-        Args:
+        """Args:
             node_numb (TYPE): DESCRIPTION.
             path (TYPE): DESCRIPTION.
             x (TYPE): DESCRIPTION.
@@ -111,17 +100,13 @@ class SurrogateText(ExplanationMixin):
         return False
 
     def get_rule(self, path):
-        """
-
-
-        Args:
+        """Args:
             path (TYPE): DESCRIPTION.
 
         Returns:
             TYPE: DESCRIPTION.
 
         """
-
         mask = []
         for index, node in enumerate(path):
             # check if we are not in the leaf

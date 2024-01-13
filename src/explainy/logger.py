@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Jul 19 20:13:34 2020
+"""Created on Sun Jul 19 20:13:34 2020
 
 @author: mauro
 """
@@ -8,14 +6,13 @@ import logging
 import os
 
 
-class Logger(object):
+class Logger:
     def __init__(self, name: str, path_log: str):
         self.name = name
         self.path_log = path_log
 
     def get_logger(self) -> logging.Logger:
-        """
-        Create a log file to record the experiment's logs
+        """Create a log file to record the experiment's logs
 
         Args:
 

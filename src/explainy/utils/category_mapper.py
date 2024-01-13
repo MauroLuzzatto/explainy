@@ -2,9 +2,8 @@ import json
 import os
 
 
-class CategoryMapper(object):
-    """
-    map the integer of the categorical variables back to the orginal string
+class CategoryMapper:
+    """map the integer of the categorical variables back to the orginal string
     using the saved json file
     """
 
@@ -13,21 +12,19 @@ class CategoryMapper(object):
         self.get_map_index_dict()
 
     def load_json(self):
-        """
-        load the json file by path
+        """Load the json file by path
 
         Returns:
             mapper (TYPE): DESCRIPTION.
 
         """
-        with open(self.path_json, "r", encoding="utf-8") as json_file:
+        with open(self.path_json, encoding="utf-8") as json_file:
             mapper = json.load(json_file)
         return mapper
 
     @staticmethod
     def key_to_int(mapper):
-        """
-        convert the key of the json file to an integer
+        """Convert the key of the json file to an integer
 
         Args:
             mapper (TYPE): DESCRIPTION.
@@ -39,8 +36,7 @@ class CategoryMapper(object):
         return {int(k): v for k, v in mapper.items()}
 
     def get_map_index_dict(self):
-        """
-        create the dictionary containing the index as key and the
+        """Create the dictionary containing the index as key and the
         string as value
 
         Returns:

@@ -7,9 +7,8 @@ class GraphvizNotFoundError(Exception):
     pass
 
 
-class SurrogatePlot(object):
-    """
-    This class create the graphviz based surrogate plot using the trained sklearn DecisionTree
+class SurrogatePlot:
+    """This class create the graphviz based surrogate plot using the trained sklearn DecisionTree
     """
 
     def __init__(self, precision=2, impurity=False, rounded=True, class_names=True):
@@ -19,8 +18,7 @@ class SurrogatePlot(object):
         self.class_names = class_names
 
     def get_plot(self, model, feature_names):
-        """
-        Update the dot file as desired, simplify the text in the boxes
+        """Update the dot file as desired, simplify the text in the boxes
 
         Args:
             model (TYPE): DESCRIPTION.
@@ -43,8 +41,7 @@ class SurrogatePlot(object):
 
     @staticmethod
     def one_hot_encoding_text(f):
-        """
-        customize the labels text for one-hot encoded features
+        """Customize the labels text for one-hot encoded features
 
         Args:
             f (TYPE): DESCRIPTION.

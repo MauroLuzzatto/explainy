@@ -220,8 +220,7 @@ class ExplanationBase(ABC, ExplanationMixin):
 
     def get_model_text(self) -> str:
         """
-        WIP
-        Generate text the explains the used machine learning model
+        Generate text the explains the used machine learning model (wip)
 
         Returns:
             str: return the description of the machine learning model
@@ -229,8 +228,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         return str(self.model)
 
     def get_plot_name(self, sample_name: Optional[str] = None) -> str:
-        """
-        Get the name of the plot
+        """Get the name of the plot
 
         Args:
             sample_name (str, optional): name of the sample. Defaults to None.
@@ -248,8 +246,7 @@ class ExplanationBase(ABC, ExplanationMixin):
     def get_sample_name(
         self, sample_index: int, sample_name: Optional[str] = None
     ) -> str:
-        """
-        Determine the name of the sample, if no sample_name provide, use the sample_index
+        """Determine the name of the sample, if no sample_name provide, use the sample_index
 
         Args:
             sample_index (int): index of the sample
@@ -263,8 +260,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         return sample_name
 
     def save(self, sample_index: int, sample_name: Optional[str] = None) -> None:
-        """
-        Save the explanations to a csv file, save the plots
+        """Save the explanations to a csv file, save the plots
 
         Args:
             sample_index (int): [description]
@@ -278,8 +274,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         )
 
     def save_csv(self, sample_index: int) -> None:
-        """
-        Save the explanation to a csv. The columns contain the method_text,
+        """Save the explanation to a csv. The columns contain the method_text,
         the natural_language_text, the name of the plot and the predicted
         value. The index is the Entry ID.
 

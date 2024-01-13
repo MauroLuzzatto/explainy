@@ -1,5 +1,4 @@
-"""
-Permutation feature importance
+"""Permutation feature importance
 ------------------------------
 Permutation feature importance measures the increase in the prediction error of the model 
 after we permuted the feature's values, which breaks the relationship between 
@@ -36,8 +35,7 @@ from explainy.utils.typing import ModelType
 
 
 class PermutationExplanation(ExplanationBase):
-    """
-    Non-contrastive, global Explanation
+    """Non-contrastive, global Explanation
     """
 
     explanation_type = "global"
@@ -97,10 +95,9 @@ class PermutationExplanation(ExplanationBase):
         self._setup()
 
     def _calculate_importance(self) -> None:
-        """
-        Calculate the feature importance using the Permuation Feature Importance
+        """Calculate the feature importance using the Permuation Feature Importance
 
-         Args:
+        Args:
             n_repeats (int, optional): sets the number of times a feature
             is randomly shuffled
 
@@ -113,8 +110,7 @@ class PermutationExplanation(ExplanationBase):
             )
 
     def get_feature_values(self) -> List[Tuple[str, float]]:
-        """
-        extract the feature name and its importance per sample,
+        """Extract the feature name and its importance per sample,
         sort by importance -> highest to lowest
 
         Returns:
@@ -130,8 +126,7 @@ class PermutationExplanation(ExplanationBase):
         return feature_values
 
     def _box_plot(self) -> plt.figure:
-        """
-        Plot the sorted permutation feature importance using a boxplot
+        """Plot the sorted permutation feature importance using a boxplot
 
         Returns:
             plt.figure: a figure object
@@ -153,8 +148,7 @@ class PermutationExplanation(ExplanationBase):
         return fig
 
     def _bar_plot(self) -> plt.figure:
-        """
-        Plot the sorted permutation feature importance using a barplot
+        """Plot the sorted permutation feature importance using a barplot
 
         Returns:
             plt.figure: a figure object
@@ -177,8 +171,7 @@ class PermutationExplanation(ExplanationBase):
         return fig
 
     def plot(self, sample_index: int = None, kind: str = "bar") -> None:
-        """
-        Plot method that calls different kinds of plot types
+        """Plot method that calls different kinds of plot types
 
         Args:
             kind (TYPE, optional): DESCRIPTION. Defaults to 'bar'.
@@ -194,8 +187,7 @@ class PermutationExplanation(ExplanationBase):
             raise Exception(f'Value of "kind" is not supported: {kind}!')
 
     def _setup(self) -> None:
-        """
-        Since the plots and values are calculate once per trained model,
+        """Since the plots and values are calculate once per trained model,
         the feature importance computatoin is done at the beginning
         when initating the class
 
@@ -210,8 +202,7 @@ class PermutationExplanation(ExplanationBase):
         self.plot_name = self.get_plot_name()
 
     def explain(self, sample_index: int, sample_name: str = None, separator="\n"):
-        """
-        main function to create the explanation of the given sample. The
+        """Main function to create the explanation of the given sample. The
         method_text, natural_language_text and the plots are create per sample.
 
         Args:

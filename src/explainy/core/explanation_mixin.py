@@ -5,10 +5,7 @@ from explainy.utils.category_mapper import CategoryMapper
 
 class ExplanationMixin:
     def map_category(self, feature_name, feature_value):
-        """
-
-
-        Args:
+        """Args:
             feature_name (TYPE): DESCRIPTION.
             feature_value (TYPE): DESCRIPTION.
 
@@ -29,8 +26,7 @@ class ExplanationMixin:
 
     @staticmethod
     def join_text_with_comma_and_and(values: list) -> str:
-        """
-        Merge values for text output with commas and only the last value
+        """Merge values for text output with commas and only the last value
         with an "and""
 
         Args:
@@ -40,7 +36,6 @@ class ExplanationMixin:
             str: new text.
 
         """
-
         if len(values) > 2:
             last_value = values[-1]
             values = ", ".join(values[:-1])
@@ -51,10 +46,8 @@ class ExplanationMixin:
         return text
 
     def get_number_to_string_dict(self) -> None:
+        """Map number of features to string values
         """
-        map number of features to string values
-        """
-
         number_text = (
             "one",
             "two",

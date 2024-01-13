@@ -2,8 +2,7 @@ import os
 
 
 def create_folder(path):
-    """
-    create folder, if it doesn't already exist
+    """Create folder, if it doesn't already exist
     """
     if not os.path.exists(path):
         os.makedirs(path)
@@ -11,8 +10,7 @@ def create_folder(path):
 
 
 def create_one_hot_sentence(feature_name, feature_value, sentence):
-    """
-    Create sentence from one-hot-encoded feature value, split the
+    """Create sentence from one-hot-encoded feature value, split the
     column name into feature and value and create sentence
     based on if the value was 1 = True, or 0 = False
 
