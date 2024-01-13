@@ -2,23 +2,22 @@ import csv
 import os
 import warnings
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Union
+from typing import List, Optional, Union
 
 import numpy as np
 import pandas as pd
 from sklearn.base import is_classifier
 
-from explainy.core.explanation_mixin import ExplanationMixin
 from explainy.logger import Logger
-from explainy.utils.typing import ModelType
-from explainy.utils.utils import create_folder
+from explainy.utils.typing import Config, ModelType
+from explainy.utils.utils import create_folder, join_text_with_comma_and_and, num_to_str
 
 
-class ExplanationBase(ABC, ExplanationMixin):
+class ExplanationBase(ABC):
     def __init__(
         self,
         model: ModelType,
-        config: Optional[Dict] = None,
+        config: Optional[Config] = None,
     ) -> None:
         """Initialize the explanation base class
 
@@ -28,18 +27,15 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         """
         self.model = model
-
-        if not config:
-            self.config = {}
-        else:
-            self.config = config
-
+        self.config = config if config else {}
         self.is_classifier: bool = is_classifier(self.model)
         self.folder: str = self.config.get("folder", "explanation")
         self.file_name: str = self.config.get("file_name", "explanations.csv")
 
+        self.explanation_name: str
+        self.number_of_features: int
+
         self.set_paths()
-        self.get_number_to_string_dict()
 
         if self.is_classifier:
             score_text_empty = (
@@ -55,12 +51,14 @@ class ExplanationBase(ABC, ExplanationMixin):
         description_text_empty: str = (
             "This is a {} explanation, it creates {} and {} explanations."
         )
-        self.description_text_empty: str = self.config.get(
-            "description_text_empty", description_text_empty
-        )
-        self.score_text_empty: str = self.config.get(
-            "score_text_empty", score_text_empty
-        )
+
+        attribute_names = [
+            ("description_text_empty", description_text_empty),
+            ("score_text_empty", score_text_empty),
+        ]
+
+        for attr_name, default_value in attribute_names:
+            setattr(self, attr_name, self.config.get(attr_name, default_value))
 
     def define_explanation_placeholder(
         self,
@@ -76,15 +74,14 @@ class ExplanationBase(ABC, ExplanationMixin):
             sentence_text_empty (str): sentence text placeholder
 
         """
-        self.natural_language_text_empty: str = self.config.get(
-            "natural_language_text_empty", natural_language_text_empty
-        )
-        self.method_text_empty: str = self.config.get(
-            "method_text_empty", method_text_empty
-        )
-        self.sentence_text_empty: str = self.config.get(
-            "sentence_text_empty", sentence_text_empty
-        )
+        attribute_names = [
+            ("natural_language_text_empty", natural_language_text_empty),
+            ("method_text_empty", method_text_empty),
+            ("sentence_text_empty", sentence_text_empty),
+        ]
+
+        for attr_name, default_value in attribute_names:
+            setattr(self, attr_name, self.config.get(attr_name, default_value))
 
     def get_number_of_features(self, number_of_features: int) -> int:
         """Set the number of features based on the defined number and the max
@@ -120,17 +117,14 @@ class ExplanationBase(ABC, ExplanationMixin):
         return feature_names
 
     def set_paths(self) -> None:
-        """Set the paths where the output should be saved
-
-        Returns:
-            None.
-        """
+        """Set the paths where the output should be saved"""
         self.path = os.path.join(os.path.dirname(os.getcwd()), "reports", self.folder)
         self.path_plot = create_folder(os.path.join(self.path, "plot"))
         self.path_result = create_folder(os.path.join(self.path, "results"))
         self.path_log = create_folder(os.path.join(self.path, "logs"))
 
     def setup_logger(self, logger_name: str) -> object:
+        """Setup the logger"""
         logger = Logger(logger_name, self.path_log)
         return logger.get_logger()
 
@@ -169,7 +163,7 @@ class ExplanationBase(ABC, ExplanationMixin):
 
     def get_method_text(self) -> str:
         """Generate the output of the method explanation."""
-        return self.method_text_empty.format(self.num_to_str[self.number_of_features])
+        return self.method_text_empty.format(num_to_str[self.number_of_features])
 
     def get_sentences(self) -> str:
         """Generate the output sentences of the explanation."""
@@ -178,7 +172,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             : self.number_of_features
         ]:
             values.append(self.sentence_text_empty.format(feature_name, feature_value))
-        sentences = self.join_text_with_comma_and_and(values)
+        sentences = join_text_with_comma_and_and(values)
         return sentences
 
     def get_natural_language_text(self) -> str:
@@ -189,7 +183,7 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         """
         return self.natural_language_text_empty.format(
-            self.num_to_str[self.number_of_features], self.sentences
+            num_to_str[self.number_of_features], self.sentences
         )
 
     def get_description_text(self) -> str:
@@ -219,9 +213,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         )
 
     def get_model_text(self) -> str:
-        """
-        WIP
-        Generate text the explains the used machine learning model
+        """Generate text the explains the used machine learning model (wip)
 
         Returns:
             str: return the description of the machine learning model
@@ -229,8 +221,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         return str(self.model)
 
     def get_plot_name(self, sample_name: Optional[str] = None) -> str:
-        """
-        Get the name of the plot
+        """Get the name of the plot
 
         Args:
             sample_name (str, optional): name of the sample. Defaults to None.
@@ -248,8 +239,7 @@ class ExplanationBase(ABC, ExplanationMixin):
     def get_sample_name(
         self, sample_index: int, sample_name: Optional[str] = None
     ) -> str:
-        """
-        Determine the name of the sample, if no sample_name provide, use the sample_index
+        """Determine the name of the sample, if no sample_name provide, use the sample_index
 
         Args:
             sample_index (int): index of the sample
@@ -263,8 +253,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         return sample_name
 
     def save(self, sample_index: int, sample_name: Optional[str] = None) -> None:
-        """
-        Save the explanations to a csv file, save the plots
+        """Save the explanations to a csv file, save the plots
 
         Args:
             sample_index (int): [description]
@@ -278,8 +267,7 @@ class ExplanationBase(ABC, ExplanationMixin):
         )
 
     def save_csv(self, sample_index: int) -> None:
-        """
-        Save the explanation to a csv. The columns contain the method_text,
+        """Save the explanation to a csv. The columns contain the method_text,
         the natural_language_text, the name of the plot and the predicted
         value. The index is the Entry ID.
 
@@ -307,27 +295,24 @@ class ExplanationBase(ABC, ExplanationMixin):
             df[column] = df[column].str.replace("\n", "\\n")
 
         # check if the file is already there, if not, create it
-        # TODO: don't duplicate code
-        if not os.path.isfile(os.path.join(self.path_result, self.file_name)):
-            df.to_csv(
-                os.path.join(self.path_result, self.file_name),
-                sep=";",
-                encoding="utf-8-sig",
-                index_label=["Entry ID"],
-                escapechar="\\",
-                quotechar='"',
-                quoting=csv.QUOTE_NONNUMERIC,
-            )
+        is_file = os.path.isfile(os.path.join(self.path_result, self.file_name))
+        if is_file:
+            # append to the file
+            header = False
+            mode = "a"
         else:
-            # append row to the file
-            df.to_csv(
-                os.path.join(self.path_result, self.file_name),
-                sep=";",
-                encoding="utf-8-sig",
-                index_label=["Entry ID"],
-                mode="a",
-                header=False,
-                escapechar="\\",
-                quotechar='"',
-                quoting=csv.QUOTE_NONNUMERIC,
-            )
+            # create the file
+            header = True
+            mode = "w"
+
+        df.to_csv(
+            os.path.join(self.path_result, self.file_name),
+            sep=";",
+            encoding="utf-8-sig",
+            index_label=["Entry ID"],
+            mode=mode,
+            header=header,
+            escapechar="\\",
+            quotechar='"',
+            quoting=csv.QUOTE_NONNUMERIC,
+        )

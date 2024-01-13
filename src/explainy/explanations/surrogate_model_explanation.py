@@ -1,5 +1,4 @@
-"""
-Global Surrogate Model
+"""Global Surrogate Model
 ----------------------
 A global surrogate model is an interpretable model that is trained to approximate the 
 predictions of a black box model. We can draw conclusions about the black box model 
@@ -20,7 +19,7 @@ import os
 import shutil
 import subprocess
 import warnings
-from typing import Dict, Optional, Union
+from typing import Optional, Union
 
 import graphviz
 import numpy as np
@@ -33,25 +32,24 @@ from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
 from explainy.utils.surrogate_plot import GraphvizNotFoundError, SurrogatePlot
 from explainy.utils.surrogate_text import SurrogateText
-from explainy.utils.typing import ModelType
+from explainy.utils.typing import Config, ModelType
+from explainy.utils.utils import num_to_str
 
 
 class SurrogateModelExplanation(ExplanationBase):
-    """
-    Contrastive, global Explanation
-    """
+    """Contrastive, global Explanation"""
 
-    explanation_type = "global"
-    explanation_style = "contrastive"
-    explanation_name = "surrogate"
+    explanation_type: str = "global"
+    explanation_style: str = "contrastive"
+    explanation_name: str = "surrogate"
 
     def __init__(
         self,
-        X: Union[pd.DataFrame, np.ndarray],
+        X: pd.DataFrame,
         y: Union[pd.DataFrame, np.ndarray],
         model: ModelType,
         number_of_features: int = 4,
-        config: Optional[Dict] = None,
+        config: Optional[Config] = None,
         kind: str = "tree",
         **kwargs: dict,
     ):
@@ -186,7 +184,6 @@ class SurrogateModelExplanation(ExplanationBase):
             Exception: if the type of kind is not supported
 
         """
-
         if self.kind == "tree":
             self._plot_tree()
         elif self.kind == "linear":
@@ -198,9 +195,7 @@ class SurrogateModelExplanation(ExplanationBase):
         raise NotImplementedError("to be done")
 
     def _plot_tree(self, precision: int = 2, **kwargs: dict) -> None:
-        """
-        use Graphviz to plot the decision tree
-        """
+        """Use Graphviz to plot the decision tree"""
         if shutil.which("dot") is None:
             raise GraphvizNotFoundError(
                 "Graphviz not found. Please install it following the instructions in"
@@ -227,8 +222,7 @@ class SurrogateModelExplanation(ExplanationBase):
             warnings.warn("plot already open!")
 
     def save(self, sample_index: int, sample_name: Optional[str] = None) -> None:
-        """
-        Save the explanations to a csv file, save the plots
+        """Save the explanations to a csv file, save the plots
 
         Args:
             sample_index (int): index of sample in scope
@@ -258,13 +252,12 @@ class SurrogateModelExplanation(ExplanationBase):
         """
         method_text = self.method_text_empty.format(
             self.surrogate_model.__class__.__name__,
-            self.num_to_str[self.number_of_groups].capitalize(),
+            num_to_str[self.number_of_groups].capitalize(),
         )
         return method_text
 
     def get_natural_language_text(self) -> str:
-        """
-        Define the natural language output using the feature names and its
+        """Define the natural language output using the feature names and its
         values for this explanation type
 
         Returns:
@@ -281,8 +274,7 @@ class SurrogateModelExplanation(ExplanationBase):
         return self.natural_language_text_empty.format(sentences)
 
     def _setup(self) -> None:
-        """
-        Calculate the feature importance and create the text once
+        """Calculate the feature importance and create the text once
 
         Returns:
             None.
@@ -298,7 +290,7 @@ class SurrogateModelExplanation(ExplanationBase):
         sample_name: Optional[str] = None,
         separator: str = "\n",
     ) -> Explanation:
-        """main function to create the explanation of the given sample.
+        """Main function to create the explanation of the given sample.
 
         The method_text, natural_language_text and the plots are create per sample.
 

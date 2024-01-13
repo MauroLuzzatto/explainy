@@ -1,5 +1,4 @@
-"""
-Counterfactual Explanation
+"""Counterfactual Explanation
 --------------------------
 Counterfactual explanations tell us how the values of an instance have to change to 
 significantly change its prediction. A counterfactual explanation of a prediction 
@@ -19,19 +18,19 @@ https://christophm.github.io/interpretable-ml-book/
 """
 
 import warnings
-from typing import Dict, Optional, Tuple
+from typing import Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import sklearn
 from matplotlib.font_manager import FontProperties
 from mlxtend.evaluate import create_counterfactual
-from sklearn.base import is_classifier, is_regressor
+from sklearn.base import is_regressor
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
-from explainy.utils.utils import create_one_hot_sentence
+from explainy.utils.typing import Config, ModelType
+from explainy.utils.utils import join_text_with_comma_and_and, num_to_str
 
 np.seterr(divide="ignore", invalid="ignore")
 
@@ -41,22 +40,20 @@ COLUMN_DIFFERENCE = "Prediction Difference"
 
 
 class CounterfactualExplanation(ExplanationBase):
-    """
-    Contrastive, local Explanation
-    """
+    """Contrastive, local Explanation"""
 
-    explanation_type = "local"
-    explanation_style = "contrastive"
-    explanation_name = "counterfactual"
+    explanation_type: str = "local"
+    explanation_style: str = "contrastive"
+    explanation_name: str = "counterfactual"
 
     def __init__(
         self,
         X: pd.DataFrame,
         y: np.ndarray,
-        model: sklearn.base.BaseEstimator,
+        model: ModelType,
         y_desired: float,
         number_of_features: int = 4,
-        config: Optional[Dict] = None,
+        config: Optional[Config] = None,
         delta: Optional[float] = None,
     ) -> None:
         super(CounterfactualExplanation, self).__init__(model, config)
@@ -104,8 +101,7 @@ class CounterfactualExplanation(ExplanationBase):
     def _calculate_importance(
         self, sample_index: int = 0
     ) -> Tuple[np.ndarray, np.ndarray]:
-        """
-        Create the counter factual explanation for the given sample.
+        """Create the counter factual explanation for the given sample.
 
         Args:
             sample_index (int, optional): sample index. Defaults to 0.
@@ -114,7 +110,6 @@ class CounterfactualExplanation(ExplanationBase):
             x_ref (np.ndarray): reference feature values
             x_counter_factual (np.ndarray): counter factual feature values
         """
-
         x_ref = self.X.values[sample_index, :]
 
         if not self.delta:
@@ -207,8 +202,7 @@ class CounterfactualExplanation(ExplanationBase):
         x_ref: np.ndarray,
         x_counter_factual: np.ndarray,
     ) -> float:
-        """
-        replace the value of the feauture at the postition of thw feature_index and predict
+        """Replace the value of the feauture at the postition of thw feature_index and predict
         a new value for this new set of features
 
         Args:
@@ -235,8 +229,7 @@ class CounterfactualExplanation(ExplanationBase):
     def get_feature_importance(
         self, x_ref: np.ndarray, x_counter_factual: np.ndarray
     ) -> list:
-        """
-        Calculate the importance of each feature. Take the reference
+        """Calculate the importance of each feature. Take the reference
         features and replace every feature with the new counter_factual value.
         Calculat the absulte difference that this feature adds to the prediction.
         A larger absolute value, means a larger contribution and therefore a more
@@ -276,8 +269,7 @@ class CounterfactualExplanation(ExplanationBase):
         decimal: int = 2,
         debug: bool = False,
     ):
-        """
-        Arrange the reference and the counter factual features in a dataframe
+        """Arrange the reference and the counter factual features in a dataframe
 
         Args:
             x_ref (np.array): features of the sample
@@ -313,42 +305,12 @@ class CounterfactualExplanation(ExplanationBase):
             self.df.plot(kind="barh", figsize=(3, 5))
 
     def importance(self) -> pd.DataFrame:
-        """return the feature importance
+        """Return the feature importance
 
         Returns:
             pd.DataFrame: dataframe with the feature importance
         """
         return self.df.round(2)
-
-    def format_features_for_plot(self) -> None:
-        """
-        Format the features for the plot:
-            - map categorical variables
-            - replace one-hot-encoded value with True, False strings
-
-        Returns:
-            None.
-
-        """
-        for feature_name in list(self.df.index)[: self.number_of_features]:
-            for col_name in [COLUMN_REFERENCE, COLUMN_COUNTERFACTUAL]:
-                feature_value = self.df.loc[feature_name, col_name]
-                self.df.loc[feature_name, col_name] = self.map_category(
-                    feature_name, feature_value
-                )
-
-                # replace one-hot-encoded value with True, False strings
-                if " - " in feature_name:
-                    self.logger.debug(
-                        f"{feature_name}, {col_name},"
-                        f" {self.df.loc[feature_name, col_name]}"
-                    )
-                    if self.df.loc[feature_name, col_name] == 1.0:
-                        string = "Yes"  # "True"
-                    else:
-                        string = "No"  # "False"
-
-                    self.df.loc[feature_name, col_name] = string
 
     def plot(self, sample_index: int, kind: str = "table") -> None:
         """Create the plot of the counterfactual table
@@ -372,8 +334,7 @@ class CounterfactualExplanation(ExplanationBase):
             raise Exception(f'Value of kind "{kind}" is not supported!')
 
     def _plot_table(self) -> plt.figure:
-        """
-        Plot the table comparing the refence and the counterfactual values
+        """Plot the table comparing the refence and the counterfactual values
 
         Returns:
             plt.figure: figure object
@@ -382,7 +343,6 @@ class CounterfactualExplanation(ExplanationBase):
         colLabels = ["Sample", "Counterfactual Sample"]
         columns = [COLUMN_REFERENCE, COLUMN_COUNTERFACTUAL]
 
-        self.format_features_for_plot()
         array_subset = self.df[columns].values[: self.number_of_features]
         rowLabels = list(self.df.index)[: self.number_of_features]
 
@@ -423,14 +383,13 @@ class CounterfactualExplanation(ExplanationBase):
         return fig
 
     def get_method_text(self) -> str:
-        """
-        Define the method introduction text of the explanation type.
+        """Define the method introduction text of the explanation type.
 
         Returns:
             str: method text explanation
         """
         return self.method_text_empty.format(
-            self.num_to_str[self.number_of_features], self.y_counter_factual
+            num_to_str[self.number_of_features], self.y_counter_factual
         )
 
     def get_natural_language_text(self) -> str:
@@ -448,24 +407,12 @@ class CounterfactualExplanation(ExplanationBase):
 
         sentences = []
         for feature_name, feature_value in zip(feature_names, feature_values):
-            feature_value = self.map_category(feature_name, feature_value)
-
-            # handle one-hot encoding case
-            if " - " in feature_name:
-                sentence_filled = create_one_hot_sentence(
-                    feature_name, feature_value, self.sentence_text_empty
-                )
-                mode = "one-hot feature"
-            else:
-                sentence_filled = self.sentence_text_empty.format(
-                    feature_name, f"'{feature_value}'"
-                )
-                mode = "standard feature"
-
-            self.logger.debug(f"{mode}: {sentence_filled}")
+            sentence_filled = self.sentence_text_empty.format(
+                feature_name, f"'{feature_value}'"
+            )
             sentences.append(sentence_filled)
 
-        sentences = "if " + self.join_text_with_comma_and_and(sentences)
+        sentences = "if " + join_text_with_comma_and_and(sentences)
         natural_language_text = self.natural_language_text_empty.format(
             self.y_counter_factual, sentences
         )
@@ -494,8 +441,7 @@ class CounterfactualExplanation(ExplanationBase):
         sample_name: Optional[str] = None,
         separator: str = "\n",
     ) -> Explanation:
-        """
-        main function to create the explanation of the given sample. The
+        """Main function to create the explanation of the given sample. The
         method_text, natural_language_text and the plots are create per sample.
 
         Args:

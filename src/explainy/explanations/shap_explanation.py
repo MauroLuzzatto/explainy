@@ -1,5 +1,4 @@
-"""
-SHAP Explanation
+"""SHAP Explanation
 ----------------
 A prediction can be explained by assuming that each feature value of  the instance is a "player" in a game where 
 the prediction is the payout.  Shapley values (a method from coalitional game theory) tells us how  to fairly 
@@ -17,22 +16,20 @@ Source
 https://christophm.github.io/interpretable-ml-book/
 """
 
-from typing import Dict, List, Tuple
+from typing import List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import shap
-import sklearn
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
+from explainy.utils.typing import Config, ModelType
 
 
 class ShapExplanation(ExplanationBase):
-    """
-    Non-contrastive, local Explanation
-    """
+    """Non-contrastive, local Explanation"""
 
     explanation_type: str = "local"
     explanation_style: str = "non-contrastive"
@@ -42,9 +39,9 @@ class ShapExplanation(ExplanationBase):
         self,
         X: pd.DataFrame,
         y: np.ndarray,
-        model: sklearn.base.BaseEstimator,
+        model: ModelType,
         number_of_features: int = 4,
-        config: Dict = None,
+        config: Optional[Config] = None,
         **kwargs,
     ) -> None:
         super(ShapExplanation, self).__init__(model, config)
@@ -87,8 +84,7 @@ class ShapExplanation(ExplanationBase):
         self._calculate_importance()
 
     def _calculate_importance(self) -> None:
-        """
-        Explain model predictions using SHAP library
+        """Explain model predictions using SHAP library
 
         Returns:
             None.
@@ -103,8 +99,7 @@ class ShapExplanation(ExplanationBase):
         # ), "self.explainer.expected_value has wrong type"
 
     def get_feature_values(self, sample_index: int = 0) -> List[Tuple[str, float]]:
-        """
-        extract the feature name and its importance per sample
+        """Extract the feature name and its importance per sample
         - get absolute values to get the strongst postive and negative contribution
         - sort by importance -> highst to lowest
 
@@ -139,8 +134,7 @@ class ShapExplanation(ExplanationBase):
         return feature_values
 
     def plot(self, sample_index: int, kind: str = "bar") -> None:
-        """
-        Plot the shap values
+        """Plot the shap values
 
         Args:
             sample_index (int, optional): DESCRIPTION. Defaults to 0.
@@ -163,12 +157,12 @@ class ShapExplanation(ExplanationBase):
             raise Exception(f'Value of "kind = {kind}" is not supported!')
 
     def _bar_plot(self, sample_index: int) -> plt.Figure:
-        """
-        Create a bar plot of the shape values for a selected sample
+        """Create a bar plot of the shape values for a selected sample
 
         Args:
             sample_index (int, optional): sample for which the explanation should
                 be returned. Defaults to 0.
+
         Returns:
             plt.figure
 
@@ -194,12 +188,12 @@ class ShapExplanation(ExplanationBase):
         return fig
 
     def _shap_plot(self, sample_index: int) -> plt.Figure:
-        """
-        visualize the first prediction's explanation
+        """Visualize the first prediction's explanation
 
         Args:
             sample_index (int, optional): sample for which the explanation should
                 be returned. Defaults to 0.
+
         Returns:
             plt.figure: return a matplotlib figure containg the plot
         """
@@ -227,8 +221,7 @@ class ShapExplanation(ExplanationBase):
         return fig
 
     def _log_output(self, sample_index: int) -> None:
-        """
-        Log the prediction values of the sample
+        """Log the prediction values of the sample
 
         Args:
             sample (int): DESCRIPTION.
@@ -249,8 +242,7 @@ class ShapExplanation(ExplanationBase):
         self.logger.debug(f"The predicted value was: {self.prediction}")
 
     def _setup(self, sample_index: int, sample_name: str) -> None:
-        """
-        Helper function to call all methods to create the explanations
+        """Helper function to call all methods to create the explanations
 
         Args:
             sample_index (TYPE): DESCRIPTION.
@@ -268,8 +260,7 @@ class ShapExplanation(ExplanationBase):
         self.plot_name = self.get_plot_name(sample_name)
 
     def explain(self, sample_index, sample_name=None, separator="\n") -> Explanation:
-        """
-        main function to create the explanation of the given sample. The
+        """Main function to create the explanation of the given sample. The
         method_text, natural_language_text and the plots are create per sample.
 
         Args:

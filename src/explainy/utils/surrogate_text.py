@@ -1,15 +1,14 @@
 import numpy as np
 from sklearn.base import is_classifier
 
-from explainy.core.explanation_mixin import ExplanationMixin
+from explainy.utils.utils import join_text_with_comma_and_and
 
 
-class SurrogateText(ExplanationMixin):
+class SurrogateText:
     """"""
 
     def __init__(self, text: str, model: object, X: np.array, feature_names: list):
-        """
-        Class to generate text explanation from Decision Trees
+        """Class to generate text explanation from Decision Trees
 
         Args:
             text (TYPE): DESCRIPTION.
@@ -41,31 +40,24 @@ class SurrogateText(ExplanationMixin):
             )
 
     def get_text(self):
-        """
-
-
-        Returns:
-            TYPE: DESCRIPTION.
+        """Returns:
+        TYPE: DESCRIPTION.
 
         """
-
         paths = self.get_paths()
 
         texts = []
         for key in paths:
             sentences = self.get_rule(paths[key])
-            sentences = self.join_text_with_comma_and_and(sentences)
+            sentences = join_text_with_comma_and_and(sentences)
             score = self.values[key][0]
             texts.append(self.text.format(score, sentences))
 
         return " ".join([text + "." for text in texts])
 
     def get_paths(self):
-        """
-
-
-        Returns:
-            None.
+        """Returns:
+        None.
 
         """
         # Leaves
@@ -80,10 +72,7 @@ class SurrogateText(ExplanationMixin):
         return paths
 
     def find_path(self, node_numb, path, x):
-        """
-
-
-        Args:
+        """Args:
             node_numb (TYPE): DESCRIPTION.
             path (TYPE): DESCRIPTION.
             x (TYPE): DESCRIPTION.
@@ -111,17 +100,13 @@ class SurrogateText(ExplanationMixin):
         return False
 
     def get_rule(self, path):
-        """
-
-
-        Args:
+        """Args:
             path (TYPE): DESCRIPTION.
 
         Returns:
             TYPE: DESCRIPTION.
 
         """
-
         mask = []
         for index, node in enumerate(path):
             # check if we are not in the leaf

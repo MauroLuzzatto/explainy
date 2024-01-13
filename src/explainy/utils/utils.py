@@ -1,33 +1,61 @@
 import os
 
 
-def create_folder(path):
-    """
-    create folder, if it doesn't already exist
-    """
+def create_folder(path: str) -> str:
+    """Create folder, if it doesn't already exist"""
     if not os.path.exists(path):
         os.makedirs(path)
     return path
 
 
-def create_one_hot_sentence(feature_name, feature_value, sentence):
-    """
-    Create sentence from one-hot-encoded feature value, split the
-    column name into feature and value and create sentence
-    based on if the value was 1 = True, or 0 = False
+def join_text_with_comma_and_and(values: list) -> str:
+    """Merge values for text output with commas and only the last value
+    with an "and""
 
     Args:
-        feature_name (TYPE): DESCRIPTION.
-        feature_value (TYPE): DESCRIPTION.
-        sentence (TYPE): DESCRIPTION.
+        values (list): list of values to be merged.
 
     Returns:
-        sentence_filled (TYPE): DESCRIPTION.
-
+        str: new text.
     """
-    column, value = feature_name.split(" - ")
-    if int(feature_value) == 1:
-        sentence_filled = sentence.format(column, f"'{value}'")
+    if len(values) > 2:
+        last_value = values[-1]
+        values = ", ".join(values[:-1])
+        text = values + ", and " + last_value
+
     else:
-        sentence_filled = sentence.format(column, f"not '{value}'")
-    return sentence_filled
+        text = ", and ".join(values)
+    return text
+
+
+def get_number_to_string_dict() -> None:
+    """Map number of features to string values"""
+    number_text = (
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        "ten",
+        "eleven",
+        "twelve",
+        "thirteen",
+        "fourteen",
+        "fifteen",
+        "sixteen",
+        "seventeen",
+        "eighteen",
+        "nineteen",
+        "twenty",
+    )
+    num_to_str = {}
+    for text, number in zip(number_text, range(1, 21)):
+        num_to_str[number] = text
+    return num_to_str
+
+
+num_to_str = get_number_to_string_dict()
