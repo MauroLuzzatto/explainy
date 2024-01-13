@@ -28,7 +28,6 @@ class Explanation:
         Returns:
             Union[str, Tuple[str, str, str]]: final explanation
         """
-
         explanation = (
             self.score_text,
             self.method_text,

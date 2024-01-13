@@ -19,7 +19,7 @@ import os
 import shutil
 import subprocess
 import warnings
-from typing import Dict, Optional, Union
+from typing import Optional, Union
 
 import graphviz
 import numpy as np

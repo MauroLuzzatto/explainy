@@ -22,7 +22,7 @@ https://christophm.github.io/interpretable-ml-book/
 """
 
 import warnings
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np

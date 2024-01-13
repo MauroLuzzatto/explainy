@@ -23,7 +23,6 @@ from typing import Optional, Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import sklearn
 from matplotlib.font_manager import FontProperties
 from mlxtend.evaluate import create_counterfactual
 from sklearn.base import is_regressor

@@ -1,5 +1,4 @@
 import pytest
-
 from explainy.core.explanation import Explanation
 
 

@@ -213,8 +213,7 @@ class ExplanationBase(ABC):
         )
 
     def get_model_text(self) -> str:
-        """
-        Generate text the explains the used machine learning model (wip)
+        """Generate text the explains the used machine learning model (wip)
 
         Returns:
             str: return the description of the machine learning model
