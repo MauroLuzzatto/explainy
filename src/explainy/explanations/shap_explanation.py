@@ -16,16 +16,16 @@ Source
 https://christophm.github.io/interpretable-ml-book/
 """
 
-from typing import Dict, List, Tuple
+from typing import List, Tuple, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import shap
-import sklearn
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
+from explainy.utils.typing import ModelType, Config
 
 
 class ShapExplanation(ExplanationBase):
@@ -39,9 +39,9 @@ class ShapExplanation(ExplanationBase):
         self,
         X: pd.DataFrame,
         y: np.ndarray,
-        model: sklearn.base.BaseEstimator,
+        model: ModelType,
         number_of_features: int = 4,
-        config: Dict = None,
+        config: Optional[Config] = None,
         **kwargs,
     ) -> None:
         super(ShapExplanation, self).__init__(model, config)

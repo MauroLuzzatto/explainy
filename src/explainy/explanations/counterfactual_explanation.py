@@ -18,7 +18,7 @@ https://christophm.github.io/interpretable-ml-book/
 """
 
 import warnings
-from typing import Dict, Optional, Tuple
+from typing import Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,6 +30,7 @@ from sklearn.base import is_regressor
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
+from explainy.utils.typing import ModelType, Config
 
 np.seterr(divide="ignore", invalid="ignore")
 
@@ -49,10 +50,10 @@ class CounterfactualExplanation(ExplanationBase):
         self,
         X: pd.DataFrame,
         y: np.ndarray,
-        model: sklearn.base.BaseEstimator,
+        model: ModelType,
         y_desired: float,
         number_of_features: int = 4,
-        config: Optional[Dict] = None,
+        config: Optional[Config] = None,
         delta: Optional[float] = None,
     ) -> None:
         super(CounterfactualExplanation, self).__init__(model, config)

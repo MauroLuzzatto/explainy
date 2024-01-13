@@ -31,15 +31,15 @@ from sklearn.inspection import permutation_importance
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
-from explainy.utils.typing import ModelType
+from explainy.utils.typing import ModelType, Config
 
 
 class PermutationExplanation(ExplanationBase):
     """Non-contrastive, global Explanation"""
 
-    explanation_type = "global"
-    explanation_style = "non-contrastive"
-    explanation_name = "permutation"
+    explanation_type: str = "global"
+    explanation_style: str = "non-contrastive"
+    explanation_name: str = "permutation"
 
     def __init__(
         self,
@@ -47,7 +47,7 @@ class PermutationExplanation(ExplanationBase):
         y: np.array,
         model: ModelType,
         number_of_features: int = 4,
-        config: Dict = None,
+        config: Optional[Config] = None,
         n_repeats: Optional[int] = 30,
         random_state: Optional[int] = 0,
         **kwargs,

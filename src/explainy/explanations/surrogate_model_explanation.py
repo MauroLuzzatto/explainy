@@ -32,23 +32,23 @@ from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
 from explainy.utils.surrogate_plot import GraphvizNotFoundError, SurrogatePlot
 from explainy.utils.surrogate_text import SurrogateText
-from explainy.utils.typing import ModelType
+from explainy.utils.typing import ModelType, Config
 
 
 class SurrogateModelExplanation(ExplanationBase):
     """Contrastive, global Explanation"""
 
-    explanation_type = "global"
-    explanation_style = "contrastive"
-    explanation_name = "surrogate"
+    explanation_type: str = "global"
+    explanation_style: str = "contrastive"
+    explanation_name: str = "surrogate"
 
     def __init__(
         self,
-        X: Union[pd.DataFrame, np.ndarray],
+        X: pd.DataFrame,
         y: Union[pd.DataFrame, np.ndarray],
         model: ModelType,
         number_of_features: int = 4,
-        config: Optional[Dict] = None,
+        config: Optional[Config] = None,
         kind: str = "tree",
         **kwargs: dict,
     ):
