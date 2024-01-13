@@ -30,7 +30,8 @@ from sklearn.base import is_regressor
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
-from explainy.utils.typing import ModelType, Config
+from explainy.utils.typing import Config, ModelType
+from explainy.utils.utils import join_text_with_comma_and_and, num_to_str
 
 np.seterr(divide="ignore", invalid="ignore")
 
@@ -389,7 +390,7 @@ class CounterfactualExplanation(ExplanationBase):
             str: method text explanation
         """
         return self.method_text_empty.format(
-            self.num_to_str[self.number_of_features], self.y_counter_factual
+            num_to_str[self.number_of_features], self.y_counter_factual
         )
 
     def get_natural_language_text(self) -> str:
@@ -412,7 +413,7 @@ class CounterfactualExplanation(ExplanationBase):
             )
             sentences.append(sentence_filled)
 
-        sentences = "if " + self.join_text_with_comma_and_and(sentences)
+        sentences = "if " + join_text_with_comma_and_and(sentences)
         natural_language_text = self.natural_language_text_empty.format(
             self.y_counter_factual, sentences
         )

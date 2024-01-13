@@ -10,8 +10,8 @@ from sklearn.base import is_classifier
 
 from explainy.core.explanation_mixin import ExplanationMixin
 from explainy.logger import Logger
-from explainy.utils.typing import ModelType, Config
-from explainy.utils.utils import create_folder
+from explainy.utils.typing import Config, ModelType
+from explainy.utils.utils import create_folder, join_text_with_comma_and_and, num_to_str
 
 
 class ExplanationBase(ABC, ExplanationMixin):
@@ -174,7 +174,7 @@ class ExplanationBase(ABC, ExplanationMixin):
             : self.number_of_features
         ]:
             values.append(self.sentence_text_empty.format(feature_name, feature_value))
-        sentences = self.join_text_with_comma_and_and(values)
+        sentences = join_text_with_comma_and_and(values)
         return sentences
 
     def get_natural_language_text(self) -> str:
@@ -185,7 +185,7 @@ class ExplanationBase(ABC, ExplanationMixin):
 
         """
         return self.natural_language_text_empty.format(
-            self.num_to_str[self.number_of_features], self.sentences
+            num_to_str[self.number_of_features], self.sentences
         )
 
     def get_description_text(self) -> str:

@@ -16,7 +16,7 @@ Source
 https://christophm.github.io/interpretable-ml-book/
 """
 
-from typing import List, Tuple, Optional
+from typing import List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -25,7 +25,7 @@ import shap
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
-from explainy.utils.typing import ModelType, Config
+from explainy.utils.typing import Config, ModelType
 
 
 class ShapExplanation(ExplanationBase):

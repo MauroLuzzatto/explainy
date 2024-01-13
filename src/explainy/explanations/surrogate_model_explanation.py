@@ -32,7 +32,8 @@ from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
 from explainy.utils.surrogate_plot import GraphvizNotFoundError, SurrogatePlot
 from explainy.utils.surrogate_text import SurrogateText
-from explainy.utils.typing import ModelType, Config
+from explainy.utils.typing import Config, ModelType
+from explainy.utils.utils import num_to_str
 
 
 class SurrogateModelExplanation(ExplanationBase):
@@ -251,7 +252,7 @@ class SurrogateModelExplanation(ExplanationBase):
         """
         method_text = self.method_text_empty.format(
             self.surrogate_model.__class__.__name__,
-            self.num_to_str[self.number_of_groups].capitalize(),
+            num_to_str[self.number_of_groups].capitalize(),
         )
         return method_text
 

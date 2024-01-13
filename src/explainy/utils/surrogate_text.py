@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.base import is_classifier
 
 from explainy.core.explanation_mixin import ExplanationMixin
+from explainy.utils.utils import join_text_with_comma_and_and
 
 
 class SurrogateText(ExplanationMixin):
@@ -49,7 +50,7 @@ class SurrogateText(ExplanationMixin):
         texts = []
         for key in paths:
             sentences = self.get_rule(paths[key])
-            sentences = self.join_text_with_comma_and_and(sentences)
+            sentences = join_text_with_comma_and_and(sentences)
             score = self.values[key][0]
             texts.append(self.text.format(score, sentences))
 
