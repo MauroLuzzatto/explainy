@@ -4,14 +4,6 @@ explainy.utils package
 Submodules
 ----------
 
-explainy.utils.category\_mapper module
---------------------------------------
-
-.. automodule:: explainy.utils.category_mapper
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 explainy.utils.surrogate\_plot module
 -------------------------------------
 

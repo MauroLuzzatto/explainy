@@ -301,7 +301,6 @@ class SurrogateModelExplanation(ExplanationBase):
 
         Returns:
             Explanation: Explanation object containg the explainations
-
         """
         self.sample_index = sample_index
         sample_name = self.get_sample_name(sample_index, sample_name)

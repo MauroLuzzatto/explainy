@@ -200,7 +200,12 @@ class PermutationExplanation(ExplanationBase):
         self.method_text = self.get_method_text()
         self.plot_name = self.get_plot_name()
 
-    def explain(self, sample_index: int, sample_name: str = None, separator="\n"):
+    def explain(
+        self,
+        sample_index: int,
+        sample_name: Optional[str] = None,
+        separator: str = "\n",
+    ) -> Explanation:
         """Main function to create the explanation of the given sample. The
         method_text, natural_language_text and the plots are create per sample.
 
@@ -208,12 +213,15 @@ class PermutationExplanation(ExplanationBase):
             sample_index (int): number of the sample to create the explanation for
 
         Returns:
-            None.
+            Explanation: Explanation object containg the explainations
         """
         sample_name = self.get_sample_name(sample_index, sample_name)
         self.prediction = self.get_prediction(sample_index)
         self.score_text = self.get_score_text()
         self.explanation = Explanation(
-            self.score_text, self.method_text, self.natural_language_text
+            self.score_text,
+            self.method_text,
+            self.natural_language_text,
+            separator=separator,
         )
         return self.explanation
