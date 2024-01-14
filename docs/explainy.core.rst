@@ -20,13 +20,6 @@ explainy.core.explanation\_base module
    :undoc-members:
    :show-inheritance:
 
-explainy.core.explanation\_mixin module
----------------------------------------
-
-.. automodule:: explainy.core.explanation_mixin
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 Module contents
 ---------------
