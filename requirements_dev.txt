@@ -17,5 +17,5 @@ isort
 black
 wheel
 ruff
-Jinja2==2.11.3
+Jinja2==3.1.3
 markupsafe==2.0.1
