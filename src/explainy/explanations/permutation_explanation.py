@@ -103,7 +103,8 @@ class PermutationExplanation(ExplanationBase):
         Returns:
             None
         """
-        with warnings.catch_warnings(action="ignore", category=UserWarning):
+        with warnings.catch_warnings(category=UserWarning):
+            warnings.simplefilter("ignore")
             self.r = permutation_importance(
                 self.model, self.X, self.y.values, **self.kwargs
             )
