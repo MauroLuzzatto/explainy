@@ -11,6 +11,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.11
+        
+      # caching pip dependencies
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+            path: ~/.cache/pip
+            key: pip-requirements-${{ hashFiles('**/requirements.txt') }}
 
       - name: Install dependencies
         run: |
