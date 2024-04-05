@@ -121,9 +121,9 @@ class SurrogateModelExplanation(ExplanationBase):
         else:
             raise ValueError(f"Value of kind '{self.kind}' is not supported!")
 
-            with warnings.catch_warnings(category=UserWarning):
-                warnings.simplefilter("ignore")
-                y_hat = self.model.predict(self.X.values)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=UserWarning)
+            y_hat = self.model.predict(self.X.values)
 
         self.surrogate_model = self.get_surrogate_model(estimator)
         self.surrogate_model.fit(self.X, y_hat)
