@@ -143,7 +143,8 @@ class CounterfactualExplanation(ExplanationBase):
                 dtype="float",
             ):
                 # catch the warning "Maximum number of function evaluations has been exceeded." warning
-                with warnings.catch_warnings(action="ignore", category=UserWarning):
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", category=UserWarning)
                     x_counter_factual = create_counterfactual(
                         x_reference=x_ref,
                         y_desired=self.y_desired,
@@ -222,7 +223,8 @@ class CounterfactualExplanation(ExplanationBase):
         # assign new value
         x_created[0, feature_index] = x_counter_factual.reshape(1, -1)[0, feature_index]
 
-        with warnings.catch_warnings(action="ignore", category=UserWarning):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=UserWarning)
             pred_new = self.model.predict(x_created)[0]
         return pred_new
 
@@ -242,7 +244,8 @@ class CounterfactualExplanation(ExplanationBase):
         Returns:
             list: list of the feature sorted by importance
         """
-        with warnings.catch_warnings(action="ignore", category=UserWarning):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=UserWarning)
             pred_ref = self.model.predict(x_ref.reshape(1, -1))[0]
 
         self.differences = []

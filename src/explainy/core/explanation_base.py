@@ -157,7 +157,8 @@ class ExplanationBase(ABC):
         Returns:
             float: predction of the model for that sample
         """
-        with warnings.catch_warnings(action="ignore", category=UserWarning):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=UserWarning)
             prediction: float = self.model.predict(self.X)[sample_index]
         return prediction
 
