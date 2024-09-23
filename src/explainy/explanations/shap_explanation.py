@@ -16,6 +16,7 @@ Source
 https://christophm.github.io/interpretable-ml-book/
 """
 
+import textwrap
 from typing import List, Optional, Tuple
 
 import matplotlib.pyplot as plt
@@ -53,8 +54,8 @@ class ShapExplanation(ExplanationBase):
             X (df): (Test) samples and features to calculate the importance for (sample, features)
             y (np.array): (Test) target values of the samples (samples, 1)
             model (object): trained (sckit-learn) model object
-            number_of_features (int):
-            config
+            number_of_features (int): number of features to be displayed in the explanation. Defaults to 4.
+            config (Dict): configuration dictionary
 
         Returns:
             None.
@@ -84,34 +85,22 @@ class ShapExplanation(ExplanationBase):
         self._calculate_importance()
 
     def _calculate_importance(self) -> None:
-        """Explain model predictions using SHAP library
-
-        Returns:
-            None.
-        """
+        """Explain model predictions using SHAP library"""
         self.explainer = shap.TreeExplainer(self.model, **self.kwargs)
         self.shap_values = self.explainer.shap_values(self.X)
 
-        # if isinstance(self.explainer.expected_value, np.ndarray):
-        #     self.explainer.expected_value = self.explainer.expected_value[0]
-        # assert isinstance(
-        #     self.explainer.expected_value, float
-        # ), "self.explainer.expected_value has wrong type"
-
     def get_feature_values(self, sample_index: int = 0) -> List[Tuple[str, float]]:
         """Extract the feature name and its importance per sample
-        - get absolute values to get the strongst postive and negative contribution
-        - sort by importance -> highst to lowest
-
+            - get absolute values to get the strongst postive and negative contribution
+            - sort by importance -> highst to lowest
 
         Args:
             sample_index (int, optional): sample for which the explanation should
-            be returned. Defaults to 0.
+                be returned. Defaults to 0.
 
         Returns:
             feature_values (list(tuple(str, float))): list of tuples for each
             feature and its importance of a sample.
-
         """
         if not self.is_classifier:
             indexes = np.argsort(abs(self.shap_values[sample_index, :]))
@@ -127,18 +116,21 @@ class ShapExplanation(ExplanationBase):
 
         feature_values = []
         for index in indexes.tolist()[::-1]:
-            feature_values.append((
-                self.feature_names[index],
-                sample_shap_value[sample_index, index],
-            ))
+            feature_values.append(
+                (
+                    self.feature_names[index],
+                    sample_shap_value[sample_index, index],
+                )
+            )
         return feature_values
 
     def plot(self, sample_index: int, kind: str = "bar") -> None:
         """Plot the shap values
 
         Args:
-            sample_index (int, optional): DESCRIPTION. Defaults to 0.
-            kind (TYPE, optional): DESCRIPTION. Defaults to "bar".
+            sample_index (int, optional): sample for which the explanation should
+                be returned.
+            kind (str, optional): set the type of plot to be created. Defaults to "bar".
 
         Returns:
             None:
@@ -161,7 +153,7 @@ class ShapExplanation(ExplanationBase):
 
         Args:
             sample_index (int, optional): sample for which the explanation should
-                be returned. Defaults to 0.
+                be returned.
 
         Returns:
             plt.figure
@@ -176,10 +168,11 @@ class ShapExplanation(ExplanationBase):
         sorted_idx = indexes.tolist()[::-1][: self.number_of_features]
 
         width = shap_value[sample_index, sorted_idx]
-        labels = [self.feature_names[i] for i in sorted_idx]
+        # wrap labels longer than 40 characters
+        labels = [textwrap.fill(self.feature_names[i], width=40) for i in sorted_idx]
         y = np.arange(self.number_of_features, 0, -1)
 
-        fig = plt.figure(figsize=(6, max(2, int(0.5 * self.number_of_features))))
+        fig = plt.figure(figsize=(6, max(2, int(0.6 * self.number_of_features))))
         plt.barh(y=y, width=width, height=0.5)
         plt.yticks(y, labels)
         plt.xlabel("Shap Values")
@@ -192,7 +185,7 @@ class ShapExplanation(ExplanationBase):
 
         Args:
             sample_index (int, optional): sample for which the explanation should
-                be returned. Defaults to 0.
+                be returned.
 
         Returns:
             plt.figure: return a matplotlib figure containg the plot
@@ -224,7 +217,7 @@ class ShapExplanation(ExplanationBase):
         """Log the prediction values of the sample
 
         Args:
-            sample (int): DESCRIPTION.
+            sample_index (int): number of the sample to create the explanation for
 
         Returns:
             None.
@@ -245,8 +238,8 @@ class ShapExplanation(ExplanationBase):
         """Helper function to call all methods to create the explanations
 
         Args:
-            sample_index (TYPE): DESCRIPTION.
-            sample_name (TYPE): DESCRIPTION.
+            sample_index (int): number of the sample to create the explanation for
+            sample_name (str, optional): name of the sample. Defaults to None.
 
         Returns:
             None.
@@ -270,6 +263,8 @@ class ShapExplanation(ExplanationBase):
 
         Args:
             sample_index (int): number of the sample to create the explanation for
+            sample_name (str, optional): name of the sample. Defaults to None.
+            separator (str, optional): separator for the explanations. Defaults to "\n".
 
         Returns:
             Explanation: Explanation object containg the explainations

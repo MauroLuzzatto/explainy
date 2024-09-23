@@ -21,6 +21,7 @@ https://christophm.github.io/interpretable-ml-book/
 
 """
 
+import textwrap
 import warnings
 from typing import List, Optional, Tuple
 
@@ -134,9 +135,10 @@ class PermutationExplanation(ExplanationBase):
         """
         sorted_idx = self.r.importances_mean.argsort()
         values = self.r.importances[sorted_idx].T
-        labels = [self.feature_names[i] for i in sorted_idx]
+        # wrap labels longer than 40 characters
+        labels = [textwrap.fill(self.feature_names[i], width=40) for i in sorted_idx]
 
-        fig, ax = plt.subplots(figsize=(6, max(2, int(0.5 * self.number_of_features))))
+        fig, ax = plt.subplots(figsize=(6, max(2, int(0.6 * self.number_of_features))))
         ax.boxplot(
             values[:, -self.number_of_features :],
             vert=False,
@@ -154,13 +156,17 @@ class PermutationExplanation(ExplanationBase):
             plt.figure: a figure object
         """
         sorted_idx = self.r.importances_mean.argsort()
-        labels = [self.feature_names[i] for i in sorted_idx][-self.number_of_features :]
+        # wrap labels longer than 40 characters
+        labels = [textwrap.fill(self.feature_names[i], width=40) for i in sorted_idx][
+            -self.number_of_features :
+        ]
+
         width = [self.r.importances_mean[i] for i in sorted_idx][
             -self.number_of_features :
         ]
         y = np.arange(self.number_of_features)
 
-        fig = plt.figure(figsize=(6, max(2, int(0.5 * self.number_of_features))))
+        fig = plt.figure(figsize=(6, max(2, int(0.6 * self.number_of_features))))
         plt.barh(y=y, width=width, height=0.5)
         plt.yticks(y, labels)
         plt.xlabel(
