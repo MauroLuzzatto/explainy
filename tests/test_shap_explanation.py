@@ -1,7 +1,6 @@
 from unittest import mock
 
 from explainy.explanations.shap_explanation import ShapExplanation
-
 from tests.utils import get_regression_model
 
 
