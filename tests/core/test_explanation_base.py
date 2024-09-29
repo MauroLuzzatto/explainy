@@ -95,8 +95,8 @@ def test_save():
     explainer.plot_name = "plot_name"
     explainer.number_of_features = 3
 
-    explainer.save(sample_index=0, sample_name="one")
-    assert True
+    output = explainer.save(sample_index=0, sample_name="one")
+    assert output is None
 
 
 if __name__ == "__main__":
