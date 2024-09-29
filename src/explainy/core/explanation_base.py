@@ -274,6 +274,7 @@ class ExplanationBase(ABC):
             os.path.join(self.path_plot, self.plot_name),
             bbox_inches="tight",
         )
+        print(f"Saved the plot to {os.path.join(self.path_plot, self.plot_name)}")
 
     def save_csv(self, sample_index: int) -> None:
         """Save the explanation to a csv. The columns contain the method_text,
@@ -333,3 +334,5 @@ class ExplanationBase(ABC):
             quotechar='"',
             quoting=csv.QUOTE_NONNUMERIC,
         )
+
+        print(f"Saved the csv to {os.path.join(self.path_result, self.file_name)}")

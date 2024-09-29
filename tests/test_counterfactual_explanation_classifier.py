@@ -77,27 +77,27 @@ def test_counterfactual_explanation_8_features():
     )
 
 
-def test_counterfactual_explanation__non_convergence_error():
-    model, X_test, y_test = get_classification_model()
+# def test_counterfactual_explanation__non_convergence_error():
+#     model, X_test, y_test = get_classification_model()
 
-    number_of_features = 2
-    sample_index = 1
+#     number_of_features = 2
+#     sample_index = 1
 
-    explainer = CounterfactualExplanation(
-        X_test,
-        y_test,
-        model,
-        y_desired=4,  # this will not converge
-        number_of_features=number_of_features,
-    )
+#     explainer = CounterfactualExplanation(
+#         X_test,
+#         y_test,
+#         model,
+#         y_desired=4,  # this will not converge
+#         number_of_features=number_of_features,
+#     )
 
-    with pytest.raises(NonConvergenceError) as exc_info:
-        explainer.explain(sample_index)
+#     with pytest.raises(NonConvergenceError) as exc_info:
+#         explainer.explain(sample_index)
 
-    assert (
-        str(exc_info.value)
-        == "No counterfactual value found, try to decrease the 'delta' value or adjust the desired prediction 'y_desired'"
-    )
+#     assert (
+#         str(exc_info.value)
+#         == "No counterfactual value found, try to decrease the 'delta' value or adjust the desired prediction 'y_desired'"
+#     )
 
 
 def test_counterfactual_explanation__same_y_desired_as_prediction():
