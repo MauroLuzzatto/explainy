@@ -120,6 +120,12 @@ class CounterfactualExplanation(ExplanationBase):
         """
         x_ref = self.X.values[sample_index, :]
 
+        if self.prediction == self.y_desired:
+            warnings.warn(
+                "The prediction is already equals to the desired value (y_desired), no counterfactual explanation needed."
+                "Are you sure you don't want to choose a different sample or desired value (y_desired)?"
+            )
+
         if not self.delta:
             if self.is_regressor:
                 self.delta = self.prediction * 0.05
@@ -131,7 +137,7 @@ class CounterfactualExplanation(ExplanationBase):
                 f"No delta value set, therefore using the value '{self.delta}'"
             )
 
-        start = -2
+        start = -3
         stop = 2
         num = stop - start + 1
 
@@ -169,13 +175,14 @@ class CounterfactualExplanation(ExplanationBase):
                 local_delta = np.abs(self.y_counter_factual - self.y_desired)
 
                 self.logger.info(
-                    f"y_counter_factual: {self.y_counter_factual:.2f}, lambda:"
+                    "hyperparameters:"
+                    f" y_pred: {self.prediction:.2f},"
+                    f" y_counter_factual: {self.y_counter_factual:.2f}, lambda:"
                     f" {lammbda}, local_delta: {local_delta}, random_seed:"
                     f" {random_seed}"
                 )
                 self.logger.debug(
-                    f" y_desired: {self.y_desired:.2f}, y_pred:"
-                    f" {self.prediction:.2f}, label:"
+                    f" y_desired: {self.y_desired:.2f}, label:"
                     f" {self.y.values[sample_index]}, delta:"
                     f" {self.delta}, "
                 )
