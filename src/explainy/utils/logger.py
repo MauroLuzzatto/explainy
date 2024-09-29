@@ -14,23 +14,22 @@ class Logger:
         Return:
             logger (obj): logger that record logs
         """
-        self.logger = logging.getLogger(self.name)
+        logger = logging.getLogger(self.name)
         # level of the logger
-        self.logger.setLevel(self.log_level)
+        logger.setLevel(self.log_level)
 
-        if self.logger.hasHandlers():
-            for _logger in self.logger.handlers:
+        if logger.hasHandlers():
+            for _logger in logger.handlers:
                 _logger.close()
-            self.logger.handlers.clear()
+            logger.handlers.clear()
 
         if self.path_log:
             file_handler = self.get_file_handler()
-            self.logger.addHandler(file_handler)
+            logger.addHandler(file_handler)
 
         console_handler = self.get_console_handler()
-        self.logger.addHandler(console_handler)
-
-        return self.logger
+        logger.addHandler(console_handler)
+        return logger
 
     def get_console_handler(self) -> logging.StreamHandler:
         # console handler
