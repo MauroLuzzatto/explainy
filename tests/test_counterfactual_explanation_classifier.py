@@ -1,4 +1,7 @@
+import pytest
+
 from explainy.explanations.counterfactual_explanation import CounterfactualExplanation
+from explainy.utils.utils import NonConvergenceError
 
 from .utils import get_classification_model
 
@@ -71,6 +74,32 @@ def test_counterfactual_explanation_8_features():
         " 'petal width (cm)' was '1.75', the 'petal length (cm)' was '4.0',"
         " the 'sepal width (cm)' was '3.1', and the 'sepal length (cm)' was"
         " '6.33'."
+    )
+
+
+def test_counterfactual_explanation__non_convergence_error():
+    model, X_test, y_test = get_classification_model()
+
+    number_of_features = 2
+    sample_index = 1
+
+    explainer = CounterfactualExplanation(
+        X_test,
+        y_test,
+        model,
+        y_desired=4,  # this will not converge
+        number_of_features=number_of_features,
+    )
+
+    with pytest.raises(NonConvergenceError) as exc_info:
+        explainer.explain(sample_index)
+
+    print(exc_info)
+    print(exc_info.value)
+
+    assert (
+        str(exc_info.value)
+        == "No counterfactual value found, try to decrease the 'delta' value or adjust the desired prediction 'y_desired'"
     )
 
 

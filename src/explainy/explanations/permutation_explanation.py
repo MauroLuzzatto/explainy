@@ -1,10 +1,10 @@
 """Permutation feature importance
 ------------------------------
-Permutation feature importance measures the increase in the prediction error of the model 
-after we permuted the feature's values, which breaks the relationship between 
+Permutation feature importance measures the increase in the prediction error of the model
+after we permuted the feature's values, which breaks the relationship between
 the feature and the true outcome [1].
 
-Permutation importance does not reflect to the intrinsic predictive value of 
+Permutation importance does not reflect to the intrinsic predictive value of
 a feature by itself but how important this feature is for a particular model [2].
 
 Characteristics
@@ -14,7 +14,7 @@ Characteristics
 
 Source
 ======
-[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
+[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019.
 https://christophm.github.io/interpretable-ml-book/
 
 [2] https://scikit-learn.org/stable/modules/permutation_importance.html
@@ -33,6 +33,7 @@ from sklearn.inspection import permutation_importance
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
 from explainy.utils.typing import Config, ModelType
+from explainy.utils.logger import Logger
 
 
 class PermutationExplanation(ExplanationBase):
@@ -54,10 +55,10 @@ class PermutationExplanation(ExplanationBase):
         **kwargs,
     ) -> None:
         super(PermutationExplanation, self).__init__(model, config)
-        """        
+        """
         This implementation is a thin wrapper around `sklearn.inspection.permutation_importance
         <https://scikit-learn.org/stable/modules/permutation_importance.html>`
-        
+
         Args:
             X (df): (Test) samples and features to calculate the importance for (sample, features)
             y (np.array): (Test) target values of the samples (samples, 1)
@@ -89,8 +90,9 @@ class PermutationExplanation(ExplanationBase):
         self.define_explanation_placeholder(
             natural_language_text_empty, method_text_empty, sentence_text_empty
         )
-
-        self.logger = self.setup_logger(self.explanation_name)
+        self.logger = Logger(
+            name=self.explanation_name, path_log=self.path_log
+        ).get_logger()
 
         self._setup()
 

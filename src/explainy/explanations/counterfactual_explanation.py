@@ -1,9 +1,9 @@
 """Counterfactual Explanation
 --------------------------
-Counterfactual explanations tell us how the values of an instance have to change to 
-significantly change its prediction. A counterfactual explanation of a prediction 
-describes the smallest change to the feature values that changes the prediction 
-to a predefined output. By creating counterfactual instances, we learn about how the 
+Counterfactual explanations tell us how the values of an instance have to change to
+significantly change its prediction. A counterfactual explanation of a prediction
+describes the smallest change to the feature values that changes the prediction
+to a predefined output. By creating counterfactual instances, we learn about how the
 model makes its predictions and can explain individual predictions [1].
 
 Characteristics
@@ -13,7 +13,7 @@ Characteristics
 
 Source
 ======
-[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
+[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019.
 https://christophm.github.io/interpretable-ml-book/
 """
 
@@ -29,8 +29,13 @@ from sklearn.base import is_regressor
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
+from explainy.utils.logger import Logger
 from explainy.utils.typing import Config, ModelType
-from explainy.utils.utils import join_text_with_comma_and_and, num_to_str
+from explainy.utils.utils import (
+    NonConvergenceError,
+    join_text_with_comma_and_and,
+    num_to_str,
+)
 
 np.seterr(divide="ignore", invalid="ignore")
 
@@ -66,12 +71,12 @@ class CounterfactualExplanation(ExplanationBase):
             y (np.array): (Test) target values of the samples (samples, 1)
             model (sklearn.base.BaseEstimator): trained (sckit-learn) model object
             number_of_features (int): number of features to consider in the explanation
-            
+
             config (dict): configuration dictionary
             y_desired (float, optional): desired target value for the counter factual example. Defaults to max(y).
             delta (float, optional): maximum allowed difference between the desired target value and the predicted value. Defaults to prediction * 0.05.
             random_state (int, optional): random state for the counter factual example. Defaults to 0.
-            
+
         Returns:
             None.
         """
@@ -96,7 +101,10 @@ class CounterfactualExplanation(ExplanationBase):
         self.define_explanation_placeholder(
             natural_language_text_empty, method_text_empty, sentence_text_empty
         )
-        self.logger = self.setup_logger(self.explanation_name)
+
+        self.logger = Logger(
+            name=self.explanation_name, path_log=self.path_log
+        ).get_logger()
 
     def _calculate_importance(
         self, sample_index: int = 0
@@ -187,7 +195,7 @@ class CounterfactualExplanation(ExplanationBase):
                 break
 
         else:
-            raise ValueError(
+            raise NonConvergenceError(
                 "No counterfactual value found, try to decrease the 'delta'"
                 " value or adjust the desired prediction 'y_desired'"
             )
