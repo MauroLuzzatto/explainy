@@ -1,8 +1,8 @@
 """SHAP Explanation
 ----------------
-A prediction can be explained by assuming that each feature value of  the instance is a "player" in a game where 
-the prediction is the payout.  Shapley values (a method from coalitional game theory) tells us how  to fairly 
-distribute the "payout" among the features. The Shapley value is the average marginal contribution of a feature 
+A prediction can be explained by assuming that each feature value of  the instance is a "player" in a game where
+the prediction is the payout.  Shapley values (a method from coalitional game theory) tells us how  to fairly
+distribute the "payout" among the features. The Shapley value is the average marginal contribution of a feature
 value across all possible coalitions [1].
 
 Characteristics
@@ -12,7 +12,7 @@ Characteristics
 
 Source
 ======
-[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
+[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019.
 https://christophm.github.io/interpretable-ml-book/
 """
 
@@ -26,6 +26,7 @@ import shap
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
+from explainy.utils.logger import Logger
 from explainy.utils.typing import Config, ModelType
 
 
@@ -49,7 +50,7 @@ class ShapExplanation(ExplanationBase):
         """
         This implementation is a thin wrapper around `shap.TreeExplainer
         <https://shap-lrjball.readthedocs.io/en/docs_update/generated/shap.TreeExplainer.html>`
-        
+
         Args:
             X (df): (Test) samples and features to calculate the importance for (sample, features)
             y (np.array): (Test) target values of the samples (samples, 1)
@@ -80,7 +81,7 @@ class ShapExplanation(ExplanationBase):
             natural_language_text_empty, method_text_empty, sentence_text_empty
         )
 
-        self.logger = self.setup_logger(self.explanation_name)
+        self.logger = Logger(self.explanation_name, self.path_log).get_logger()
 
         self._calculate_importance()
 

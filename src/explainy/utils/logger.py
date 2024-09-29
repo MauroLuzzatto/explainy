@@ -3,9 +3,10 @@ import os
 
 
 class Logger:
-    def __init__(self, name: str, path_log: str):
+    def __init__(self, name: str, path_log: str, log_level: int = logging.INFO) -> None:
         self.name = name
         self.path_log = path_log
+        self.log_level = log_level
 
     def get_logger(self) -> logging.Logger:
         """Create a log file to record the experiment's logs
@@ -13,8 +14,9 @@ class Logger:
         Return:
             logger (obj): logger that record logs
         """
-        logging.basicConfig(level=logging.INFO)
-        logger = logging.getLogger()
+        logger = logging.getLogger(self.name)
+        # level of the logger
+        logger.setLevel(self.log_level)
 
         if logger.hasHandlers():
             for _logger in logger.handlers:
@@ -27,13 +29,12 @@ class Logger:
 
         console_handler = self.get_console_handler()
         logger.addHandler(console_handler)
-
         return logger
 
     def get_console_handler(self) -> logging.StreamHandler:
         # console handler
         console_handler = logging.StreamHandler()
-        console_logging_format = "%(message)s"
+        console_logging_format = "%(levelname)s: %(message)s"
         formatter = logging.Formatter(console_logging_format)
         console_handler.setFormatter(formatter)
         console_handler.setLevel(level=logging.DEBUG)

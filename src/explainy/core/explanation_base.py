@@ -1,4 +1,5 @@
 import csv
+import logging
 import os
 import warnings
 from abc import ABC, abstractmethod
@@ -8,9 +9,10 @@ import numpy as np
 import pandas as pd
 from sklearn.base import is_classifier
 
-from explainy.logger import Logger
 from explainy.utils.typing import Config, ModelType
 from explainy.utils.utils import create_folder, join_text_with_comma_and_and, num_to_str
+
+logger = logging.getLogger(__name__)
 
 
 class ExplanationBase(ABC):
@@ -29,7 +31,7 @@ class ExplanationBase(ABC):
         self.model = model
         self.config = config if config else {}
         self.is_classifier: bool = is_classifier(self.model)
-        self.folder: str = self.config.get("folder", "explanation")
+        self.folder_name: str = self.config.get("folder_name", "output")
         self.file_name: str = self.config.get("file_name", "explanations.csv")
 
         self.explanation_name: str
@@ -118,15 +120,18 @@ class ExplanationBase(ABC):
 
     def set_paths(self) -> None:
         """Set the paths where the output should be saved"""
-        self.path = os.path.join(os.path.dirname(os.getcwd()), "reports", self.folder)
+        self.path = os.path.join(os.getcwd(), "reports", self.folder_name)
         self.path_plot = create_folder(os.path.join(self.path, "plot"))
         self.path_result = create_folder(os.path.join(self.path, "results"))
         self.path_log = create_folder(os.path.join(self.path, "logs"))
 
-    def setup_logger(self, logger_name: str) -> object:
-        """Setup the logger"""
-        logger = Logger(logger_name, self.path_log)
-        return logger.get_logger()
+        paths_dict = {
+            "path": self.path,
+            "path_plot": self.path_plot,
+            "path_result": self.path_result,
+            "path_log": self.path_log,
+        }
+        logger.debug(f"paths_dict:", extra=paths_dict)
 
     @abstractmethod
     def _calculate_importance(self):
@@ -260,12 +265,16 @@ class ExplanationBase(ABC):
             sample_index (int): [description]
             sample_name (str, optional): name of the sample. Defaults to None.
         """
+
+        assert hasattr(self, "fig"), "missing the figure object, call `plot()` first"
+
         sample_name = self.get_sample_name(sample_index, sample_name)
         self.save_csv(sample_name)
         self.fig.savefig(
             os.path.join(self.path_plot, self.plot_name),
             bbox_inches="tight",
         )
+        print(f"Saved the plot to {os.path.join(self.path_plot, self.plot_name)}")
 
     def save_csv(self, sample_index: int) -> None:
         """Save the explanation to a csv. The columns contain the method_text,
@@ -278,7 +287,15 @@ class ExplanationBase(ABC):
         Returns:
             None.
         """
-        assert hasattr(self, "plot_name"), "instance lacks plot_name"
+        assert hasattr(
+            self, "natural_language_text"
+        ), "missing the `natural_language_text`, call `explain()` first"
+        assert hasattr(
+            self, "prediction"
+        ), "missing the prediction, call `explain()` first"
+        assert hasattr(
+            self, "plot_name"
+        ), "instance lacks plot_name, call `plot()` first"
 
         output = {
             "score_text": self.score_text,
@@ -317,3 +334,5 @@ class ExplanationBase(ABC):
             quotechar='"',
             quoting=csv.QUOTE_NONNUMERIC,
         )
+
+        print(f"Saved the csv to {os.path.join(self.path_result, self.file_name)}")

@@ -1,10 +1,15 @@
 import os
 
 
+class NonConvergenceError(Exception):
+    """Custom exception for non-convergence of the CounterFactual explanation optimization algorithm"""
+
+    pass
+
+
 def create_folder(path: str) -> str:
     """Create folder, if it doesn't already exist"""
-    if not os.path.exists(path):
-        os.makedirs(path)
+    os.makedirs(path, exist_ok=True)
     return path
 
 

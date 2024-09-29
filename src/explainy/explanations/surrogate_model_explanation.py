@@ -1,7 +1,7 @@
 """Global Surrogate Model
 ----------------------
-A global surrogate model is an interpretable model that is trained to approximate the 
-predictions of a black box model. We can draw conclusions about the black box model 
+A global surrogate model is an interpretable model that is trained to approximate the
+predictions of a black box model. We can draw conclusions about the black box model
 by interpreting the surrogate model [1].
 
 Characteristics
@@ -11,7 +11,7 @@ Characteristics
 
 Source
 ======
-[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019. 
+[1] Molnar, Christoph. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019.
 https://christophm.github.io/interpretable-ml-book/
 """
 
@@ -30,6 +30,7 @@ from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_t
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
+from explainy.utils.logger import Logger
 from explainy.utils.surrogate_plot import GraphvizNotFoundError, SurrogatePlot
 from explainy.utils.surrogate_text import SurrogateText
 from explainy.utils.typing import Config, ModelType
@@ -64,7 +65,7 @@ class SurrogateModelExplanation(ExplanationBase):
             config (dict, optional): config dictionary. Defaults to None.
             kind (str, optional): kind of surrogate model. Defaults to "tree".
             **kwargs (dict): hyperparamters for the surrogate model
-           
+
         Returns:
             None.
         """
@@ -99,7 +100,7 @@ class SurrogateModelExplanation(ExplanationBase):
         self.define_explanation_placeholder(
             natural_language_text_empty, method_text_empty, sentence_text_empty
         )
-        self.logger = self.setup_logger(self.explanation_name)
+        self.logger = Logger(self.explanation_name, self.path_log).get_logger()
 
         self._setup()
 
