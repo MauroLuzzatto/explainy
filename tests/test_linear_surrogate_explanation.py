@@ -1,5 +1,4 @@
-from explainy.explanations.surrogate_model_explanation import \
-    SurrogateModelExplanation
+from explainy.explanations.surrogate_model_explanation import SurrogateModelExplanation
 
 from .utils import get_regression_model
 

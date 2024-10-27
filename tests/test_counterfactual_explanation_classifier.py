@@ -1,7 +1,6 @@
 import pytest
 
-from explainy.explanations.counterfactual_explanation import \
-    CounterfactualExplanation
+from explainy.explanations.counterfactual_explanation import CounterfactualExplanation
 from explainy.utils.utils import NonConvergenceError
 
 from .utils import get_classification_model
