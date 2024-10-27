@@ -1,4 +1,5 @@
-from explainy.explanations.permutation_explanation import PermutationExplanation
+from explainy.explanations.permutation_explanation import \
+    PermutationExplanation
 
 from .utils import get_classification_model
 

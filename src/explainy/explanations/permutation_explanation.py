@@ -97,7 +97,7 @@ class PermutationExplanation(ExplanationBase):
         self._setup()
 
     def _calculate_importance(self) -> None:
-        """Calculate the feature importance using the Permuation Feature Importance
+        """Calculate the feature importance using the Permutation Feature Importance
 
         Args:
             n_repeats (int, optional): sets the number of times a feature
@@ -197,7 +197,7 @@ class PermutationExplanation(ExplanationBase):
     def _setup(self) -> None:
         """Since the plots and values are calculate once per trained model,
         the feature importance computatoin is done at the beginning
-        when initating the class
+        when initiating the class
 
         Returns:
             None.
@@ -222,7 +222,7 @@ class PermutationExplanation(ExplanationBase):
             sample_index (int): number of the sample to create the explanation for
 
         Returns:
-            Explanation: Explanation object containg the explainations
+            Explanation: Explanation object containing the explanations
         """
         sample_name = self.get_sample_name(sample_index, sample_name)
         self.prediction = self.get_prediction(sample_index)

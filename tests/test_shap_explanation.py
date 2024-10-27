@@ -4,7 +4,7 @@ from explainy.explanations.shap_explanation import ShapExplanation
 from tests.utils import get_regression_model
 
 
-def test_shap_explanation_4_features():
+def test_shap_explanation_4_features() -> None:
     model, X_test, y_test = get_regression_model()
 
     number_of_features = 4
@@ -30,7 +30,7 @@ def test_shap_explanation_4_features():
     )
 
 
-def test_shap_explanation_8_features():
+def test_shap_explanation_8_features() -> None:
     model, X_test, y_test = get_regression_model()
 
     number_of_features = 8

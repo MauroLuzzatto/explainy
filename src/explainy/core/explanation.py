@@ -23,7 +23,7 @@ class Explanation:
         """Get the final explanation as a string or tuple
 
         Args:
-            separator (str, optional): Seperator to join the sub-explanations. Defaults to "\n".
+            separator (str, optional): Separator to join the sub-explanations. Defaults to "\n".
 
         Returns:
             Union[str, Tuple[str, str, str]]: final explanation
