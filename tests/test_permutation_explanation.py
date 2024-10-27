@@ -3,7 +3,7 @@ from explainy.explanations.permutation_explanation import PermutationExplanation
 from .utils import get_regression_model
 
 
-def test_permuation_explanation_4_features():
+def test_permuation_explanation_4_features() -> None:
     model, X_test, y_test = get_regression_model()
 
     number_of_features = 4
@@ -30,7 +30,7 @@ def test_permuation_explanation_4_features():
     )
 
 
-def test_permuation_explanation_8_features():
+def test_permuation_explanation_8_features() -> None:
     model, X_test, y_test = get_regression_model()
 
     number_of_features = 8

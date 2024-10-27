@@ -92,7 +92,7 @@ class ShapExplanation(ExplanationBase):
 
     def get_feature_values(self, sample_index: int = 0) -> List[Tuple[str, float]]:
         """Extract the feature name and its importance per sample
-            - get absolute values to get the strongst postive and negative contribution
+            - get absolute values to get the strongst positive and negative contribution
             - sort by importance -> highst to lowest
 
         Args:
@@ -189,7 +189,7 @@ class ShapExplanation(ExplanationBase):
                 be returned.
 
         Returns:
-            plt.figure: return a matplotlib figure containg the plot
+            plt.figure: return a matplotlib figure
         """
         if not self.is_classifier:
             base_value = self.explainer.expected_value
@@ -268,7 +268,7 @@ class ShapExplanation(ExplanationBase):
             separator (str, optional): separator for the explanations. Defaults to "\n".
 
         Returns:
-            Explanation: Explanation object containg the explainations
+            Explanation: Explanation object
         """
         sample_name = self.get_sample_name(sample_index, sample_name)
         self.prediction = self.get_prediction(sample_index)

@@ -122,8 +122,9 @@ class CounterfactualExplanation(ExplanationBase):
 
         if self.prediction == self.y_desired:
             warnings.warn(
-                "The prediction is already equals to the desired value (y_desired), no counterfactual explanation needed."
-                "Are you sure you don't want to choose a different sample or desired value (y_desired)?"
+                "The prediction is already equals to the desired value (y_desired), no"
+                " counterfactual explanation needed.Are you sure you don't want to"
+                " choose a different sample or desired value (y_desired)?"
             )
 
         if not self.delta:
@@ -218,7 +219,7 @@ class CounterfactualExplanation(ExplanationBase):
         x_ref: np.ndarray,
         x_counter_factual: np.ndarray,
     ) -> float:
-        """Replace the value of the feauture at the postition of thw feature_index and predict
+        """Replace the value of the feature at the position of the feature_index and predict
         a new value for this new set of features
 
         Args:
@@ -248,7 +249,7 @@ class CounterfactualExplanation(ExplanationBase):
     ) -> list:
         """Calculate the importance of each feature. Take the reference
         features and replace every feature with the new counter_factual value.
-        Calculat the absulte difference that this feature adds to the prediction.
+        Calculate the absulte difference that this feature adds to the prediction.
         A larger absolute value, means a larger contribution and therefore a more
         important feature.
 
@@ -291,7 +292,7 @@ class CounterfactualExplanation(ExplanationBase):
 
         Args:
             x_ref (np.array): features of the sample
-            x_counter_factual (np.array): features of the counter factual sample to achive y_desired
+            x_counter_factual (np.array): features of the counter factual sample to achieve y_desired
             decimal (int): decimal number to round the values to in the plot
             debug (bool): if True, plot the dataframe
 
@@ -352,7 +353,7 @@ class CounterfactualExplanation(ExplanationBase):
             raise Exception(f'Value of kind "{kind}" is not supported!')
 
     def _plot_table(self) -> plt.figure:
-        """Plot the table comparing the refence and the counterfactual values
+        """Plot the table comparing the reference and the counterfactual values
 
         Returns:
             plt.figure: figure object
@@ -468,7 +469,7 @@ class CounterfactualExplanation(ExplanationBase):
             separator (str, optional): separator for the natural language text. Defaults to "\n".
 
         Returns:
-            Explanation: Explanation object containg the explainations
+            Explanation: Explanation object containing the explanations
         """
         self.sample_index = sample_index
         sample_name = self.get_sample_name(sample_index, sample_name)
