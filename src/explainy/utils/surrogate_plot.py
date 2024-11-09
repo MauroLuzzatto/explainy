@@ -1,7 +1,7 @@
 import re
 from typing import List
 
-import sklearn
+from sklearn import tree
 
 from explainy.utils.typing import ModelType
 
@@ -26,17 +26,8 @@ class SurrogatePlot:
         self.class_names = class_names
 
     def get_plot(self, model: ModelType, feature_names: List[str]):
-        """Update the dot file as desired, simplify the text in the boxes
-
-        Args:
-            model (TYPE): DESCRIPTION.
-            feature_names (TYPE): DESCRIPTION.
-
-        Returns:
-            f (TYPE): DESCRIPTION.
-
-        """
-        tree = sklearn.tree.export_graphviz(
+        """Update the dot file as desired, simplify the text in the boxes"""
+        tree_dot_format = tree.export_graphviz(
             model,
             feature_names=feature_names,
             impurity=self.impurity,
@@ -44,19 +35,11 @@ class SurrogatePlot:
             precision=self.precision,
             class_names=self.class_names,
         )
-        tree = self.one_hot_encoding_text(tree)
-        return tree
+        return self.one_hot_encoding_text(tree_dot_format)
 
     @staticmethod
     def one_hot_encoding_text(tree: str) -> str:
-        """Customize the labels text for one-hot encoded features
-
-        Args:
-            f (TYPE): DESCRIPTION.
-
-        Returns:
-            f (TYPE): DESCRIPTION.
-        """
+        """Customize the labels text for one-hot encoded features"""
         values = re.findall(r'\[label="(.*?)"\]', tree, re.DOTALL)
         for value in values:
             if " - " in value:

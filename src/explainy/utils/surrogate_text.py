@@ -55,12 +55,7 @@ class SurrogateText:
 
         return " ".join([text + "." for text in texts])
 
-    def get_paths(self):
-        """Returns:
-        None.
-
-        """
-        # Leaves
+    def get_paths(self) -> dict:
         leave_id = self.model.apply(self.X)
 
         paths = {}
