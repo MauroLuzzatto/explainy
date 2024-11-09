@@ -2,6 +2,7 @@ import re
 from typing import List
 
 from sklearn import tree
+
 from explainy.utils.typing import ModelType
 
 

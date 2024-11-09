@@ -49,7 +49,10 @@ class TreeSurrogate(ExplanationBase):
             "The following thresholds were important for the predictions: {}"
         )
 
-        method_text_empty = "The feature importance was calculated using a {} surrogate model. {} tree nodes are shown."
+        method_text_empty = (
+            "The feature importance was calculated using a {} surrogate model. {} tree"
+            " nodes are shown."
+        )
 
         if self.is_classifier:
             sentence_text_empty = "\nThe sample is assigned class {} if {}"

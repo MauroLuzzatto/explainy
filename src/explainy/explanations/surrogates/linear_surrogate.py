@@ -56,11 +56,9 @@ class LinearSurrogate(ExplanationBase):
         natural_language_text_empty = (
             "The features which were most important for the predictions were: {}."
         )
-
         method_text_empty = (
             "The feature importance was calculated using a {} surrogate model."
         )
-
         sentence_text_empty = "'{}' ({:.2f})"
 
         self.define_explanation_placeholder(
@@ -102,20 +100,11 @@ class LinearSurrogate(ExplanationBase):
         return estimator(**self.kwargs)
 
     def importance(self) -> str:
-        """Return the importance of the surrogate model
-
-        Returns:
-            str: importance of the surrogate model
-
-        """
+        """Return the importance of the surrogate model"""
         return super().importance()
 
     def plot(self, sample_index: int) -> None:
-        """Plot the sorted permutation feature importance using a barplot
-
-        Returns:
-            plt.figure: a figure object
-        """
+        """Plot the sorted permutation feature importance using a barplot"""
         sorted_idx = self.feature_importance.argsort()
         # wrap labels longer than 40 characters
         labels = [textwrap.fill(self.feature_names[i], width=40) for i in sorted_idx][

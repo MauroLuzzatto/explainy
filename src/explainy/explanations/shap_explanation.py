@@ -117,12 +117,10 @@ class ShapExplanation(ExplanationBase):
 
         feature_values = []
         for index in indexes.tolist()[::-1]:
-            feature_values.append(
-                (
-                    self.feature_names[index],
-                    sample_shap_value[sample_index, index],
-                )
-            )
+            feature_values.append((
+                self.feature_names[index],
+                sample_shap_value[sample_index, index],
+            ))
         return feature_values
 
     def plot(self, sample_index: int, kind: str = "bar") -> None:
