@@ -26,16 +26,7 @@ class SurrogatePlot:
         self.class_names = class_names
 
     def get_plot(self, model: ModelType, feature_names: List[str]):
-        """Update the dot file as desired, simplify the text in the boxes
-
-        Args:
-            model (TYPE): DESCRIPTION.
-            feature_names (TYPE): DESCRIPTION.
-
-        Returns:
-            f (TYPE): DESCRIPTION.
-
-        """
+        """Update the dot file as desired, simplify the text in the boxes"""
         tree = sklearn.tree.export_graphviz(
             model,
             feature_names=feature_names,
@@ -49,14 +40,7 @@ class SurrogatePlot:
 
     @staticmethod
     def one_hot_encoding_text(tree: str) -> str:
-        """Customize the labels text for one-hot encoded features
-
-        Args:
-            f (TYPE): DESCRIPTION.
-
-        Returns:
-            f (TYPE): DESCRIPTION.
-        """
+        """Customize the labels text for one-hot encoded features"""
         values = re.findall(r'\[label="(.*?)"\]', tree, re.DOTALL)
         for value in values:
             if " - " in value:

@@ -32,8 +32,8 @@ from sklearn.inspection import permutation_importance
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
-from explainy.utils.typing import Config, ModelType
 from explainy.utils.logger import Logger
+from explainy.utils.typing import Config, ModelType
 
 
 class PermutationExplanation(ExplanationBase):
