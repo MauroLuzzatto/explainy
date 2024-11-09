@@ -22,8 +22,8 @@ import pandas as pd
 
 from explainy.core.explanation import Explanation
 from explainy.core.explanation_base import ExplanationBase
-from explainy.explanations.surrogates.linear_surrogate import LinearSurrogate
-from explainy.explanations.surrogates.tree_surrogate import TreeSurrogate
+from explainy.explanations.linear_surrogate import LinearSurrogate
+from explainy.explanations.tree_surrogate import TreeSurrogate
 from explainy.utils.typing import Config, ModelType
 
 surrogate_types = ["tree", "linear"]
