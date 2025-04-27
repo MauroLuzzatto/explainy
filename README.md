@@ -1,11 +1,9 @@
 
 <!-- <img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="180" height="180" align="right"/> -->
 <p align="center">
-<<<<<<< Updated upstream
-<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="200" height="200"/>
-=======
+
 <img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" height="350"/>
->>>>>>> Stashed changes
+
 </p>
 <!-- # explainy - machine learning model explanations for humans -->
 <!-- # explainy - black-box model explanations for humans -->
@@ -19,8 +17,6 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/ambv/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 [![Downloads](https://pepy.tech/badge/explainy)](https://pepy.tech/project/explainy)
-
-<!-- [![travis](https://app.travis-ci.com/MauroLuzzatto/explainy.svg?branch=main)](https://app.travis-ci.com/github/MauroLuzzatto/explainy?branch=master) -->
 
 
 **explainy** is a library for generating machine learning models explanations in Python. It uses methods from **Machine Learning Explainability** and provides a standardized API to create feature importance explanations for samples. 
