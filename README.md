@@ -1,7 +1,7 @@
 
 <!-- <img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="180" height="180" align="right"/> -->
 <p align="center">
-<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="200" height="200"/>
+<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" height="300"/>
 </p>
 <!-- # explainy - machine learning model explanations for humans -->
 <!-- # explainy - black-box model explanations for humans -->
