@@ -1,12 +1,16 @@
 
 <!-- <img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="180" height="180" align="right"/> -->
 <p align="center">
+<<<<<<< Updated upstream
 <img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" width="200" height="200"/>
+=======
+<img src="https://github.com/MauroLuzzatto/explainy/raw/main/docs/_static/logo.png" height="350"/>
+>>>>>>> Stashed changes
 </p>
 <!-- # explainy - machine learning model explanations for humans -->
 <!-- # explainy - black-box model explanations for humans -->
 
-<h1 align="center">explainy - black-box model explanations for humans</h1>
+<h1 align="center">black-box model explanations for humans</h1>
 
 [![pypi version](https://img.shields.io/pypi/v/explainy.svg)](https://pypi.python.org/pypi/explainy)
 [![codecov](https://codecov.io/gh/MauroLuzzatto/explainy/branch/main/graph/badge.svg?token=N6EKHMEAQR)](https://codecov.io/gh/MauroLuzzatto/explainy)
